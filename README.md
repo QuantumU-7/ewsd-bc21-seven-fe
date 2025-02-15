@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 Project Title
 
-## Getting Started
+### 📚 Project Description
 
-First, run the development server:
+### .............
+
+This project is a **_Next.js_** web application that utilizes **_ShadCN UI_** for styling.
+
+## Features
+
+This web application includes the following features:
+
+- Login
+- Dashboard
+-
+-
+-
+-
+-
+
+## 📁 Folder Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+.
+├── src
+|   ├── app
+|   ├── components
+|   ├── constants
+|   ├── hooks
+|   ├── layouts
+|   ├── middleware
+|   ├── pages
+|   ├── providers
+|   ├── public
+|   ├── services
+|   ├── utils
+|   └── ...
+├── package.json
+├── next.config.js
+├── yarn.lock
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚙️ Getting Started
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Ensure you have Node.js version 18 or higher installed. To check your Node.js version, run the following command:
 
-## Learn More
+```bash
+node --version
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 💡 Run Locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To run the project in your local server, follow these steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Clone the repository onto your local machine:
 
-## Deploy on Vercel
+   ```bash
+   git clone https://github.com/T-N9/ewsd-bc21-seven-fe.git
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Go to the project directory:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```bash
+   cd ewsd-bc21-seven-fe
+   ```
+
+3. Install the necessary dependencies:
+
+   ```bash
+   yarn install
+   ```
+
+4. Start the development server:
+
+   ```bash
+   yarn dev
+   ```
+
+5. Open the web application in your browser at `http://localhost:3000`.
+
+### 💡 Production Build
+
+```bash
+yarn build
+```
+
+Builds the app for production to the `.next` folder. It optimizes the build for the best performance and prepares the app for deployment.
+
+## 🔗 Learn More
+
+- [Learn more about Next.js](https://nextjs.org/)
+- [Learn more about ShadCN UI](https://ui.shadcn.com/)
+  <br>
+  <br>
+  > Connect with us on :fast_forward: [LinkedIn](https://www.linkedin.com/in/phyoewaiaung082/)  
+  > Connect with us on :fast_forward: [Facebook](https://www.linkedin.com/in/phyoewaiaung082/)
