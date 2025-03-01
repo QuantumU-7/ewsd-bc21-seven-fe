@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import LoadingButton from "@/components/shared/common/Button";
 
 const passwordFormSchema = z
   .object({
@@ -29,7 +29,7 @@ const passwordFormSchema = z
     path: ["confirmPassword"],
   });
 
-export const PasswordForm = ({ onSubmit }) => {
+export const PasswordForm = ({ onSubmit, isLoading }) => {
   const form = useForm({
     resolver: zodResolver(passwordFormSchema),
     defaultValues: {
@@ -85,9 +85,7 @@ export const PasswordForm = ({ onSubmit }) => {
             </FormItem>
           )}
         />
-        <Button className="w-full my-2 bg-button-primary text-white">
-          Reset Password
-        </Button>
+        <LoadingButton label="Reset Password" isLoading={isLoading} />
       </form>
     </Form>
   );
