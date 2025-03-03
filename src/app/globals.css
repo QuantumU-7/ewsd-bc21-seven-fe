@@ -86,4 +86,12 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  thead{
+    background-color: #002B6E;
+  }
+
+  th{
+    color: white !important
+  }
 }
