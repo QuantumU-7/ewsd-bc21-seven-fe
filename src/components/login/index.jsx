@@ -23,6 +23,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { loginService } from "@/services/loginService";
 import LoadingButton from "../shared/common/Button";
+import { TokenKeys } from "@/constants/tokenKeys";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -52,9 +53,8 @@ const LoginForm = () => {
 
     try {
       const data = await loginService(values.username, values.password);
-      console.log("Login successful:", data);
-
-      // Redirect to home page upon successful login
+      localStorage.setItem(TokenKeys.accesstoken, data.access_token);
+      localStorage.setItem(TokenKeys.refreshtoken, data.refresh_token);
       router.push("/");
     } catch (error) {
       setError(error.message);

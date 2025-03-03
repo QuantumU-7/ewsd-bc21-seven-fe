@@ -33,7 +33,7 @@ const MostViewdTable = () => {
             <TableCell className="font-medium">{idea.title}</TableCell>
             <TableCell>{idea.author}</TableCell>
             <TableCell>{idea.department}</TableCell>
-            <TableCell>{idea.total_likes}</TableCell>
+            <TableCell>{idea.views}</TableCell>
             <TableCell>{idea.category}</TableCell>
           </TableRow>
         ))}

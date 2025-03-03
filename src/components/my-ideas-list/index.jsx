@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -22,16 +24,57 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import actionApi from "@/api/config";
+// import { toast } from "@/components/ui/use-toast"; // Assuming you're using shadcn/ui toast
 
 const MyIdeasListForm = () => {
-  // Sample data - in a real app this would come from props or an API
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await actionApi().get("/users");
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const ideas = Array(10).fill({
+    id: Math.floor(Math.random() * 1000),
     title: "Improve Communication Channel",
     likes: 200,
     dislikes: 35,
     comments: 400,
     category: "Facility",
   });
+
+  const handleViewIdea = async (ideaId) => {
+    try {
+      // const response = await fetch(`/api/ideas/${ideaId}`);
+
+      // if (!response.ok) {
+      //   throw new Error("Failed to fetch idea details");
+      // }
+
+      // const ideaData = await response.json();
+
+      router.push(`/my-ideas/${ideaId}`);
+    } catch (error) {
+      // Show error toast if API call fails
+      // toast({
+      //   title: "Error",
+      //   description: "Failed to load idea details. Please try again.",
+      //   variant: "destructive",
+      // });
+      console.error("Error fetching idea details:", error);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 my-8 px-4">
@@ -65,7 +108,10 @@ const MyIdeasListForm = () => {
                       </div>
                     </PopoverTrigger>
                     <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-                      <p className="text-sm p-2 cursor-pointer hover:bg-gray-100">
+                      <p
+                        className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleViewIdea(idea.id)}
+                      >
                         View
                       </p>
                       <div className="border-t"></div>
