@@ -95,3 +95,46 @@ body {
     color: white !important
   }
 }
+
+.public-DraftStyleDefault-block {
+  margin: 0 !important;
+}
+.rdw-editor-main {
+  min-height: 300px;
+}
+
+.rdw-editor-wrapper h1 {
+  font-size: 3.75rem; 
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.rdw-editor-wrapper h2 {
+  font-size: 3rem; /* Equivalent to text-5xl */
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.rdw-editor-wrapper h3 {
+  font-size: 2.25rem; /* Equivalent to text-4xl */
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.rdw-editor-wrapper h4 {
+  font-size: 1.875rem; /* Equivalent to text-3xl */
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.rdw-editor-wrapper h5 {
+  font-size: 1.5rem; /* Equivalent to text-2xl */
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.rdw-editor-wrapper h6 {
+  font-size: 1.25rem; /* Equivalent to text-xl */
+  font-weight: bold;
+  line-height: 1.4;
+}
