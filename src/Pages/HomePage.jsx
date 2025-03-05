@@ -7,10 +7,6 @@ const HomePage = () => {
     <div>
         <PopularSection/>
         <LatestIdeaSection/>
-
-        <div className='h-screen'>
-
-        </div>
     </div>
   )
 }

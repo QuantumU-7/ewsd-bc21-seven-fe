@@ -1,9 +1,12 @@
-import HomePage from "@/Pages/HomePage";
+import LatestIdeaSection from "@/components/latest-idea-section";
+import PopularSection from "@/components/popular-section/PopularSection";
 
-export default function Home() {
+export default async function Home() {
+
   return (
     <div className="">
-      <HomePage />
+      <PopularSection />
+      <LatestIdeaSection />
     </div>
   );
 }
