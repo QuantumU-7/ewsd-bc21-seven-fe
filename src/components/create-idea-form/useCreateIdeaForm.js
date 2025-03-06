@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorState, convertToRaw } from "draft-js";
+import { getAllCategories } from "@/services/categoryManagementService";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -29,6 +30,21 @@ export const useCreateIdeaForm = () => {
   const [files, setFiles] = useState([]);
   const [modalFiles, setModalFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [allCategories, setAllCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchAllCategories = async () => {
+      try {
+        const data = await getAllCategories();
+        setAllCategories(data);
+        console.log({data});
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchAllCategories();
+  }, []);
 
   const onDrop = (acceptedFiles) => {
     setImage(acceptedFiles[0]);
@@ -77,6 +93,7 @@ export const useCreateIdeaForm = () => {
     watch,
     errors,
     editorState,
+    allCategories,
     handleEditorChange,
     image,
     getRootProps,

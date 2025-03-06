@@ -38,6 +38,7 @@ const CreateIdeaForm = () => {
     handleUploadFiles,
     handleCancelUpload,
     onSubmit,
+    allCategories,
   } = useCreateIdeaForm();
 
   return (
@@ -90,21 +91,28 @@ const CreateIdeaForm = () => {
               )}
             </div>
 
-            <div>
+            <div className={`${allCategories.length === 0 && 'opacity-50 select-none cursor-progress'}`}>
               <label className="text-gray-400" htmlFor="category">
                 Category
               </label>
               <Select
                 name="category"
                 id="category"
-                onValueChange={(val) => setValue("facility", val)}
+                onValueChange={(val) => {
+                  let id = allCategories.find((category) => category?.name === val).id
+                  // console.log({id})
+                  setValue("facility", id.toString())
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Facility" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="facility1">Facility 1</SelectItem>
-                  <SelectItem value="facility2">Facility 2</SelectItem>
+                  {allCategories.map((category) => (
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {errors.facility && (
