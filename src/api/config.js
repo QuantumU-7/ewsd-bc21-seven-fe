@@ -3,7 +3,7 @@ import { decodeToken } from "react-jwt";
 import axios, { AxiosInstance } from "axios";
 
 // Function to redirect to login
-const redirectLogin = () => {
+export const redirectLogin = () => {
   window.location.href = "/login";
 };
 
