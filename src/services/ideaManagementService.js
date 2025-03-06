@@ -1,0 +1,36 @@
+import axios from "axios";
+import Cookies from "js-cookie";
+
+export const getAccessToken = () => {
+  const token = Cookies.get("accesstoken");
+  console.log("Retrieved Token:", token); 
+  return token;
+};
+
+export const getAllIdeasService = async (pageNumber = 1, limit = 5) => {
+  try {
+    const token = getAccessToken(); 
+    console.log("Using Token:", token);
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/ideas/?page=${pageNumber}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+          Accept: "application/json",
+        },
+      }
+    );
+    
+    console.log("Fetched Ideas:", response.data); // Log response data
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ideas:", error.response ? error.response.data : error.message);
+    
+    if (error.response) {
+      throw new Error(error.response.data.message || "Fetch All Ideas failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+};

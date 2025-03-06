@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import uniImage from "@/public/images/uni.png";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,10 +19,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
 import { loginService } from "@/services/loginService";
 import LoadingButton from "../shared/common/Button";
 import { TokenKeys } from "@/constants/tokenKeys";
+import Cookies from "js-cookie";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -55,6 +54,8 @@ const LoginForm = () => {
       const data = await loginService(values.username, values.password);
       localStorage.setItem(TokenKeys.accesstoken, data.access_token);
       localStorage.setItem(TokenKeys.refreshtoken, data.refresh_token);
+      Cookies.set("accesstoken", data.access_token, { expires: 1 }); // 1 day expiry
+      Cookies.set("refreshtoken", data.refresh_token, { expires: 7 });
       router.push("/");
     } catch (error) {
       setError(error.message);

@@ -2614,6 +2614,7 @@ __metadata:
     draft-js: "npm:0.11.7"
     eslint: "npm:^8"
     eslint-config-next: "npm:14.2.23"
+    js-cookie: "npm:^3.0.5"
     lucide-react: "npm:^0.474.0"
     next: "npm:14.2.23"
     postcss: "npm:^8"
@@ -3543,6 +3544,13 @@ __metadata:
   bin:
     jiti: bin/jiti.js
   checksum: 10c0/77b61989c758ff32407cdae8ddc77f85e18e1a13fc4977110dbd2e05fc761842f5f71bce684d9a01316e1c4263971315a111385759951080bbfe17cbb5de8f7a
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "js-cookie@npm:3.0.5"
+  checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
   languageName: node
   linkType: hard
 
