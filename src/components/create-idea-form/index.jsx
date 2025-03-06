@@ -38,6 +38,8 @@ const CreateIdeaForm = () => {
     handleUploadFiles,
     handleCancelUpload,
     onSubmit,
+    handleAnonymousToggle,
+    isAnonymous,
     allCategories,
   } = useCreateIdeaForm();
 
@@ -50,6 +52,7 @@ const CreateIdeaForm = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex-[8] space-y-4"
           >
+            {/* Thumbnail Image Field */}
             <div
               {...getRootProps()}
               className="border-2 border-solid border-slate-300 flex justify-center items-center p-4 text-center cursor-pointe h-[434px] rounded-lg"
@@ -91,7 +94,7 @@ const CreateIdeaForm = () => {
               )}
             </div>
 
-            <div className={`${allCategories.length === 0 && 'opacity-50 select-none cursor-progress'}`}>
+            <div className={`${allCategories.length === 0 && 'opacity-50 select-none cursor-progress pointer-events-none'}`}>
               <label className="text-gray-400" htmlFor="category">
                 Category
               </label>
@@ -153,15 +156,15 @@ const CreateIdeaForm = () => {
                 />
               </div>
               {errors.content && (
-                <p className="text-pink-500 text-sm">
+                <p className="text-red-500 text-sm">
                   {errors.content.message}
                 </p>
               )}
             </div>
 
             <div className="flex items-center space-x-2">
-              <Checkbox onCheckedChange={(val) => setValue("agree", val)} />
-              <span>I agree to the terms and conditions</span>
+              <Checkbox name="terms" id="terms" onCheckedChange={(val) => setValue("agree", val)} />
+              <label htmlFor="terms">I agree to the terms and conditions</label>
             </div>
             {errors.agree && (
               <p className="text-red-500 text-sm">{errors.agree.message}</p>
@@ -169,6 +172,10 @@ const CreateIdeaForm = () => {
 
             <Button className="w-full" type="submit">
               Upload Idea
+            </Button>
+
+            <Button onClick={handleAnonymousToggle} className="ml-auto table" variant="ghost" type="button">
+              Switch as {isAnonymous ? 'User' : 'Anonymous'}
             </Button>
           </form>
 
@@ -215,9 +222,6 @@ const CreateIdeaForm = () => {
       {/* Upload Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
-          {/* <DialogHeader>
-            <DialogTitle>Upload Files</DialogTitle>
-          </DialogHeader> */}
           <div
             {...getFileRootProps()}
             className="border-2 border-solid border-slate-300 flex justify-center items-center p-4 text-center cursor-pointe w-full h-[434px] rounded-lg"

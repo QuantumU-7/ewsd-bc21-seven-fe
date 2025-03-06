@@ -1,3 +1,4 @@
+import { redirectLogin } from "@/api/config";
 import { getAccessToken } from "@/utils/tokenManagement";
 import axios from "axios";
 
@@ -21,7 +22,7 @@ export const getAllCategories = async () => {
         console.error("Error fetching ideas:", error.response ? error.response.data : error.message);
         
         if (error.response) {
-          throw new Error(error.response.data.message || "Fetch All Ideas failed");
+          throw new Error(error.response.data.message || "Fetch All Categories failed");
         } else {
           throw new Error("Something went wrong. Please try again.");
         }
