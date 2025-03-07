@@ -20,6 +20,12 @@ import {
 
 /* components */
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { handleLogout } from "@/utils/authentication";
 
 const NavigationBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,9 +64,31 @@ const NavigationBar = () => {
             <Button>Upload Idea</Button>
           </Link>
 
-          <Link href={USER_PROFILE}>
-            <Image src={profile} width={28} height={28} alt="user profile" />
-          </Link>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="cursor-pointer">
+                <Image
+                  src={profile}
+                  width={28}
+                  height={28}
+                  alt="user profile"
+                />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+              <p
+                className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleViewIdea(idea.id)}
+              >
+                Welcome, User
+              </p>
+              <div className="border-t"></div>
+              <p onClick={handleLogout} className="text-sm p-2 cursor-pointer hover:bg-gray-100">
+                Logout
+              </p>
+              <div className="border-t"></div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         {/* Mobile Menu Button */}
@@ -95,9 +123,32 @@ const NavigationBar = () => {
           <Link href={UPLOAD_IDEA} onClick={() => setIsOpen(false)}>
             <Button>Upload Idea</Button>
           </Link>
-          <Link href={USER_PROFILE} onClick={() => setIsOpen(false)}>
-            <Image src={profile} width={28} height={28} alt="user profile" />
-          </Link>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="cursor-pointer">
+                <Image
+                  src={profile}
+                  width={28}
+                  height={28}
+                  alt="user profile"
+                />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+              <p
+                className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleViewIdea(idea.id)}
+              >
+                Welcome, User
+              </p>
+              <div className="border-t"></div>
+              <p onClick={handleLogout} className="text-sm p-2 cursor-pointer hover:bg-gray-100">
+                Logout
+              </p>
+              <div className="border-t"></div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </nav>
