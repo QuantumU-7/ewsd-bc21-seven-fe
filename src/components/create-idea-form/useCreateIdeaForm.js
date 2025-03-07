@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorState, convertToRaw } from "draft-js";
 import { getAllCategories } from "@/services/categoryManagementService";
 import draftToHtml from "draftjs-to-html";
+import { createNewIdeaService } from "@/services/ideaManagementService";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -33,26 +35,45 @@ export const useCreateIdeaForm = () => {
   const [modalFiles, setModalFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allCategories, setAllCategories] = useState([]);
-  const [ isAnonymous, setIsAnonymous] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   useEffect(() => {
     const fetchAllCategories = async () => {
       try {
         const data = await getAllCategories();
         setAllCategories(data);
-        console.log({data});
+        console.log({ data });
       } catch (error) {
         console.error(error.message);
       }
     };
 
     fetchAllCategories();
-    setValue("isAnonymous", isAnonymous)
+    setValue("isAnonymous", isAnonymous);
   }, []);
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
 
   const onDrop = (acceptedFiles) => {
     setImage(acceptedFiles[0]);
     setValue("image", acceptedFiles[0]);
+
+    // const file = acceptedFiles[0];
+    // setImage(file);
+
+    // const reader = new FileReader();
+    // reader.readAsDataURL(file);
+    // reader.onloadend = () => {
+    //   console.log({ imageData: reader.result });
+    //   setValue("image", reader.result);
+    // };
   };
 
   const handleEditorChange = (state) => {
@@ -89,13 +110,49 @@ export const useCreateIdeaForm = () => {
   };
 
   const handleAnonymousToggle = () => {
-    setValue("isAnonymous",!isAnonymous);
+    setValue("isAnonymous", !isAnonymous);
     setIsAnonymous(!isAnonymous);
   };
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
-  };
+  // Fix for the onSubmit function
+const onSubmit = async (data) => {
+  try {
+    const formData = new FormData();
+
+    // Append text fields with exact names from the API documentation
+    formData.append("title", data.title);
+    // Make sure this matches the API's expected field name (description not content)
+    formData.append("description", data.content);
+    // Convert to number to ensure proper format
+    formData.append("category_id", Number(data.facility));
+    formData.append("posted_by", Number(1)); // Converting to number explicitly
+    // Make sure boolean is properly serialized
+    formData.append("is_posted_anon", data.isAnonymous === true ? "true" : "false");
+
+    // Append thumbnail file (image)
+    if (data.image instanceof File) {
+      formData.append("thumbnail", data.image);
+    }
+
+    // Append files as separate entries, not as an array
+    if (files.length > 0) {
+      files.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append(`files`, file);
+        }
+      });
+    }
+
+    console.log("About to submit form data");
+    
+    const result = await createNewIdeaService(formData);
+    console.log("API Response:", result);
+    toast.success("Idea created successfully!");
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    toast.error(error.message || "Failed to create idea");
+  }
+};
 
   return {
     register,
@@ -112,7 +169,7 @@ export const useCreateIdeaForm = () => {
     getFileRootProps,
     getFileInputProps,
     isModalOpen,
-    setIsModalOpen,   
+    setIsModalOpen,
     modalFiles,
     files,
     setFiles,
