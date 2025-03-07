@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-full`}
       >
         <LayoutWrapper>{children}</LayoutWrapper>
-        <Toaster/>
+        <Toaster />
       </body>
     </html>
   );

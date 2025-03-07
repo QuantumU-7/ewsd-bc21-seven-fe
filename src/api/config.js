@@ -28,7 +28,7 @@ async function getRefreshToken() {
 
   try {
     const response = await refreshApi.post(
-      `/common/auth/refresh-token`,
+      `/token/refresh`,
       { refresh_token: refreshToken },
       {
         headers: {
