@@ -2,13 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  Heart,
-  ThumbsDown,
-  Eye,
-  Loader2
-} from "lucide-react";
+import { ArrowLeft, Heart, ThumbsDown, Eye, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -35,7 +29,6 @@ const IdeaDetailPage = () => {
       try {
         const response = await getIdeaById(params.id);
         setIdea(response);
-        
       } catch (error) {
         console.error("Error fetching idea details:", error);
         toast.error("Something went wrong!");
@@ -59,13 +52,14 @@ const IdeaDetailPage = () => {
       }
 
       const response = await toggleLikeIdea(id, isLike);
-      
+
       // Update idea with new like/dislike counts from response
       if (response && response.data) {
-        setIdea(prevIdea => ({
+        setIdea((prevIdea) => ({
           ...prevIdea,
           likes_count: response.data.likes_count || prevIdea.likes_count,
-          dislikes_count: response.data.dislikes_count || prevIdea.dislikes_count
+          dislikes_count:
+            response.data.dislikes_count || prevIdea.dislikes_count,
         }));
       }
     } catch (error) {
@@ -81,20 +75,20 @@ const IdeaDetailPage = () => {
     }
   };
 
-  const handleCommentSubmit = async() => {
+  const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
-    
+
     setCommentLoading(true);
     try {
       const res = await createComment(params.id, isAnonymous, commentText);
-      
+
       // Update the idea state with the new comment
       if (res && res.data) {
         const newComment = res.data;
-        setIdea(prevIdea => ({
+        setIdea((prevIdea) => ({
           ...prevIdea,
           comments: [newComment, ...(prevIdea.comments || [])],
-          comments_count: (prevIdea.comments_count || 0) + 1
+          comments_count: (prevIdea.comments_count || 0) + 1,
         }));
       }
 
@@ -102,7 +96,7 @@ const IdeaDetailPage = () => {
       setCommentText("");
       setIsAnonymous(false);
       toast.success("Comment posted successfully!");
-    } catch(e) {
+    } catch (e) {
       toast.error("Failed to post comment");
       console.log(e);
     } finally {
@@ -117,7 +111,7 @@ const IdeaDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto my-8 px-4 flex justify-center">
+      <div className="max-w-3xl h-[77.5vh] overflow-auto mx-auto my-8 px-4 flex justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -125,7 +119,7 @@ const IdeaDetailPage = () => {
 
   if (!idea) {
     return (
-      <div className="max-w-3xl mx-auto my-8 px-4">
+      <div className="max-w-3xl h-[77.5vh] overflow-auto mx-auto my-8 px-4">
         <h2 className="text-2xl font-bold">Idea not found</h2>
         <Button
           className="mt-4"
@@ -148,7 +142,7 @@ const IdeaDetailPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto my-8 h-[42vw] overflow-auto">
+    <div className="max-w-7xl h-[77.5vh] overflow-auto mx-auto my-8">
       <Button variant="ghost" size="sm" onClick={() => router.back()}>
         <ArrowLeft className="h-4 w-4" />
       </Button>
@@ -156,7 +150,10 @@ const IdeaDetailPage = () => {
       <div className="w-full h-[450px] flex gap-7 p-2">
         <div className="w-2/3 h-full relative flex justify-center">
           <Image
-            src={idea.thumbnail || "https://images.unsplash.com/photo-1562825606-7e7187e44a83?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+            src={
+              idea.thumbnail ||
+              "https://images.unsplash.com/photo-1562825606-7e7187e44a83?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            }
             alt="idea detail logo"
             fill
             style={{ objectFit: "cover" }}
@@ -192,17 +189,21 @@ const IdeaDetailPage = () => {
                     href="#"
                     className="text-sm text-gray-700 hover:text-blue-600"
                   >
-                    {typeof doc === 'object' ? doc.filename || 'Unnamed document' : doc}
+                    {typeof doc === "object"
+                      ? doc.filename || "Unnamed document"
+                      : doc}
                   </a>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500 text-center">No documents available</p>
+              <p className="text-sm text-gray-500 text-center">
+                No documents available
+              </p>
             )}
           </div>
         </div>
       </div>
-      
+
       {/* Content and interactions section */}
       <div className="w-full flex gap-7 p-2">
         <div className="w-2/3 gap-7 flex">
@@ -211,26 +212,32 @@ const IdeaDetailPage = () => {
             <div className="w-full flex justify-between">
               <div className="flex gap-3">
                 <Avatar>
-                  <AvatarFallback>{idea.posted_by.firstname.charAt(0) || 'U'}</AvatarFallback>
+                  <AvatarFallback>
+                    {idea.posted_by.firstname.charAt(0) || "U"}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="font-medium">{`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</p>
                   <p className="text-sm text-gray-500 flex items-center">
-                    {idea.category.name || 'Uncategorized'}
+                    {idea.category.name || "Uncategorized"}
                   </p>
                 </div>
               </div>
               <p className="text-sm text-gray-500 flex items-center">
-                {idea.posted_on ? formatDate(idea.posted_on) : 'Date unavailable'}
+                {idea.posted_on
+                  ? formatDate(idea.posted_on)
+                  : "Date unavailable"}
               </p>
             </div>
-            
+
             {/* Idea content */}
             <div className="my-3">
               <p className="text-2xl font-bold text-primary mb-2">
-                {idea.title || 'Untitled'}
+                {idea.title || "Untitled"}
               </p>
-              <p className="text-gray-700 mb-7">{idea.description || 'No description available'}</p>
+              <p className="text-gray-700 mb-7">
+                {idea.description || "No description available"}
+              </p>
 
               {/* Comments section */}
               <div>
@@ -247,41 +254,44 @@ const IdeaDetailPage = () => {
                       className="mb-2"
                       disabled={commentLoading}
                     />
-                    
+
                     <div className="flex justify-between items-center">
                       <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="anonymous" 
+                        <Checkbox
+                          id="anonymous"
                           checked={isAnonymous}
                           onCheckedChange={setIsAnonymous}
                           disabled={commentLoading}
                         />
-                        <label 
-                          htmlFor="anonymous" 
+                        <label
+                          htmlFor="anonymous"
                           className="text-sm text-gray-600 cursor-pointer"
                         >
                           Post anonymously
                         </label>
                       </div>
-                      
+
                       {(commentText.trim() !== "" || commentLoading) && (
                         <div>
-                          <Button 
-                            size="sm" 
-                            variant="ghost" 
+                          <Button
+                            size="sm"
+                            variant="ghost"
                             onClick={handleCancelComment}
                             disabled={commentLoading}
                           >
                             Cancel
                           </Button>
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             className="ml-2"
                             onClick={handleCommentSubmit}
                             disabled={commentLoading || !commentText.trim()}
                           >
                             {commentLoading ? (
-                              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Posting...</>
+                              <>
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />{" "}
+                                Posting...
+                              </>
                             ) : (
                               "Comment"
                             )}
@@ -303,20 +313,28 @@ const IdeaDetailPage = () => {
                         <div className="flex gap-3">
                           <Avatar>
                             <AvatarFallback>
-                              {typeof comment.user === 'string' ? comment.user.charAt(0) : 'U'}
+                              {typeof comment.user === "string"
+                                ? comment.user.charAt(0)
+                                : "U"}
                             </AvatarFallback>
                           </Avatar>
                           <div className="leading-3">
                             <div className="flex items-baseline justify-between gap-2">
-                              <p className="font-bold">{typeof comment.user === 'string' ? comment.user : 'Anonymous'}</p>
+                              <p className="font-bold">
+                                {typeof comment.user === "string"
+                                  ? comment.user
+                                  : "Anonymous"}
+                              </p>
                             </div>
                             <p className="mt-1 text-gray-700 text-sm">
-                              {comment.text || 'No comment text'}
+                              {comment.text || "No comment text"}
                             </p>
                           </div>
                         </div>
                         <p className="text-xs text-gray-500">
-                          {comment.posted_on ? formatDate(comment.posted_on) : 'Date unavailable'}
+                          {comment.posted_on
+                            ? formatDate(comment.posted_on)
+                            : "Date unavailable"}
                         </p>
                       </div>
                     ))}
@@ -330,46 +348,36 @@ const IdeaDetailPage = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Like/Dislike interactions */}
         <div className="w-1/3 pt-[4vw]">
           <div className="w-[2vw] space-y-4">
             {/* Like button with loading state */}
-            <div 
+            <div
               className="flex flex-col justify-center items-center cursor-pointer"
               onClick={() => !likeLoading && toggleLike(idea.id, true)}
             >
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
               ) : (
-                <Heart 
-                  className="text-red-600" 
-                  size={24}
-                />
+                <Heart className="text-red-600" size={24} />
               )}
-              <p className="text-sm">
-                {idea.likes_count}
-              </p>
+              <p className="text-sm">{idea.likes_count}</p>
             </div>
-            
+
             {/* Dislike button with loading state */}
-            <div 
+            <div
               className="flex flex-col justify-center items-center cursor-pointer"
               onClick={() => !dislikeLoading && toggleLike(idea.id, false)}
             >
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
               ) : (
-                <ThumbsDown 
-                  className="text-primary" 
-                  size={24}
-                />
+                <ThumbsDown className="text-primary" size={24} />
               )}
-              <p className="text-sm">
-                {idea.dislikes_count}
-              </p>
+              <p className="text-sm">{idea.dislikes_count}</p>
             </div>
-            
+
             {/* Views count (no interaction) */}
             <div className="flex flex-col justify-center items-center">
               <Eye className="text-primary" />
