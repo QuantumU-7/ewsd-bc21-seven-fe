@@ -1,6 +1,6 @@
 import actionApi from "@/api/config";
 
-export const getAllIdeaService = async (page) => {
+export const getAllIdeaService = async (page = 1) => {
   try {
     const response = await actionApi().get("/ideas", {
       params: {
