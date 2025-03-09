@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 const IdeaCard = ({ id, title, description, image }) => {
+  console.log({image})
   return (
     <div className="cursor-pointer">
       <div className="flex flex-col lg:flex-row rounded-md overflow-hidden bg-white shadow-lg">

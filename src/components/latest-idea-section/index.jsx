@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/pagination";
 import { getAllIdeasService } from "@/services/ideaManagementService";
 import LoadingIdeaCard from "../shared/common/idea-card/LoadingIdeaCard";
+import Link from "next/link";
 
 // const ideas = [
 //   {
@@ -61,16 +62,20 @@ const LatestIdeaSection = () => {
   const [ideas, setIdeas] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 5; // Number of ideas per page
+  const [loading, setLoading] = useState(false);
+  const limit = 5;
 
   useEffect(() => {
     const fetchIdeas = async () => {
+      setLoading(true);
       try {
         const data = await getAllIdeasService(currentPage, limit);
-        setIdeas(data.data); // Adjust based on API response structure
-        setTotalPages(data.pagination.total_pages || 1); // Adjust if the API returns total pages
+        setIdeas(data.data);
+        setTotalPages(data.pagination.total_pages || 1);
         console.log(data);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error(error.message);
       }
     };
@@ -81,41 +86,48 @@ const LatestIdeaSection = () => {
   return (
     <section className="my-28">
       <div className="max-w-7xl mx-auto px-4 space-y-6">
-        {ideas.length === 0 ? (
-          <LoadingIdeaCard />
-        ) : (
-          ideas.map((idea) => (
-            <IdeaCard
-              key={idea.id}
-              id={idea.id}
-              title={idea.title}
-              description={idea.description}
-              image={idea.thumbnail}
-            />
-          ))
-        )}
+        {ideas.length === 0 || loading
+          ? [...Array(5)].map((_, index) => <LoadingIdeaCard key={index} />)
+          : ideas.map((idea) => (
+              <div>
+                <Link href={`/ideas/${idea.id}`}>
+                  <IdeaCard
+                    key={idea.id}
+                    id={idea.id}
+                    title={idea.title}
+                    description={idea.description}
+                    image={idea.thumbnail}
+                  />
+                </Link>
+              </div>
+            ))}
 
-        <Pagination>
+        <Pagination className={`${loading && "pointer-events-none opacity-45"}`}>
           <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
+            <PaginationItem className="cursor-pointer">
+              <PaginationPrevious
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              />
             </PaginationItem>
-            <PaginationItem>
-              <PaginationLink isActive href="#">
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
+            {[...Array(totalPages)].map((_, index) => (
+              <PaginationItem key={index} className="cursor-pointer">
+                <PaginationLink
+                  isActive={currentPage === index + 1}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            {totalPages > 3 && <PaginationEllipsis />}
+            <PaginationItem className="cursor-pointer">
+              <PaginationNext
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              />
             </PaginationItem>
           </PaginationContent>
         </Pagination>

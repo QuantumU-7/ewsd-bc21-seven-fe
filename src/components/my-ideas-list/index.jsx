@@ -49,7 +49,7 @@ const MyIdeasListForm = () => {
 
   const handleViewIdea = async (ideaId) => {
     try {
-      router.push(`/my-ideas/${ideaId}`);
+      router.push(`/ideas/${ideaId}`);
     } catch (error) {
       console.error("Error navigating to idea details:", error);
     }
