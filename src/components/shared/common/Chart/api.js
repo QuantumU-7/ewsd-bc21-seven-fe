@@ -1,24 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ideasByCategoryService } from "@/services/ideasByCategoryService";
+import { contributorsByDepartmentService } from "@/services/contributorsByDepartmentService";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const chartConfig = {
-  count: {
-    label: "Ideas Count",
+  contributors: {
+    label: "Contributors",
     color: "hsl(var(--chart-1))",
   },
 };
 
-export function CategoryChart() {
+export function HorizontalBarChart() {
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -27,11 +27,11 @@ export function CategoryChart() {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const categoryData = await ideasByCategoryService();
-        if (categoryData) {
-          const formattedData = categoryData.labels.map((label, index) => ({
-            category: label,
-            count: categoryData.data[index],
+        const departmentData = await contributorsByDepartmentService();
+        if (departmentData) {
+          const formattedData = departmentData.labels.map((label, index) => ({
+            department: label,
+            contributors: departmentData.data[index],
           }));
           setChartData(formattedData);
         } else {
@@ -39,7 +39,7 @@ export function CategoryChart() {
         }
         setError("");
       } catch (err) {
-        setError("Failed to load category data. Please try again later.");
+        setError("Failed to load contributors data. Please try again later.");
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -53,7 +53,7 @@ export function CategoryChart() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Ideas By Category</CardTitle>
+          <CardTitle>Contributors By Department</CardTitle>
         </CardHeader>
         <CardContent className="flex justify-center items-center h-64">
           <p className="text-red-500">{error}</p>
@@ -65,41 +65,34 @@ export function CategoryChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ideas By Category</CardTitle>
+        <CardTitle>Contributors By Department</CardTitle>
       </CardHeader>
       {isLoading ? (
         <CardContent className="space-y-4">
           <Skeleton className="h-[8vw] w-full" />
         </CardContent>
       ) : (
-        <CardContent className="pb-0">
+        <CardContent>
           <ChartContainer config={chartConfig}>
             <BarChart
               accessibilityLayer
               data={chartData}
-              margin={{
-                top: 20,
-              }}
+              layout="vertical"
+              margin={{ left: 0 }}
             >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="category"
+              <YAxis
+                dataKey="department"
+                type="category"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
               />
+              <XAxis dataKey="contributors" type="number" hide />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
-              <Bar dataKey="count" fill="var(--color-count)" radius={8}>
-                <LabelList
-                  position="top"
-                  offset={12}
-                  className="text-foreground"
-                  fontSize={12}
-                />
-              </Bar>
+              <Bar dataKey="contributors" layout="vertical" radius={5} />
             </BarChart>
           </ChartContainer>
         </CardContent>

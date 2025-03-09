@@ -1,135 +1,188 @@
-import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Ellipsis, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getAllIdeaService } from "@/services/getAllIdeas";
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
+  PopoverContent,
 } from "@/components/ui/popover";
+import { Ellipsis } from "lucide-react";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
+import { TableCell, TableRow } from "@/components/ui/table";
+import CommonTable from "@/components/shared/common/Table";
+import CommonPagination from "@/components/shared/common/Pagination";
 
-// Format date to a more readable format
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
-
-const IdeaTable = ({
-  ideas,
-  loading,
-  handleViewIdea,
-  handleEditIdea,
-  handleDeleteIdea,
-}) => {
+const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const router = useRouter();
 
-  const handleConfirm = () => {
-    if (deleteId) {
-      handleDeleteIdea(deleteId);
-      setDeleteId(null);
-      setOpenConfirmBox(false);
+  // If props are not provided, use local state and fetch data
+  const [localIdeas, setLocalIdeas] = useState([]);
+  const [localLoading, setLocalLoading] = useState(true);
+  const [localPagination, setLocalPagination] = useState({
+    totalRecords: 0,
+    currentPage: 1,
+    totalPages: 1,
+    nextPage: null,
+    prevPage: null,
+  });
+
+  // Fetch ideas based on page number (for standalone mode)
+  const fetchIdeas = async (page) => {
+    setLocalLoading(true);
+    try {
+      const response = await getAllIdeaService(page);
+      setLocalIdeas(response.data);
+      setLocalPagination({
+        totalRecords: response.pagination.total_records,
+        currentPage: response.pagination.current_page,
+        totalPages: response.pagination.total_pages,
+        nextPage: response.pagination.next_page,
+        prevPage: response.pagination.prev_page,
+      });
+    } catch (error) {
+      console.error("Error fetching ideas:", error);
+    } finally {
+      setLocalLoading(false);
     }
   };
 
-  const handleCancel = () => {
-    setDeleteId(null);
-    setOpenConfirmBox(false);
+  // Handle page change in standalone mode
+  const handleLocalPageChange = async (page) => {
+    fetchIdeas(page);
+  };
+
+  // Initial fetch on component mount (only if used in standalone mode)
+  useEffect(() => {
+    if (!ideas) {
+      fetchIdeas(1);
+    }
+  }, [ideas]);
+
+  const handleView = (ideaId) => {
+    router.push(`/ideas/${ideaId}`);
+  };
+
+  const handleEdit = (ideaId) => {
+    router.push(`/ideas/edit/${ideaId}`);
+  };
+
+  const handleDelete = async (ideaId) => {
+    try {
+      console.log("Idea deleted:", ideaId);
+      // Refresh the current page data - use appropriate function based on mode
+      if (handlePageChange) {
+        handlePageChange(pagination.currentPage);
+      } else {
+        fetchIdeas(localPagination.currentPage);
+      }
+    } catch (error) {
+      console.error("Error deleting idea:", error);
+    }
+  };
+
+  // Determine which data to use - props or local state
+  const displayIdeas = ideas || localIdeas;
+  const isLoading = loading !== undefined ? loading : localLoading;
+  const currentPagination = pagination || localPagination;
+  const pageChangeHandler = handlePageChange || handleLocalPageChange;
+
+  // Generate table body based on ideas data
+  const renderTableBody = () => {
+    if (displayIdeas.length === 0 && !isLoading) {
+      return (
+        <TableRow>
+          <TableCell colSpan={7} className="text-center py-8">
+            No ideas found
+          </TableCell>
+        </TableRow>
+      );
+    }
+
+    return displayIdeas.map((idea) => (
+      <TableRow key={idea.id} className="border-b">
+        <TableCell>{idea.title}</TableCell>
+        <TableCell>{idea.likes_count}</TableCell>
+        <TableCell>{idea.dislikes_count}</TableCell>
+        <TableCell>{idea.comments_count}</TableCell>
+        <TableCell>{idea.category?.name || "Uncategorized"}</TableCell>
+        <TableCell>{new Date(idea.posted_on).toLocaleDateString()}</TableCell>
+        <TableCell>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="cursor-pointer flex justify-end">
+                <Ellipsis className="text-gray-500" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+              <p
+                className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleView(idea.id)}
+              >
+                View
+              </p>
+              <div className="border-t"></div>
+              <p
+                className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleEdit(idea.id)}
+              >
+                Edit
+              </p>
+              <div className="border-t"></div>
+              <p
+                className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => {
+                  setDeleteId(idea.id);
+                  setOpenConfirmBox(true);
+                }}
+              >
+                Delete
+              </p>
+            </PopoverContent>
+          </Popover>
+        </TableCell>
+      </TableRow>
+    ));
   };
 
   return (
     <>
-      <Table>
-        <TableHeader className="bg-primary">
-          <TableRow>
-            <TableHead className="text-white">Title</TableHead>
-            <TableHead className="text-white">Total Likes</TableHead>
-            <TableHead className="text-white">Total Dislikes</TableHead>
-            <TableHead className="text-white">Total Comments</TableHead>
-            <TableHead className="text-white">Category</TableHead>
-            <TableHead className="text-white">Posted On</TableHead>
-            <TableHead className="text-white"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {loading ? (
-            <TableRow>
-              <TableCell colSpan={7} className="text-center py-8">
-                <div className="flex justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                </div>
-              </TableCell>
-            </TableRow>
-          ) : ideas.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={7} className="text-center py-8">
-                No ideas found.
-              </TableCell>
-            </TableRow>
-          ) : (
-            ideas.map((idea) => (
-              <TableRow key={idea.id} className="border-b">
-                <TableCell>{idea.title}</TableCell>
-                <TableCell>{idea.likes_count}</TableCell>
-                <TableCell>{idea.dislikes_count}</TableCell>
-                <TableCell>{idea.comments_count}</TableCell>
-                <TableCell>{idea.category.name}</TableCell>
-                <TableCell>{formatDate(idea.posted_on)}</TableCell>
-                <TableCell>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <div className="cursor-pointer">
-                        <Ellipsis className="text-gray-500 ml-auto" />
-                      </div>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-                      <p
-                        className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleViewIdea(idea.id)}
-                      >
-                        View
-                      </p>
-                      <div className="border-t"></div>
-                      <p
-                        className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleEditIdea(idea.id)}
-                      >
-                        Edit
-                      </p>
-                      <div className="border-t"></div>
-                      <p
-                        className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => {
-                          setDeleteId(idea.id);
-                          setOpenConfirmBox(true);
-                        }}
-                      >
-                        Delete
-                      </p>
-                    </PopoverContent>
-                  </Popover>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+      <CommonTable
+        columns={[
+          "Title",
+          "Total Likes",
+          "Total Dislikes",
+          "Total Comments",
+          "Category",
+          "Posted On",
+          "",
+        ]}
+        loading={isLoading}
+        tableBody={renderTableBody()}
+      />
+      {/** Pagination */}
+      {!isLoading && currentPagination.totalPages > 0 && (
+        <div className="flex w-full mt-3">
+          <CommonPagination
+            currentPage={currentPagination.currentPage}
+            totalPages={currentPagination.totalPages}
+            onPageChange={pageChangeHandler}
+            position="end"
+          />
+        </div>
+      )}
       <ConfirmationBox
         title="Delete Idea"
         description="Are you sure you want to delete this idea?"
-        onConfirm={handleConfirm}
-        onCancel={handleCancel}
+        onConfirm={() => {
+          if (deleteId) {
+            handleDelete(deleteId);
+            setDeleteId(null);
+            setOpenConfirmBox(false);
+          }
+        }}
+        onCancel={() => setOpenConfirmBox(false)}
         isOpen={openConfirmBox}
         setIsOpen={setOpenConfirmBox}
       />
