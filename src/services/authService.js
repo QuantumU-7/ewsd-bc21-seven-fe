@@ -1,12 +1,8 @@
 import actionApi from "@/api/config";
 
-export const getAllIdeaService = async (page = 1) => {
+export const getMe = async () => {
   try {
-    const response = await actionApi().get("/ideas", {
-      params: {
-        page,
-      },
-    });
+    const response = await actionApi().get("/users/me");
     return response.data;
   } catch (error) {
     if (error.response) {

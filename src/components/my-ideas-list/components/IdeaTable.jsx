@@ -25,11 +25,22 @@ const formatDate = (dateString) => {
   });
 };
 
-const IdeaTable = ({ ideas, loading, handleViewIdea }) => {
+const IdeaTable = ({
+  ideas,
+  loading,
+  handleViewIdea,
+  handleEditIdea,
+  handleDeleteIdea,
+}) => {
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+
   const handleConfirm = () => {
-    console.log("Confirmed!");
+    if (deleteId) {
+      handleDeleteIdea(deleteId);
+      setDeleteId(null);
+      setOpenConfirmBox(false);
+    }
   };
 
   const handleCancel = () => {
@@ -90,7 +101,10 @@ const IdeaTable = ({ ideas, loading, handleViewIdea }) => {
                         View
                       </p>
                       <div className="border-t"></div>
-                      <p className="text-sm p-2 cursor-pointer hover:bg-gray-100">
+                      <p
+                        className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleEditIdea(idea.id)}
+                      >
                         Edit
                       </p>
                       <div className="border-t"></div>

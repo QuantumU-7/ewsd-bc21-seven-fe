@@ -20,6 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { loginService } from "@/services/loginService";
+import { getMe } from "@/services/authService";
 import LoadingButton from "../shared/common/Button";
 import { TokenKeys } from "@/constants/tokenKeys";
 import Cookies from "js-cookie";
@@ -52,6 +53,8 @@ const LoginForm = () => {
 
     try {
       const data = await loginService(values.username, values.password);
+      const me = await getMe();
+      localStorage.setItem(TokenKeys.user, JSON.stringify(me));
       localStorage.setItem(TokenKeys.accesstoken, data.access_token);
       localStorage.setItem(TokenKeys.refreshtoken, data.refresh_token);
       Cookies.set("accesstoken", data.access_token, { expires: 1 }); // 1 day expiry

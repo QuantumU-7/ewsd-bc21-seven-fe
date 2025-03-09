@@ -1,15 +1,37 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MostPopularTable from "./components/MostPopularTable";
-import MostViewdTable from "./components/MostViewdTable";
 import { CategoryChart } from "./components/CategoryChart";
 import { DepartmentChart } from "./components/DepartmentChart";
+import { getAllIdeaService } from "@/services/getAllIdeas";
+import MostViewedTable from "./components/MostViewdTable";
 
 const IdeasDashboard = () => {
+  const [ideas, setIdeas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchIdeas();
+  }, []);
+
+  const fetchIdeas = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllIdeaService();
+      setIdeas(response.data);
+    } catch (error) {
+      console.error("Error fetching ideas:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 my-8 px-4 h-[85vh] overflow-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <DepartmentChart />
-        <CategoryChart />
+        <DepartmentChart ideas={ideas} loading={loading} />
+        <CategoryChart ideas={ideas} loading={loading} />
       </div>
 
       <Tabs defaultValue="popular" className="w-full">
@@ -19,11 +41,11 @@ const IdeasDashboard = () => {
         </TabsList>
 
         <TabsContent value="popular" className="border rounded-md">
-          <MostPopularTable />
+          <MostPopularTable ideas={ideas} loading={loading} />
         </TabsContent>
 
         <TabsContent value="viewed" className="border rounded-md">
-          <MostViewdTable />
+          <MostViewedTable ideas={ideas} loading={loading} />
         </TabsContent>
       </Tabs>
     </div>
