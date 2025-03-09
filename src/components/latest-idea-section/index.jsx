@@ -89,7 +89,7 @@ const LatestIdeaSection = () => {
         {ideas.length === 0 || loading
           ? [...Array(5)].map((_, index) => <LoadingIdeaCard key={index} />)
           : ideas.map((idea) => (
-              <div>
+              <div key={idea.id}>
                 <Link href={`/ideas/${idea.id}`}>
                   <IdeaCard
                     key={idea.id}
