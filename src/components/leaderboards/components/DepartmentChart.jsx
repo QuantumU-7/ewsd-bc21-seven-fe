@@ -9,6 +9,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { ideasByDepartmentService } from "@/services/ideasByDepartmentService";
+import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Predefined color palette for departments
 const colorPalette = [
@@ -75,19 +77,6 @@ export function DepartmentChart() {
     loadData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Ideas By Department</CardTitle>
-        </CardHeader>
-        <CardContent className="flex justify-center items-center h-64">
-          <p>Loading data...</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   if (error) {
     return (
       <Card>
@@ -108,56 +97,62 @@ export function DepartmentChart() {
       <CardHeader>
         <CardTitle>Ideas By Department</CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[200px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="department"
-              innerRadius={60}
-              strokeWidth={5}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
+      {isLoading ? (
+        <CardContent className="space-y-4">
+          <Skeleton className="h-[8vw] w-full" />
+        </CardContent>
+      ) : (
+        <CardContent className="flex-1 pb-0">
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square max-h-[200px]"
+          >
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={chartData}
+                dataKey="visitors"
+                nameKey="department"
+                innerRadius={60}
+                strokeWidth={5}
+              >
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                      return (
+                        <text
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
                         >
-                          {totalIdeas.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          total
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
+                          <tspan
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            className="fill-foreground text-3xl font-bold"
+                          >
+                            {totalIdeas.toLocaleString()}
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={(viewBox.cy || 0) + 24}
+                            className="fill-muted-foreground"
+                          >
+                            total
+                          </tspan>
+                        </text>
+                      );
+                    }
+                  }}
+                />
+              </Pie>
+            </PieChart>
+          </ChartContainer>
+        </CardContent>
+      )}
     </Card>
   );
 }
