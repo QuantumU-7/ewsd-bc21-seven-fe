@@ -11,7 +11,6 @@ export default function LayoutWrapper({ children }) {
   // Define authentication routes
   const authRoutes = [LOGIN, REGISTER, FORGOT_PASSWORD];
   const shouldHideNavAndFooter = authRoutes.includes(pathname);
-
   return (
     <>
       {!shouldHideNavAndFooter && <NavigationBar />}
