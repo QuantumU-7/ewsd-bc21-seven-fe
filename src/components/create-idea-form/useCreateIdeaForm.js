@@ -52,15 +52,6 @@ export const useCreateIdeaForm = () => {
     setValue("isAnonymous", isAnonymous);
   }, []);
 
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
   const onDrop = (acceptedFiles) => {
     setImage(acceptedFiles[0]);
     setValue("image", acceptedFiles[0]);
@@ -136,7 +127,7 @@ const onSubmit = async (data) => {
 
     // Append files as separate entries, not as an array
     if (files.length > 0) {
-      files.forEach((file, index) => {
+      files.forEach((file) => {
         if (file instanceof File) {
           formData.append(`files`, file);
         }

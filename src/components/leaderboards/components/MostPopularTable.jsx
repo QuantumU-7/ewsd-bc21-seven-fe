@@ -1,6 +1,5 @@
 // In MostPopularTable.jsx
 import React from "react";
-import { Loader2 } from "lucide-react";
 import CommonTable from "@/components/shared/common/Table"; // Changed from destructuring import
 import { TableCell, TableRow } from "@/components/ui/table";
 

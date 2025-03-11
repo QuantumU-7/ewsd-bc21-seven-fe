@@ -15,7 +15,6 @@ import {
   LEADERBOARDS,
   MY_IDEAS,
   UPLOAD_IDEA,
-  USER_PROFILE,
 } from "@/constants/routes";
 
 /* components */
@@ -78,7 +77,6 @@ const NavigationBar = () => {
             <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
               <p
                 className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                onClick={() => handleViewIdea(idea.id)}
               >
                 Welcome, User
               </p>
@@ -138,7 +136,6 @@ const NavigationBar = () => {
             <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
               <p
                 className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                onClick={() => handleViewIdea(idea.id)}
               >
                 Welcome, User
               </p>

@@ -17,7 +17,7 @@ const IdeaCard = ({ id, title, description, image }) => {
 
         <div className="flex-1">
           {image ? (
-            <Image className="w-full" src={image} width={300} height={200} />
+            <Image className="w-full" src={image} width={300} height={200} alt={title}/>
           ) : (
             <p className="text-gray-500">No image provided</p>
           )}

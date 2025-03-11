@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 
 export function ConfirmationBox({
-  triggerText,
   title,
   description,
   onConfirm,

@@ -1,13 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAllIdeaService } from "@/services/getAllIdeas";
 import IdeaTable from "./components/IdeaTable";
 
 const QAManagerIdeasList = () => {
-  const router = useRouter();
 
   // Separate states for each tab
   const [allIdeas, setAllIdeas] = useState([]);
