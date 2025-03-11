@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 const IdeaCard = ({ id, title, description, image }) => {
+  console.log({image})
   return (
     <div className="cursor-pointer">
       <div className="flex flex-col lg:flex-row rounded-md overflow-hidden bg-white shadow-lg">
@@ -16,7 +17,7 @@ const IdeaCard = ({ id, title, description, image }) => {
 
         <div className="flex-1">
           {image ? (
-            <Image className="w-full" src={image} width={300} height={200} />
+            <Image className="w-full" src={image} width={300} height={200} alt={title}/>
           ) : (
             <p className="text-gray-500">No image provided</p>
           )}

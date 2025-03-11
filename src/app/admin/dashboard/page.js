@@ -1,7 +1,8 @@
+import QaMangerDashboard from "@/components/admin-dashboard/qa-manager";
 import React from "react";
 
 const AdminDashboardPage = () => {
-  return <div>AdminDashboardPage</div>;
+  return <QaMangerDashboard />;
 };
 
 export default AdminDashboardPage;

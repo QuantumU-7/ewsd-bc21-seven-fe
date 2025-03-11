@@ -21,7 +21,6 @@ const CreateIdeaForm = () => {
     register,
     handleSubmit,
     setValue,
-    watch,
     errors,
     editorState,
     handleEditorChange,
@@ -68,7 +67,7 @@ const CreateIdeaForm = () => {
                 <div className="space-y-2 text-gray-600">
                   <p>Drop Image Here</p>
                   <p>OR</p>
-                  <Button variant="outline" size="lg">
+                  <Button type="button" variant="outline" size="lg">
                     Browse
                   </Button>
                 </div>

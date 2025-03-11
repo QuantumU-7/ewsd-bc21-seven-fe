@@ -79,6 +79,7 @@ const ForgotPasswordForm = () => {
                 Back to Login
               </Link>
             </div>
+            {error && <p className="text-center text-destructive">{error}</p>}
           </div>
           <div className="w-1/2 h-full relative flex justify-center">
             <Image

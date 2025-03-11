@@ -1,6 +1,6 @@
 import { TokenKeys } from "@/constants/tokenKeys";
 import { decodeToken } from "react-jwt";
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 
 // Function to redirect to login
 export const redirectLogin = () => {
@@ -28,7 +28,7 @@ async function getRefreshToken() {
 
   try {
     const response = await refreshApi.post(
-      `/common/auth/refresh-token`,
+      `/token/refresh`,
       { refresh_token: refreshToken },
       {
         headers: {
@@ -39,16 +39,16 @@ async function getRefreshToken() {
     if (response.status === 200) {
       localStorage.setItem(
         TokenKeys.accesstoken,
-        response.data.data.access_token
+        response.data.access_token
       );
       localStorage.setItem(
         TokenKeys.refreshtoken,
-        response.data.data.refresh_token
+        response.data.refresh_token
       );
 
       return {
-        accessToken: response.data.data.access_token,
-        refreshToken: response.data.data.refresh_token,
+        accessToken: response.data.access_token,
+        refreshToken: response.data.refresh_token,
       };
     }
     return undefined;

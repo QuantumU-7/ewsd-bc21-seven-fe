@@ -1,44 +1,28 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+// In MostPopularTable.jsx
 import React from "react";
+import CommonTable from "@/components/shared/common/Table"; // Changed from destructuring import
+import { TableCell, TableRow } from "@/components/ui/table";
 
-const MostPopularTable = () => {
-  const popularIdeas = Array(10).fill({
-    title: "Improve Communication Channel",
-    author: "PHYO",
-    department: "Finance",
-    total_likes: 200,
-    category: "Facility",
-  });
+const MostPopularTable = ({ ideas, loading }) => {
+  const tableBody = ideas?.map((idea, index) => (
+    <TableRow key={index} className="border-b">
+      <TableCell className="font-medium">{idea.title}</TableCell>
+      <TableCell>{`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</TableCell>
+      <TableCell>{idea.department.name}</TableCell>
+      <TableCell>{idea.likes_count}</TableCell>
+      <TableCell>{idea.category.name}</TableCell>
+    </TableRow>
+  ));
+
   return (
-    <Table>
-      <TableHeader className="bg-primary">
-        <TableRow>
-          <TableHead className="text-white">Title</TableHead>
-          <TableHead className="text-white">Author</TableHead>
-          <TableHead className="text-white">Department</TableHead>
-          <TableHead className="text-white">Total Likes</TableHead>
-          <TableHead className="text-white">Category</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {popularIdeas.map((idea, index) => (
-          <TableRow key={index} className="border-b">
-            <TableCell className="font-medium">{idea.title}</TableCell>
-            <TableCell>{idea.author}</TableCell>
-            <TableCell>{idea.department}</TableCell>
-            <TableCell>{idea.total_likes}</TableCell>
-            <TableCell>{idea.category}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="max-w-7xl h-[40vh] overflow-auto mx-auto space-y-8 my-8 px-4">
+      <h2 className="text-2xl font-bold my-4">Most Popular Ideas</h2>
+      <CommonTable
+        columns={["Title", "Author", "Department", "Total Likes", "Category"]}
+        loading={loading}
+        tableBody={tableBody}
+      />
+    </div>
   );
 };
 
