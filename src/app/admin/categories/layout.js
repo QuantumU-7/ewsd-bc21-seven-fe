@@ -1,4 +1,3 @@
-import {AdminSidebar} from "@/components/admin-sidebar/AdminSidebar";
 import {CategoryProvider} from "@/providers/CategoryContext";
 
 export default function CategoryLayout({children}) {

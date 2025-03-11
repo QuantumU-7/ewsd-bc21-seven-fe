@@ -1,4 +1,4 @@
-import { LayoutDashboard, FolderKanban, Calendar, Lightbulb, Users } from "lucide-react";
+import { LayoutDashboard, FolderKanban, Lightbulb, Users } from "lucide-react";
 import {
 	ADMIN
 } from "@/constants/routes"

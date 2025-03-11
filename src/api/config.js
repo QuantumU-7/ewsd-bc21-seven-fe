@@ -1,6 +1,6 @@
 import { TokenKeys } from "@/constants/tokenKeys";
 import { decodeToken } from "react-jwt";
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 
 // Function to redirect to login
 export const redirectLogin = () => {

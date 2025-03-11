@@ -1,5 +1,4 @@
 "use client";
-import React, { useState } from "react";
 import IdeaTable from "./components/IdeaTable";
 
 const MyIdeasListForm = () => {

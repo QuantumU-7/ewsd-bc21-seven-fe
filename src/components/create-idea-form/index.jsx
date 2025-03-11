@@ -21,7 +21,6 @@ const CreateIdeaForm = () => {
     register,
     handleSubmit,
     setValue,
-    watch,
     errors,
     editorState,
     handleEditorChange,

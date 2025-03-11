@@ -19,7 +19,6 @@ const CategoryManagementForm = ({ isEditing = false }) => {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(formSchema),
@@ -28,9 +27,7 @@ const CategoryManagementForm = ({ isEditing = false }) => {
   const params = useParams();
 
   const {
-    categories,
     loading,
-    error,
     addCategory,
     editCategory,
     editingCategory,
