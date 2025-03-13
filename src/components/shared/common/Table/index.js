@@ -2,12 +2,10 @@ import React from "react";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader2 } from "lucide-react";
 import TableLoading from "../TableLoading/TableLoading";
 
 const CommonTable = ({ columns = [], loading = false, tableBody = <></> }) => {

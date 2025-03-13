@@ -14,6 +14,7 @@ import {
 import { getAllIdeasService } from "@/services/ideaManagementService";
 import LoadingIdeaCard from "../shared/common/idea-card/LoadingIdeaCard";
 import Link from "next/link";
+import CommonPagination from "../shared/common/Pagination";
 
 // const ideas = [
 //   {
@@ -102,7 +103,7 @@ const LatestIdeaSection = () => {
               </div>
             ))}
 
-        <Pagination className={`${loading && "pointer-events-none opacity-45"}`}>
+        {/* <Pagination className={`${loading && "pointer-events-none opacity-45"}`}>
           <PaginationContent>
             <PaginationItem className="cursor-pointer">
               <PaginationPrevious
@@ -130,7 +131,15 @@ const LatestIdeaSection = () => {
               />
             </PaginationItem>
           </PaginationContent>
-        </Pagination>
+        </Pagination> */}
+
+        <CommonPagination
+          isLoading={loading}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          position="center"
+        />
       </div>
     </section>
   );

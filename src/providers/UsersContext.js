@@ -4,7 +4,6 @@ import { createContext, useContext, useState } from "react";
 import {
   getAllUsers,
 } from "@/services/userManagementService";
-import { toast } from "sonner";
 
 const UsersContext = createContext();
 
