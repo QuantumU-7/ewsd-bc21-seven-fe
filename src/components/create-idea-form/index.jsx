@@ -15,6 +15,7 @@ import { Checkbox } from "../ui/checkbox";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useCreateIdeaForm } from "./useCreateIdeaForm";
+import { Loader2 } from "lucide-react";
 
 const CreateIdeaForm = () => {
   const {
@@ -40,6 +41,7 @@ const CreateIdeaForm = () => {
     handleAnonymousToggle,
     isAnonymous,
     allCategories,
+    isLoading,
   } = useCreateIdeaForm();
 
   return (
@@ -93,7 +95,12 @@ const CreateIdeaForm = () => {
               )}
             </div>
 
-            <div className={`${allCategories.length === 0 && 'opacity-50 select-none cursor-progress pointer-events-none'}`}>
+            <div
+              className={`${
+                allCategories.length === 0 &&
+                "opacity-50 select-none cursor-progress pointer-events-none"
+              }`}
+            >
               <label className="text-gray-400" htmlFor="category">
                 Category
               </label>
@@ -101,9 +108,11 @@ const CreateIdeaForm = () => {
                 name="category"
                 id="category"
                 onValueChange={(val) => {
-                  let id = allCategories.find((category) => category?.name === val).id
+                  let id = allCategories.find(
+                    (category) => category?.name === val
+                  ).id;
                   // console.log({id})
-                  setValue("facility", id.toString())
+                  setValue("facility", id.toString());
                 }}
               >
                 <SelectTrigger>
@@ -155,14 +164,16 @@ const CreateIdeaForm = () => {
                 />
               </div>
               {errors.content && (
-                <p className="text-red-500 text-sm">
-                  {errors.content.message}
-                </p>
+                <p className="text-red-500 text-sm">{errors.content.message}</p>
               )}
             </div>
 
             <div className="flex items-center space-x-2">
-              <Checkbox name="terms" id="terms" onCheckedChange={(val) => setValue("agree", val)} />
+              <Checkbox
+                name="terms"
+                id="terms"
+                onCheckedChange={(val) => setValue("agree", val)}
+              />
               <label htmlFor="terms">I agree to the terms and conditions</label>
             </div>
             {errors.agree && (
@@ -170,11 +181,20 @@ const CreateIdeaForm = () => {
             )}
 
             <Button className="w-full" type="submit">
-              Upload Idea
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Upload Idea"
+              )}
             </Button>
 
-            <Button onClick={handleAnonymousToggle} className="ml-auto table" variant="ghost" type="button">
-              Switch as {isAnonymous ? 'User' : 'Anonymous'}
+            <Button
+              onClick={handleAnonymousToggle}
+              className="ml-auto table"
+              variant="ghost"
+              type="button"
+            >
+              Switch as {isAnonymous ? "User" : "Anonymous"}
             </Button>
           </form>
 
