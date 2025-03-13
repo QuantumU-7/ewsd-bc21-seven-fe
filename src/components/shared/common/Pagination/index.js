@@ -16,6 +16,8 @@ const CommonPagination = ({
   maxPagesToShow = 5,
   position = "end", // "start", "center", or "end"
   showNextPrevious = true,
+  isLoading = false,
+  className
 }) => {
   // Generate pagination items
   const renderPaginationItems = () => {
@@ -132,7 +134,7 @@ const CommonPagination = ({
   };
 
   return (
-    <Pagination className={`justify-${position}`}>
+    <Pagination className={`justify-${position} ${className} ${isLoading && 'opacity-50 pointer-events-none select-none cursor-wait'}`}>
       {showNextPrevious && (
         <PaginationPrevious
           href="#"
