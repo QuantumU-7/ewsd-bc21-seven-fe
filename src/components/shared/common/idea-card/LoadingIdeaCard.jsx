@@ -14,7 +14,7 @@ const LoadingIdeaCard = () => {
         </div>
 
         <div className="flex-1">
-          <div className="w-full h-[200px] bg-gray-300"></div>
+          <div className="w-full h-[345px] bg-gray-300"></div>
         </div>
       </div>
     </div>
