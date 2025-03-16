@@ -53,10 +53,11 @@ const LoginForm = () => {
 
     try {
       const data = await loginService(values.username, values.password);
-      const me = await getMe();
-      localStorage.setItem(TokenKeys.user, JSON.stringify(me));
       localStorage.setItem(TokenKeys.accesstoken, data.access_token);
       localStorage.setItem(TokenKeys.refreshtoken, data.refresh_token);
+      const me = await getMe();
+      localStorage.setItem(TokenKeys.user, JSON.stringify(me));
+
       Cookies.set("accesstoken", data.access_token, { expires: 1 }); // 1 day expiry
       Cookies.set("refreshtoken", data.refresh_token, { expires: 7 });
       router.push("/");
