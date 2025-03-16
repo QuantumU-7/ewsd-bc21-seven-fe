@@ -29,6 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import CommonPagination from "@/components/shared/common/Pagination";
 
 export default function CategoryManagementTable() {
   const router = useRouter();
@@ -38,10 +39,11 @@ export default function CategoryManagementTable() {
     fetchCategories,
     setEditingCategory,
     deleteSelectedCategory,
+    totalPages,
   } = useCategory();
 
   useEffect(() => {
-    categories.length === 0 && fetchCategories();
+    categories.length === 0 && fetchCategories(1);
   }, []);
 
   const handleClickEditingCategory = (id, name) => {
@@ -111,30 +113,7 @@ export default function CategoryManagementTable() {
         </Table>
 
         {/* Pagination */}
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink isActive href="#">
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CommonPagination totalPages={totalPages} isLoading={loading} onPageChange={fetchCategories}/>
       </CardContent>
     </Card>
   );

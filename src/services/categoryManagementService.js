@@ -1,12 +1,13 @@
 import { getAccessToken } from "@/utils/tokenManagement";
 import axios from "axios";
 
-export const getAllCategories = async () => {
+export const getAllCategories = async (page, limit=5) => {
   try {
     const token = getAccessToken();
 
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/categories`,
+      {page,limit},
       {
         headers: {
           Authorization: `Bearer ${token}`,
