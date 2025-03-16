@@ -11,15 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect } from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useCategory } from "@/providers/CategoryContext";
@@ -44,7 +35,7 @@ export default function CategoryManagementTable() {
 
   useEffect(() => {
     categories.length === 0 && fetchCategories(1);
-  }, []);
+  }, [categories.length , fetchCategories]);
 
   const handleClickEditingCategory = (id, name) => {
     console.log({ name });
@@ -113,7 +104,7 @@ export default function CategoryManagementTable() {
         </Table>
 
         {/* Pagination */}
-        <CommonPagination totalPages={totalPages} isLoading={loading} onPageChange={fetchCategories}/>
+        <CommonPagination position="center" totalPages={totalPages} isLoading={loading} onPageChange={fetchCategories}/>
       </CardContent>
     </Card>
   );

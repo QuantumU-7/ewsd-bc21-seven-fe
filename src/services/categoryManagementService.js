@@ -1,20 +1,15 @@
+import actionApi from "@/api/config";
 import { getAccessToken } from "@/utils/tokenManagement";
 import axios from "axios";
 
-export const getAllCategories = async (page, limit=5) => {
+export const getAllCategories = async (page, limit = 5) => {
   try {
-    const token = getAccessToken();
-
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/categories`,
-      {page,limit},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
+    const response = await actionApi().get(`/categories`, {
+      params: {
+        page,
+        limit,
       }
-    );
+    });
 
     console.log("Fetched Categories:", response.data);
     return response.data;
@@ -88,7 +83,9 @@ export const updateCategory = async (id, name) => {
     );
 
     if (error.response) {
-      throw new Error(error.response.data.message || "Editing Categories failed");
+      throw new Error(
+        error.response.data.message || "Editing Categories failed"
+      );
     } else {
       throw new Error("Something went wrong. Please try again.");
     }
@@ -118,7 +115,9 @@ export const deleteCategory = async (id) => {
     );
 
     if (error.response) {
-      throw new Error(error.response.data.message || "Deleting Categories failed");
+      throw new Error(
+        error.response.data.message || "Deleting Categories failed"
+      );
     } else {
       throw new Error("Something went wrong. Please try again.");
     }
