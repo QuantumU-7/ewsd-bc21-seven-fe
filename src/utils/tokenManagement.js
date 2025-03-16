@@ -1,6 +1,6 @@
-import Cookies from "js-cookie";
+import { TokenKeys } from "@/constants/tokenKeys";
 
 export const getAccessToken = () => {
-  const token = Cookies.get("accesstoken");
+  const token = localStorage.getItem(TokenKeys.accesstoken);
   return token;
 };

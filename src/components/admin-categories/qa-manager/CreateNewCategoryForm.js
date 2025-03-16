@@ -35,7 +35,7 @@ const CategoryManagementForm = ({ isEditing = false }) => {
 
   useEffect(() => {
     setValue("name", editingCategory);
-  }, []);
+  }, [setValue, editingCategory]);
 
   const onSubmit = (data) => {
     if (isEditing) {

@@ -78,7 +78,7 @@ const UsersManagementTableQA = () => {
 
   useEffect(() => {
     users.length === 0 && fetchUsers();
-  }, []);
+  }, [users.length, fetchUsers]);
 
   const tableBody = users.map((user) => (
     <TableRow key={user.id}>

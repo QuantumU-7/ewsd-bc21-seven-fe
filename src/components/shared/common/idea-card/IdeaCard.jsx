@@ -8,7 +8,7 @@ const IdeaCard = ({ id, title, description, image }) => {
       <div className="flex flex-col lg:flex-row rounded-md overflow-hidden bg-white shadow-lg">
         <div className="flex-1 p-8 flex flex-col justify-between gap-6">
           <div className="space-y-4">
-            <p className="text-xl mt-4">{id}</p>
+            <p className="text-xl mt-4 hidden">{id}</p>
             <h1 className="text-3xl text-primary font-bold">{title}</h1>
           </div>
 
