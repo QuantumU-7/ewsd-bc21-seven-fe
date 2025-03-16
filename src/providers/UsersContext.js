@@ -17,7 +17,7 @@ export const UsersProvider = ({ children }) => {
     setError(null);
     try {
       const response = await getAllUsers();
-      setUsers(response);
+      setUsers(response.data);
     } catch (error) {
       setError(
         error.response ? error.response.data.message : "Something went wrong"

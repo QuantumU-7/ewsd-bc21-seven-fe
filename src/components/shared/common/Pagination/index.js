@@ -29,7 +29,7 @@ const CommonPagination = ({
         items.push(
           <PaginationItem key={i}>
             <PaginationLink
-              href="#"
+
               onClick={(e) => {
                 e.preventDefault();
                 onPageChange(i);
@@ -47,7 +47,7 @@ const CommonPagination = ({
       items.push(
         <PaginationItem key={1}>
           <PaginationLink
-            href="#"
+
             onClick={(e) => {
               e.preventDefault();
               onPageChange(1);

@@ -16,13 +16,15 @@ export const CategoryProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editingCategory, setEditingCategory] = useState("");
+  const [totalPages, setTotalPages] = useState(null);
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (page) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getAllCategories();
-      setCategories(response);
+      const response = await getAllCategories(page);
+      setCategories(response.data);
+      setTotalPages(response.pagination.total_pages || 1);
     } catch (error) {
       setError(
         error.response ? error.response.data.message : "Something went wrong"
@@ -85,7 +87,9 @@ export const CategoryProvider = ({ children }) => {
         editingCategory,
         setEditingCategory,
         editCategory,
-        deleteSelectedCategory
+        deleteSelectedCategory,
+        totalPages,
+        setTotalPages,
       }}
     >
       {children}
