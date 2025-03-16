@@ -235,9 +235,12 @@ const IdeaDetailPage = () => {
               <p className="text-2xl font-bold text-primary mb-2">
                 {idea.title || "Untitled"}
               </p>
-              <p className="text-gray-700 mb-7">
-                {idea.description || "No description available"}
-              </p>
+              <div className="text-gray-700 mb-7 rdw-editor-wrapper">
+                <div dangerouslySetInnerHTML={{__html: idea.description}}>
+
+                </div>
+                
+              </div>
 
               {/* Comments section */}
               <div>
