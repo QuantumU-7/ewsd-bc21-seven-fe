@@ -32,7 +32,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   const fetchIdeas = async (page) => {
     setLocalLoading(true);
     try {
-      const response = await getAllIdeaService(page);
+      const response = await getAllIdeaService({ page, myIdeas: true });
       setLocalIdeas(response.data);
       setLocalPagination({
         totalRecords: response.pagination.total_records,
