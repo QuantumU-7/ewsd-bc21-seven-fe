@@ -35,7 +35,7 @@ const CommonPagination = ({
                 onPageChange(i);
               }}
               isActive={i === currentPage}
-              className={i === currentPage ? "bg-primary text-white" : ""}
+              className={`cursor-pointer ${i === currentPage ? "bg-primary text-white" : ""}`}
             >
               {i}
             </PaginationLink>
@@ -53,7 +53,7 @@ const CommonPagination = ({
               onPageChange(1);
             }}
             isActive={1 === currentPage}
-            className={1 === currentPage ? "bg-primary text-white" : ""}
+            className={`cursor-pointer ${1 === currentPage ? "bg-primary text-white" : ""}`}
           >
             1
           </PaginationLink>
@@ -87,7 +87,6 @@ const CommonPagination = ({
         items.push(
           <PaginationItem key={i}>
             <PaginationLink
-              href="#"
               onClick={(e) => {
                 e.preventDefault();
                 onPageChange(i);
@@ -114,7 +113,7 @@ const CommonPagination = ({
       items.push(
         <PaginationItem key={totalPages}>
           <PaginationLink
-            href="#"
+
             onClick={(e) => {
               e.preventDefault();
               onPageChange(totalPages);
@@ -137,12 +136,12 @@ const CommonPagination = ({
     <Pagination className={`justify-${position} ${className} ${isLoading && 'opacity-50 pointer-events-none select-none cursor-wait'}`}>
       {showNextPrevious && (
         <PaginationPrevious
-          href="#"
           onClick={(e) => {
             e.preventDefault();
             if (currentPage > 1) onPageChange(currentPage - 1);
           }}
           disabled={currentPage === 1}
+          className={'cursor-pointer'}
         >
           Previous
         </PaginationPrevious>
@@ -150,12 +149,12 @@ const CommonPagination = ({
       <PaginationContent>{renderPaginationItems()}</PaginationContent>
       {showNextPrevious && (
         <PaginationNext
-          href="#"
           onClick={(e) => {
             e.preventDefault();
             if (currentPage < totalPages) onPageChange(currentPage + 1);
           }}
           disabled={currentPage === totalPages}
+          className={'cursor-pointer'}
         >
           Next
         </PaginationNext>
