@@ -45,7 +45,7 @@ export const useCreateIdeaForm = () => {
     const fetchAllCategories = async () => {
       try {
         const data = await getAllCategories();
-        setAllCategories(data);
+        setAllCategories(data.data);
         console.log({ data });
       } catch (error) {
         console.error(error.message);

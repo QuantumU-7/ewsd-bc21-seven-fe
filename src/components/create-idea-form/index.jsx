@@ -119,7 +119,7 @@ const CreateIdeaForm = () => {
                   <SelectValue placeholder="Select Facility" />
                 </SelectTrigger>
                 <SelectContent>
-                  {allCategories.map((category) => (
+                  {allCategories?.map((category) => (
                     <SelectItem key={category.id} value={category.name}>
                       {category.name}
                     </SelectItem>

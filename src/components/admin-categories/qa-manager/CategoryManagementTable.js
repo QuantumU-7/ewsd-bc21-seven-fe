@@ -11,15 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect } from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useCategory } from "@/providers/CategoryContext";
@@ -29,6 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import CommonPagination from "@/components/shared/common/Pagination";
 
 export default function CategoryManagementTable() {
   const router = useRouter();
@@ -38,11 +30,12 @@ export default function CategoryManagementTable() {
     fetchCategories,
     setEditingCategory,
     deleteSelectedCategory,
+    totalPages,
   } = useCategory();
 
   useEffect(() => {
-    categories.length === 0 && fetchCategories();
-  }, []);
+    categories.length === 0 && fetchCategories(1);
+  }, [categories.length , fetchCategories]);
 
   const handleClickEditingCategory = (id, name) => {
     console.log({ name });
@@ -111,30 +104,7 @@ export default function CategoryManagementTable() {
         </Table>
 
         {/* Pagination */}
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink isActive href="#">
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <CommonPagination position="center" totalPages={totalPages} isLoading={loading} onPageChange={fetchCategories}/>
       </CardContent>
     </Card>
   );

@@ -20,7 +20,6 @@ export const loginService = async (username, password) => {
         },
       }
     );
-
     return response.data;
   } catch (error) {
     if (error.response) {
