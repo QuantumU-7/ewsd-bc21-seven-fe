@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Heart, ThumbsDown, Eye, Loader2 } from "lucide-react";
+import { ArrowLeft, Heart, ThumbsDown, Eye, Loader2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { getIdeaById } from "@/services/getIdeaById";
 import { toggleLikeIdea } from "@/services/ideaInteraction";
 import { toast } from "sonner";
 import { createComment } from "@/services/createComment";
+import { exportIdeaToCSV } from "@/services/exportIdeaToCSV";
 
 const IdeaDetailPage = () => {
   const params = useParams();
@@ -23,6 +24,7 @@ const IdeaDetailPage = () => {
   const [likeLoading, setLikeLoading] = useState(false);
   const [dislikeLoading, setDislikeLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
 
   useEffect(() => {
     const fetchIdeaDetail = async () => {
@@ -109,6 +111,18 @@ const IdeaDetailPage = () => {
     setIsAnonymous(false);
   };
 
+  const handleExportCSV = async () => {
+    setExportLoading(true);
+    try {
+      await exportIdeaToCSV(params.id);
+      toast.success("Idea exported successfully!");
+    } catch (error) {
+      toast.error("Failed to export idea");
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="max-w-3xl h-[77.5vh] overflow-auto mx-auto my-8 px-4 flex justify-center">
@@ -143,9 +157,24 @@ const IdeaDetailPage = () => {
 
   return (
     <div className="max-w-7xl h-[77.5vh] overflow-auto mx-auto my-8">
-      <Button variant="ghost" size="sm" onClick={() => router.back()}>
-        <ArrowLeft className="h-4 w-4" />
-      </Button>
+      <div className="flex justify-between items-center mb-4">
+        <Button variant="ghost" size="sm" onClick={() => router.back()}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleExportCSV}
+          disabled={exportLoading}
+        >
+          {exportLoading ? (
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          ) : (
+            <Download className="h-4 w-4 mr-2" />
+          )}
+          Export CSV
+        </Button>
+      </div>
       {/* Image and documents section */}
       <div className="w-full h-[450px] flex gap-7 p-2">
         <div className="w-2/3 h-full relative flex justify-center">
@@ -307,41 +336,42 @@ const IdeaDetailPage = () => {
 
                 {/* Comments list */}
                 {idea.comments_count && idea.comments_count > 0 ? (
-                  <div>
-                    {idea.comments.map((comment, index) => (
-                      <div
-                        key={index}
-                        className="flex w-full justify-between my-5"
-                      >
-                        <div className="flex gap-3">
-                          <Avatar>
-                            <AvatarFallback>
-                              {typeof comment.user === "string"
-                                ? comment.user.charAt(0)
-                                : "U"}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="leading-3">
-                            <div className="flex items-baseline justify-between gap-2">
-                              <p className="font-bold">
-                                {typeof comment.user === "string"
-                                  ? comment.user
-                                  : "Anonymous"}
-                              </p>
-                            </div>
-                            <p className="mt-1 text-gray-700 text-sm">
-                              {comment.text || "No comment text"}
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-500">
-                          {comment.posted_on
-                            ? formatDate(comment.posted_on)
-                            : "Date unavailable"}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <></>
+                  // <div>
+                  //   {idea.comments.map((comment, index) => (
+                  //     <div
+                  //       key={index}
+                  //       className="flex w-full justify-between my-5"
+                  //     >
+                  //       <div className="flex gap-3">
+                  //         <Avatar>
+                  //           <AvatarFallback>
+                  //             {typeof comment.user === "string"
+                  //               ? comment.user.charAt(0)
+                  //               : "U"}
+                  //           </AvatarFallback>
+                  //         </Avatar>
+                  //         <div className="leading-3">
+                  //           <div className="flex items-baseline justify-between gap-2">
+                  //             <p className="font-bold">
+                  //               {typeof comment.user === "string"
+                  //                 ? comment.user
+                  //                 : "Anonymous"}
+                  //             </p>
+                  //           </div>
+                  //           <p className="mt-1 text-gray-700 text-sm">
+                  //             {comment.text || "No comment text"}
+                  //           </p>
+                  //         </div>
+                  //       </div>
+                  //       <p className="text-xs text-gray-500">
+                  //         {comment.posted_on
+                  //           ? formatDate(comment.posted_on)
+                  //           : "Date unavailable"}
+                  //       </p>
+                  //     </div>
+                  //   ))}
+                  // </div>
                 ) : (
                   <div className="p-4 text-center text-gray-500">
                     No comments yet. Be the first to comment!

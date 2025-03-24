@@ -8,22 +8,43 @@ import { getAllIdeaService } from "@/services/getAllIdeas";
 import MostViewedTable from "./components/MostViewdTable";
 
 const IdeasDashboard = () => {
-  const [ideas, setIdeas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [popularIdeas, setPopularIdeas] = useState([]);
+  const [viewedIdeas, setViewedIdeas] = useState([]);
+  const [loadingPopular, setLoadingPopular] = useState(true);
+  const [loadingViewed, setLoadingViewed] = useState(true);
 
   useEffect(() => {
-    fetchIdeas();
+    fetchPopularIdeas();
+    fetchViewedIdeas();
   }, []);
 
-  const fetchIdeas = async () => {
-    setLoading(true);
+  const fetchPopularIdeas = async () => {
+    setLoadingPopular(true);
     try {
-      const response = await getAllIdeaService();
-      setIdeas(response.data);
+      const response = await getAllIdeaService({
+        // sort: { likes: -1 }, // Sort by likes in descending order
+        limit: 10
+      });
+      setPopularIdeas(response.data);
     } catch (error) {
-      console.error("Error fetching ideas:", error);
+      console.error("Error fetching popular ideas:", error);
     } finally {
-      setLoading(false);
+      setLoadingPopular(false);
+    }
+  };
+
+  const fetchViewedIdeas = async () => {
+    setLoadingViewed(true);
+    try {
+      const response = await getAllIdeaService({
+        // sort: { views: -1 }, // Sort by views in descending order
+        limit: 10
+      });
+      setViewedIdeas(response.data);
+    } catch (error) {
+      console.error("Error fetching viewed ideas:", error);
+    } finally {
+      setLoadingViewed(false);
     }
   };
 
@@ -41,11 +62,11 @@ const IdeasDashboard = () => {
         </TabsList>
 
         <TabsContent value="popular" className="border rounded-md">
-          <MostPopularTable ideas={ideas} loading={loading} />
+          <MostPopularTable ideas={popularIdeas} loading={loadingPopular} />
         </TabsContent>
 
         <TabsContent value="viewed" className="border rounded-md">
-          <MostViewedTable ideas={ideas} loading={loading} />
+          <MostViewedTable ideas={viewedIdeas} loading={loadingViewed} />
         </TabsContent>
       </Tabs>
     </div>
