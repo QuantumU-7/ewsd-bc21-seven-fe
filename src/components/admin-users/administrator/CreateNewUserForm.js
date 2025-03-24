@@ -56,7 +56,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
     },
   });
 
-  const { loading, addUser, editUser, editingUser } = useUsers();
+  const { loading, addUser } = useUsers();
 
   async function onSubmit(values) {
     await addUser(values);

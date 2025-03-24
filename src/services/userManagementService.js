@@ -1,10 +1,7 @@
 import actionApi from "@/api/config";
-import { getAccessToken } from "@/utils/tokenManagement";
-import axios from "axios";
 
 export const getAllUsers = async (page, limit =5) => {
   try {
-    const token = getAccessToken();
 
     const response = await actionApi().get(`/users`, {
       params: {
