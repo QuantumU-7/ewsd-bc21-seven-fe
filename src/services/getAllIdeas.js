@@ -6,6 +6,7 @@ export const getAllIdeaService = async ({
   categories = null,
   sortDate = null,
   sortLikes = null,
+  sortPopularity = null,
   searchQuery = null,
   myIdeas = false,
   departments = null,
@@ -39,7 +40,7 @@ export const getAllIdeaService = async ({
     }
 
     // Add sorts
-    if (sortDate !== null || sortLikes !== null) {
+    if (sortDate !== null || sortLikes !== null || sortPopularity !== null) {
       params.sort = {};
 
       if (sortDate !== null) {
@@ -48,6 +49,10 @@ export const getAllIdeaService = async ({
 
       if (sortLikes !== null) {
         params.sort.likes = sortLikes;
+      }
+
+      if (sortPopularity !== null) {
+        params.sort.popularity = sortPopularity;
       }
     }
 

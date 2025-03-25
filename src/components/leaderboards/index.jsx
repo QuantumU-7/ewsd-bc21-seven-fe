@@ -22,7 +22,7 @@ const IdeasDashboard = () => {
     setLoadingPopular(true);
     try {
       const response = await getAllIdeaService({
-        // sort: { likes: -1 }, // Sort by likes in descending order
+        sortPopularity: -1, // Sort by likes in descending order
         limit: 10
       });
       setPopularIdeas(response.data);
@@ -37,7 +37,7 @@ const IdeasDashboard = () => {
     setLoadingViewed(true);
     try {
       const response = await getAllIdeaService({
-        // sort: { views: -1 }, // Sort by views in descending order
+        sortLikes: -1,
         limit: 10
       });
       setViewedIdeas(response.data);
