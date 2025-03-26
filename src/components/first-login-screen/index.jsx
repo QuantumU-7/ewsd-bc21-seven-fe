@@ -1,16 +1,13 @@
 "use client";
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
 import uniImage from "@/public/images/uni.png";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getUser } from "@/utils/authentication";
 
 const ForgotPasswordForm = () => {
-  const router = useRouter();
-  const { firstname, lastname }  = getUser();
+  const me  = getUser();
   return (
     <div className="flex justify-center items-center h-[90vh]">
       <Card className="w-[50vw] h-[30vw]">
@@ -18,7 +15,7 @@ const ForgotPasswordForm = () => {
           <div className="w-1/2 p-[4vw]">
             <div className="flex flex-col items-center justify-center mb-9">
               <p className="text-2xl font-bold mb-2 text-primary">
-                Welcome {firstname + " " + lastname}
+                Welcome {me?.firstname + " " + me?.lastname}
               </p>
               <p className="text-sm text-center">
                 You are about to make our university better by sharing you ideas and insights.
