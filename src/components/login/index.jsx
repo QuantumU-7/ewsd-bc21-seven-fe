@@ -69,7 +69,7 @@ const LoginForm = () => {
   }
 
   const redirectAfterLogin = (me) => {
-    if (me.lastLoginDate === null) {
+    if (me.lastlogin === null) {
       router.push("/welcome");
     } else {
       router.push("/");
