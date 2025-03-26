@@ -60,11 +60,19 @@ const LoginForm = () => {
 
       Cookies.set("accesstoken", data.access_token, { expires: 1 }); // 1 day expiry
       Cookies.set("refreshtoken", data.refresh_token, { expires: 7 });
-      router.push("/");
+      redirectAfterLogin(me)
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  const redirectAfterLogin = (me) => {
+    if (me.lastlogin === null) {
+      router.push("/welcome");
+    } else {
+      router.push("/");
     }
   }
 
