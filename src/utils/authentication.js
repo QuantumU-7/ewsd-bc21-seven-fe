@@ -10,6 +10,7 @@ export const handleLogout = () => {
 };
 
 export const getUser = () => {
-  const user = localStorage.getItem(TokenKeys.user);
+  const user =
+    typeof window !== "undefined" && localStorage.getItem(TokenKeys.user);
   return user ? JSON.parse(user) : null;
-}
+};
