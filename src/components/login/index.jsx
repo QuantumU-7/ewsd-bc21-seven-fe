@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import uniImage from "@/public/images/uni.png";
+import {jwtDecode} from "jwt-decode";
 
 import {
   Form,
@@ -60,7 +61,9 @@ const LoginForm = () => {
 
       Cookies.set("accesstoken", data.access_token, { expires: 1 }); // 1 day expiry
       Cookies.set("refreshtoken", data.refresh_token, { expires: 7 });
-      redirectAfterLogin(me)
+
+      const decodedToken = jwtDecode(data.access_token);
+      redirectAfterLogin(decodedToken.lastlogin);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -68,8 +71,8 @@ const LoginForm = () => {
     }
   }
 
-  const redirectAfterLogin = (me) => {
-    if (me.lastlogin === null) {
+  const redirectAfterLogin = (lastlogin) => {
+    if (lastlogin === null) {
       router.push("/welcome");
     } else {
       router.push("/");
