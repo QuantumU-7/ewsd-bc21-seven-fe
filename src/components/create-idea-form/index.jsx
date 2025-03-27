@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Editor } from "react-draft-wysiwyg";
+// import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -16,6 +16,33 @@ import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useCreateIdeaForm } from "./useCreateIdeaForm";
 import { Loader2 } from "lucide-react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Bold from "@tiptap/extension-bold";
+import Italic from "@tiptap/extension-italic";
+import Strike from "@tiptap/extension-strike";
+import Heading from "@tiptap/extension-heading";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import Underline from "@tiptap/extension-underline";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
+import {
+  ArrowUUpLeft,
+  ArrowUUpRight,
+  LinkBreak,
+  LinkSimple,
+  ListDashes,
+  ListNumbers,
+  Minus,
+  Quotes,
+  TextB,
+  TextItalic,
+  TextStrikethrough,
+  TextUnderline,
+} from "@phosphor-icons/react";
+import { useCallback } from "react";
+import Link from "@tiptap/extension-link";
 
 const CreateIdeaForm = () => {
   const {
@@ -23,8 +50,8 @@ const CreateIdeaForm = () => {
     handleSubmit,
     setValue,
     errors,
-    editorState,
-    handleEditorChange,
+    // editorState,
+    // handleEditorChange,
     image,
     getRootProps,
     getInputProps,
@@ -44,6 +71,129 @@ const CreateIdeaForm = () => {
     isLoading,
   } = useCreateIdeaForm();
 
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Bold,
+      Italic,
+      Strike,
+      Underline,
+      Heading.configure({ levels: [1, 2, 3] }),
+      BulletList,
+      OrderedList,
+      ListItem,
+      HorizontalRule,
+      // History,
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https",
+        protocols: ["http", "https"],
+        isAllowedUri: (url, ctx) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(":")
+              ? new URL(url)
+              : new URL(`${ctx.defaultProtocol}://${url}`);
+
+            // use default validation
+            if (!ctx.defaultValidate(parsedUrl.href)) {
+              return false;
+            }
+
+            // disallowed protocols
+            const disallowedProtocols = ["ftp", "file", "mailto"];
+            const protocol = parsedUrl.protocol.replace(":", "");
+
+            if (disallowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // only allow protocols specified in ctx.protocols
+            const allowedProtocols = ctx.protocols.map((p) =>
+              typeof p === "string" ? p : p.scheme
+            );
+
+            if (!allowedProtocols.includes(protocol)) {
+              return false;
+            }
+
+            // disallowed domains
+            const disallowedDomains = [
+              "example-phishing.com",
+              "malicious-site.net",
+            ];
+            const domain = parsedUrl.hostname;
+
+            if (disallowedDomains.includes(domain)) {
+              return false;
+            }
+
+            // all checks have passed
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        shouldAutoLink: (url) => {
+          try {
+            // construct URL
+            const parsedUrl = url.includes(":")
+              ? new URL(url)
+              : new URL(`https://${url}`);
+
+            // only auto-link if the domain is not in the disallowed list
+            const disallowedDomains = [
+              "example-no-autolink.com",
+              "another-no-autolink.com",
+            ];
+            const domain = parsedUrl.hostname;
+
+            return !disallowedDomains.includes(domain);
+          } catch {
+            return false;
+          }
+        },
+      }),
+    ],
+    content: "",
+    onUpdate: ({ editor }) => {
+      setValue("content", editor.getHTML());
+    },
+  });
+
+  const setLink = useCallback(() => {
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    // cancelled
+    if (url === null) {
+      return;
+    }
+
+    // empty
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+
+    // update link
+    try {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
+    } catch (e) {
+      alert(e.message);
+    }
+  }, [editor]);
+
+  if (!editor) {
+    return null;
+  }
   return (
     <section>
       <div className="max-w-7xl mx-auto px-4 mb-10">
@@ -135,33 +285,170 @@ const CreateIdeaForm = () => {
 
             <div>
               <label className="text-gray-400">Content</label>
-              <div className="border p-2 rounded-md">
-                <Editor
-                  toolbar={{
-                    options: [
-                      "inline",
-                      "blockType",
-                      "list",
-                      "textAlign",
-                      "history",
-                    ],
-                    inline: {
-                      options: ["bold", "italic", "strikethrough"],
-                    },
-                    blockType: {
-                      inDropdown: false,
-                      options: ["Normal", "H1", "H2", "H3"],
-                    },
-                    list: {
-                      options: ["unordered", "ordered"],
-                    },
-                    textAlign: {
-                      options: ["left", "center", "right", "justify"],
-                    },
-                  }}
-                  editorState={editorState}
-                  onEditorStateChange={handleEditorChange}
-                />
+              <div className="border rounded-md rdw-editor-wrapper prose">
+                {/* Toolbar */}
+                <div className="toolbar flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleBold().run()}
+                    className={
+                      editor.isActive("bold") ? "!bg-primary !text-white" : ""
+                    }
+                  >
+                    <TextB size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                    className={
+                      editor.isActive("italic") ? "!bg-primary !text-white" : ""
+                    }
+                  >
+                    <TextItalic size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleStrike().run()}
+                    className={
+                      editor.isActive("strike") ? "!bg-primary !text-white" : ""
+                    }
+                  >
+                    <TextStrikethrough size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      editor.chain().focus().toggleUnderline().run()
+                    }
+                    className={
+                      editor.isActive("underline")
+                        ? "!bg-primary !text-white"
+                        : ""
+                    }
+                  >
+                    <TextUnderline size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      editor.chain().focus().setHorizontalRule().run()
+                    }
+                  >
+                    <Minus size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      editor.isActive("heading", { level: 1 })
+                        ? "!bg-primary !text-white"
+                        : ""
+                    }
+                    onClick={() =>
+                      editor.chain().focus().toggleHeading({ level: 1 }).run()
+                    }
+                  >
+                    H1
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      editor.isActive("heading", { level: 2 })
+                        ? "!bg-primary !text-white"
+                        : ""
+                    }
+                    onClick={() =>
+                      editor.chain().focus().toggleHeading({ level: 2 }).run()
+                    }
+                  >
+                    H2
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      editor.isActive("heading", { level: 3 })
+                        ? "!bg-primary !text-white"
+                        : ""
+                    }
+                    onClick={() =>
+                      editor.chain().focus().toggleHeading({ level: 3 }).run()
+                    }
+                  >
+                    H3
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      editor.isActive("bulletList")
+                        ? "!bg-primary !text-white"
+                        : ""
+                    }
+                    onClick={() =>
+                      editor.chain().focus().toggleBulletList().run()
+                    }
+                  >
+                    <ListDashes size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      editor.chain().focus().toggleOrderedList().run()
+                    }
+                    className={
+                      editor.isActive("orderedList")
+                        ? "!bg-primary !text-white"
+                        : ""
+                    }
+                  >
+                    <ListNumbers size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      editor.chain().focus().toggleBlockquote().run()
+                    }
+                    className={
+                      editor.isActive("blockquote")
+                        ? "!bg-primary !text-white"
+                        : ""
+                    }
+                  >
+                    <Quotes size={22} />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={setLink}
+                    className={
+                      editor.isActive("link") ? "!bg-primary !text-white" : ""
+                    }
+                  >
+                    <LinkSimple size={22} />
+                  </button>
+                  {editor.isActive("link") && (
+                    <button
+                      type="button"
+                      onClick={() => editor.chain().focus().unsetLink().run()}
+                      disabled={!editor.isActive("link")}
+                    >
+                      <LinkBreak size={22} />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => editor.chain().focus().undo().run()}
+                    disabled={!editor.can().undo()}
+                  >
+                     <ArrowUUpLeft size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => editor.chain().focus().redo().run()}
+                    disabled={!editor.can().redo()}
+                  >
+                    <ArrowUUpRight size={22} />
+                  </button>
+                </div>
+                <EditorContent editor={editor} />
               </div>
               {errors.content && (
                 <p className="text-red-500 text-sm">{errors.content.message}</p>
@@ -212,6 +499,7 @@ const CreateIdeaForm = () => {
                   >
                     <span className="">{file.name}</span>
                     <button
+                      type="button"
                       className=" w-12 h-12 inline-block"
                       onClick={() =>
                         setFiles(files.filter((_, i) => i !== index))
@@ -256,6 +544,7 @@ const CreateIdeaForm = () => {
                   >
                     <span className="">{file.name}</span>
                     <button
+                      type="button"
                       className=" w-12 h-12 inline-block"
                       onClick={() =>
                         setFiles(files.filter((_, i) => i !== index))

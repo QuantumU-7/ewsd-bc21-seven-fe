@@ -1,10 +1,10 @@
-import UsersManagementTableQA from '@/components/admin-users/qa-manager/UsersManagementTableQA'
+import AdminUsersManagementTableSection from '@/components/admin-users'
 import React from 'react'
 
 const UsersManagementPage = () => {
   return (
     <div>
-        <UsersManagementTableQA/>
+        <AdminUsersManagementTableSection/>
     </div>
   )
 }
