@@ -17,11 +17,12 @@ export const UsersProvider = ({ children }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchUsers = async (page) => {
+  /* Note: API Search is equal to keyword form field */
+  const fetchUsers = async (page,limit = 5, department_id = null, keyword = null) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getAllUsers(page);
+      const response = await getAllUsers(page, limit, department_id, keyword);
       setUsers(response.data);
       setTotalPages(response.pagination.total_pages);
     } catch (error) {

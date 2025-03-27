@@ -1,12 +1,14 @@
 import actionApi from "@/api/config";
 
-export const getAllUsers = async (page, limit =5) => {
+export const getAllUsers = async (page, limit =5, department_id = null, search = null) => {
   try {
 
     const response = await actionApi().get(`/users`, {
       params: {
         page,
         limit,
+        department_id,
+        search
       }
     });
 

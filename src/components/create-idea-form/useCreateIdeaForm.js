@@ -54,6 +54,7 @@ export const useCreateIdeaForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allCategories, setAllCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
 
   const editor = useEditor({
@@ -282,7 +283,7 @@ export const useCreateIdeaForm = () => {
 
       formData.append("title", data.title);
       formData.append("description", data.content);
-      formData.append("category_id", Number(data.facility));
+      formData.append("category_id", Number(selectedCategoryId));
       formData.append("posted_by", Number(1));
       formData.append(
         "is_posted_anon",
@@ -344,5 +345,6 @@ export const useCreateIdeaForm = () => {
     setLink,
     selectedCategory,
     setSelectedCategory,
+    setSelectedCategoryId,
   };
 };

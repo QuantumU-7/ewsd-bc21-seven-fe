@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useCreateIdeaForm } from "./useCreateIdeaForm";
 import { Loader2 } from "lucide-react";
-import {  EditorContent } from "@tiptap/react";
+import { EditorContent } from "@tiptap/react";
 
 import {
   ArrowUUpLeft,
@@ -32,7 +32,6 @@ import {
   TextStrikethrough,
   TextUnderline,
 } from "@phosphor-icons/react";
-
 
 const CreateIdeaForm = () => {
   const {
@@ -63,6 +62,7 @@ const CreateIdeaForm = () => {
     setLink,
     selectedCategory,
     setSelectedCategory,
+    setSelectedCategoryId,
   } = useCreateIdeaForm();
 
   if (!editor) {
@@ -133,17 +133,17 @@ const CreateIdeaForm = () => {
                 id="category"
                 value={selectedCategory}
                 onValueChange={(val) => {
-                  // let id = allCategories.find(
-                  //   (category) => category?.name === val
-                  // ).id;
-                  // console.log({id})
+                  let id = allCategories.find(
+                    (category) => category?.name === val
+                  ).id;
+                  setSelectedCategoryId(id);
                   setSelectedCategory(val);
                   setValue("facility", val);
                 }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Facility">
-                  {selectedCategory || "Select Facility"}
+                    {selectedCategory || "Select Facility"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
@@ -316,7 +316,7 @@ const CreateIdeaForm = () => {
                     onClick={() => editor.chain().focus().undo().run()}
                     disabled={!editor.can().undo()}
                   >
-                     <ArrowUUpLeft size={22} />
+                    <ArrowUUpLeft size={22} />
                   </button>
                   <button
                     type="button"

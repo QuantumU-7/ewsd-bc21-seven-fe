@@ -27,19 +27,23 @@ import Link from "next/link";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
 
 const filterSchema = z.object({
-  department: z.string().nonempty("Department is required"),
+  department: z.string().optional(),
   keyword: z.string().optional(),
 });
 
-const FilterForm = ({ departments, onFilter }) => {
+const FilterForm = ({ departments}) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({ resolver: zodResolver(filterSchema) });
 
+  const { fetchUsers, currentPage } = useUsers();
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
+
   const onSubmit = (data) => {
-    onFilter(data);
+    fetchUsers(currentPage, 5, selectedDepartmentId, data.keyword);
   };
 
   return (
@@ -49,14 +53,20 @@ const FilterForm = ({ departments, onFilter }) => {
     >
       <div className="flex gap-5">
         <div>
-          <Select {...register("department")}>
+          <Select
+            onValueChange={(val) => {setValue("department", val)
+              const id = departments.find((dept) => dept.name === val).id;
+              setSelectedDepartmentId(id)
+            }}
+            {...register("department")}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select Department" />
             </SelectTrigger>
             <SelectContent>
               {departments.map((dept) => (
-                <SelectItem key={dept} value={dept}>
-                  {dept}
+                <SelectItem key={dept.id} value={dept.name}>
+                  {dept.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -149,7 +159,21 @@ const UsersManagementTableAdmin = () => {
             </Link>
           </div>
 
-          <FilterForm departments={["Human Resource", "IT"]} />
+          <FilterForm
+            departments={[
+              {
+                id: 1,
+                name: "IT",
+              },
+              {
+                id: 2,
+                name: "HR",
+              },
+              {
+                id: 3,
+                name: "Finance",
+              },]}
+          />
 
           <CommonTable
             columns={["Name", "User ID", "Email", "Department", ""]}
