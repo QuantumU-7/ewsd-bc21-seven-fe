@@ -131,11 +131,12 @@ const onSubmit = async (data) => {
         }
       });
     }
-    
-    const result = await createNewIdeaService(formData);
-    setIsLoading(false);
+
+    await createNewIdeaService(formData);
     toast("Idea created successfully!");
     router.push('/')
+    setIsLoading(false);
+
   } catch (error) {
     setIsLoading(false);
     console.error("Error submitting form:", error);

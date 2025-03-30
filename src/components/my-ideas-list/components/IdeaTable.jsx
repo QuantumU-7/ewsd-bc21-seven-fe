@@ -71,6 +71,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   const handleDelete = async (ideaId) => {
     try {
       // Refresh the current page data - use appropriate function based on mode
+      console.log(ideaId)
       if (handlePageChange) {
         handlePageChange(pagination.currentPage);
       } else {
