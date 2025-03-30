@@ -38,7 +38,6 @@ export default function CategoryManagementTable() {
   }, [categories.length , fetchCategories]);
 
   const handleClickEditingCategory = (id, name) => {
-    console.log({ name });
     setEditingCategory(name);
     router.push(`/admin/categories/${id}`);
   };

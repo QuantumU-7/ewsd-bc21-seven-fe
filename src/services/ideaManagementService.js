@@ -4,7 +4,6 @@ import axios from "axios";
 export const getAllIdeasService = async (pageNumber = 1, limit = 5) => {
   try {
     const token = getAccessToken();
-    console.log("Using Token:", token);
 
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/ideas/?page=${pageNumber}&limit=${limit}`,
@@ -16,7 +15,6 @@ export const getAllIdeasService = async (pageNumber = 1, limit = 5) => {
       }
     );
 
-    console.log("Fetched Ideas:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -36,12 +34,6 @@ export const getAllIdeasService = async (pageNumber = 1, limit = 5) => {
 export const createNewIdeaService = async (formData) => {
   try {
     const token = getAccessToken();
-    console.log("Using Token:", token);
-
-    // Debug the formData contents before sending
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
 
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/ideas`,
