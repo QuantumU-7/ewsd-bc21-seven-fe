@@ -24,10 +24,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { handleLogout } from "@/utils/authentication";
+import { handleLogout, getUser } from "@/utils/authentication";
 
 const NavigationBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const user = getUser()
+  const username = user?.firstname + " " + user?.lastname;
 
   return (
     <nav className="bg-white">
@@ -74,14 +76,20 @@ const NavigationBar = () => {
                 />
               </div>
             </PopoverTrigger>
-            <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+            <PopoverContent className="w-[250px] rounded-xl p-0 flex flex-col text-center" align="end" sideOffset={20}>
               <p
-                className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
               >
-                Welcome, User
+                Welcome, {username || "User"}
               </p>
               <div className="border-t"></div>
-              <p onClick={handleLogout} className="text-sm p-2 cursor-pointer hover:bg-gray-100">
+              <p
+                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
+              >
+                Last Login: {new Date(user?.lastlogin).toLocaleString() || "N/A"}
+              </p>
+              <div className="border-t"></div>
+              <p onClick={handleLogout} className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">
                 Logout
               </p>
               <div className="border-t"></div>
@@ -135,12 +143,18 @@ const NavigationBar = () => {
             </PopoverTrigger>
             <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
               <p
-                className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
               >
-                Welcome, User
+                Welcome, {username || "User"}
               </p>
               <div className="border-t"></div>
-              <p onClick={handleLogout} className="text-sm p-2 cursor-pointer hover:bg-gray-100">
+              <p
+                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
+              >
+                Last Login: {new Date(user?.lastlogin).toLocaleString() || "N/A"}
+              </p>
+              <div className="border-t"></div>
+              <p onClick={handleLogout} className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">
                 Logout
               </p>
               <div className="border-t"></div>

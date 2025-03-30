@@ -63,7 +63,6 @@ const LatestIdeaSection = () => {
         const data = await getAllIdeasService(currentPage, limit);
         setIdeas(data.data);
         setTotalPages(data.pagination.total_pages || 1);
-        console.log(data);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -77,7 +76,7 @@ const LatestIdeaSection = () => {
   return (
     <section className="my-28">
       <div className="max-w-7xl mx-auto px-4 space-y-6">
-        {ideas.length === 0 || loading
+        {loading
           ? [...Array(5)].map((_, index) => <LoadingIdeaCard key={index} />)
           : ideas.map((idea) => (
               <div key={idea.id}>
@@ -92,36 +91,14 @@ const LatestIdeaSection = () => {
                 </Link>
               </div>
             ))}
-
-        {/* <Pagination className={`${loading && "pointer-events-none opacity-45"}`}>
-          <PaginationContent>
-            <PaginationItem className="cursor-pointer">
-              <PaginationPrevious
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              />
-            </PaginationItem>
-            {[...Array(totalPages)].map((_, index) => (
-              <PaginationItem key={index} className="cursor-pointer">
-                <PaginationLink
-                  isActive={currentPage === index + 1}
-                  onClick={() => setCurrentPage(index + 1)}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            {totalPages > 3 && <PaginationEllipsis />}
-            <PaginationItem className="cursor-pointer">
-              <PaginationNext
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination> */}
+            
+        {!loading && ideas.length === 0 && (
+          <div className="flex justify-center items-center h-[300px]">
+            <h2 className="text-2xl font-semibold text-gray-500">
+              No Ideas Found
+            </h2>
+          </div>
+        )}
 
         <CommonPagination
           isLoading={loading}

@@ -12,7 +12,6 @@ export const getAllUsers = async (page, limit =5, department_id = null, search =
       }
     });
 
-    console.log("Fetched Users:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -44,7 +43,6 @@ export const createNewUser = async (user) => {
       department_id: user.department,
     });
 
-    console.log("Posted a new user", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -64,7 +62,6 @@ export const deleteUserById = (userId) => {
   try {
     const response = actionApi().delete(`/users/${userId}`);
 
-    console.log("Deleted user:", response.data);
     return response.data;
   } catch (error) {
     console.error(

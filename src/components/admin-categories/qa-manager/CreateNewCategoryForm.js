@@ -40,10 +40,8 @@ const CategoryManagementForm = ({ isEditing = false }) => {
   const onSubmit = (data) => {
     if (isEditing) {
       editCategory(parseInt(params.id), data.name);
-      console.log("Form submitted (editing):", data);
     } else {
       addCategory(data.name);
-      console.log("Form submitted:", data);
     }
   };
 

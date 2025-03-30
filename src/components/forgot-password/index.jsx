@@ -21,9 +21,8 @@ const ForgotPasswordForm = () => {
     setError(null);
 
     try {
-      const data = await emailOtpService(values.email);
+      await emailOtpService(values.email);
       setValidEmail(values.email);
-      console.log("Otp request:", data);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -36,13 +35,11 @@ const ForgotPasswordForm = () => {
     setError(null);
 
     try {
-      const data = await passwordResetService(
+      await passwordResetService(
         validEmail,
         values.OTP,
         values.newPassword
       );
-
-      console.log("password reset:", data);
       router.push("/login");
     } catch (error) {
       setError(error.message);
