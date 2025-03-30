@@ -36,7 +36,7 @@ export const UsersProvider = ({ children }) => {
   const addUser = async (user) => {
     setLoading(true);
     try {
-      const response = await createNewUser(user);
+      await createNewUser(user);
       fetchUsers(currentPage);
       toast("Crated New User");
     } catch (error) {
@@ -49,7 +49,7 @@ export const UsersProvider = ({ children }) => {
   const deleteUser = async (id) => {
     setLoading(true);
     try {
-      const response = await deleteUserById(id);
+      await deleteUserById(id);
       setTimeout(() => {
         fetchUsers(currentPage);
       }, 300);
