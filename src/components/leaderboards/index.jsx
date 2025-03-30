@@ -37,7 +37,7 @@ const IdeasDashboard = () => {
     setLoadingViewed(true);
     try {
       const response = await getAllIdeaService({
-        sortLikes: -1,
+        most_viewed: -1,
         limit: 10
       });
       setViewedIdeas(response.data);

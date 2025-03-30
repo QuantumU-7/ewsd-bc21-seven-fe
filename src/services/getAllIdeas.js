@@ -10,6 +10,7 @@ export const getAllIdeaService = async ({
   searchQuery = null,
   myIdeas = false,
   departments = null,
+  most_viewed = null,
 } = {}) => {
   try {
     const params = {};
@@ -40,7 +41,7 @@ export const getAllIdeaService = async ({
     }
 
     // Add sorts
-    if (sortDate !== null || sortLikes !== null || sortPopularity !== null) {
+    if (sortDate !== null || sortLikes !== null || sortPopularity !== null || most_viewed !== null) {
       params.sort = {};
 
       if (sortDate !== null) {
@@ -54,6 +55,10 @@ export const getAllIdeaService = async ({
       if (sortPopularity !== null) {
         params.sort.popularity = sortPopularity;
       }
+
+      if (most_viewed !== null) {
+        params.sort.most_viewed = most_viewed;
+      }
     }
 
     // Add search
@@ -61,7 +66,7 @@ export const getAllIdeaService = async ({
       params.search = searchQuery;
     }
 
-    const response = await actionApi().get("/ideas", { params });
+    const response = await actionApi().get("/ideas/", { params });
     return response.data;
   } catch (error) {
     if (error.response) {

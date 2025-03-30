@@ -42,6 +42,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
           <TableCell>{`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</TableCell>
           <TableCell>{idea.department.name}</TableCell>
           <TableCell>{idea.likes_count}</TableCell>
+          <TableCell>{idea.views_count}</TableCell>
           <TableCell>{idea.category.name}</TableCell>
           <TableCell>{new Date(idea.posted_on).toLocaleDateString()}</TableCell>
           <TableCell>
@@ -91,6 +92,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
           "Author",
           "Department",
           "Total Likes",
+          "Total Views",
           "Category",
           "Posted On",
           "",

@@ -2,7 +2,7 @@ import actionApi from "@/api/config";
 
 export const downloadAttachments = async () => {
   try {
-    const response = await actionApi().get("/api/download/attachments", {
+    const response = await actionApi().get("/ideas/files/download", {
       responseType: "blob", // Important for handling file downloads
     });
 

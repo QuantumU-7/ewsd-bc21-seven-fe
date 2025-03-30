@@ -51,11 +51,14 @@ const QAManagerIdeasList = () => {
     fetchPopularIdeas(1);
     fetchViewedIdeas(1);
   }, []);
+  console.log("allIdeas", allIdeas);
+  console.log("popularIdeas", popularIdeas);
+  console.log("viewedIdeas", viewedIdeas);
 
   const fetchAllIdeas = async (page) => {
     setAllIdeasLoading(true);
     try {
-      const response = await getAllIdeaService(page);
+      const response = await getAllIdeaService({ page: page });
       setAllIdeas(response.data);
       setAllPagination({
         totalRecords: response.pagination.total_records,
@@ -74,9 +77,7 @@ const QAManagerIdeasList = () => {
   const fetchPopularIdeas = async (page) => {
     setPopularIdeasLoading(true);
     try {
-      // In a real implementation, you'd likely use a different endpoint or parameters
-      // to fetch popular ideas. For now, we're using the same service.
-      const response = await getAllIdeaService(page);
+      const response = await getAllIdeaService({ page: page, sortPopularity: -1 });
       setPopularIdeas(response.data);
       setPopularPagination({
         totalRecords: response.pagination.total_records,
@@ -95,9 +96,7 @@ const QAManagerIdeasList = () => {
   const fetchViewedIdeas = async (page) => {
     setViewedIdeasLoading(true);
     try {
-      // In a real implementation, you'd likely use a different endpoint or parameters
-      // to fetch most viewed ideas. For now, we're using the same service.
-      const response = await getAllIdeaService(page);
+      const response = await getAllIdeaService({ page: page, most_viewed: -1 });
       setViewedIdeas(response.data);
       setViewedPagination({
         totalRecords: response.pagination.total_records,
@@ -132,6 +131,7 @@ const QAManagerIdeasList = () => {
       setExportCSVLoading(true);
       const response = await exportIdeaToCSV();
       setExportCSVLoading(false);
+      toast.success("CSV exported successfully!");
     } catch (error) {
       toast.error("Error exporting CSV");
       console.error("Error exporting CSV:", error);
@@ -142,6 +142,7 @@ const QAManagerIdeasList = () => {
     try {
       setDownloadAttachmentsLoading(true);
       await downloadAttachments();
+      toast.success("Attachments downloaded successfully!");
     } catch (error) {
       toast.error("Error downloading attachments");
       console.error("Error downloading attachments:", error);

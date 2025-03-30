@@ -19,6 +19,7 @@ const QaMangerDashboard = () => {
 
       try {
         const res = await getAnonymousStatus();
+        console.log(res);
         setAnonymousStatus(res);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -46,7 +47,7 @@ const QaMangerDashboard = () => {
           </CardHeader>
 
           <CardContent>
-            <span className="text-4xl font-bold">{anonymousStatus?.ideas || 0}</span>
+            <span className="text-4xl font-bold">{anonymousStatus?.ideasCount || 0}</span>
           </CardContent>
         </Card>
 
@@ -56,7 +57,7 @@ const QaMangerDashboard = () => {
           </CardHeader>
 
           <CardContent>
-            <span className="text-4xl font-bold">{anonymousStatus?.users || 0}</span>
+            <span className="text-4xl font-bold">{anonymousStatus?.commentsCount || 0}</span>
           </CardContent>
         </Card>
       </div>

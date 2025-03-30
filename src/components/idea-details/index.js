@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Heart, ThumbsDown, Eye, Loader2, Download } from "lucide-react";
+import { ArrowLeft, Heart, ThumbsDown, Eye, Loader2, Download, MessageCircleWarning } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,8 @@ import { toggleLikeIdea } from "@/services/ideaInteraction";
 import { toast } from "sonner";
 import { createComment } from "@/services/createComment";
 import { exportIdeaToCSV } from "@/services/exportIdeaToCSV";
-
+import { RemarkBox } from "../shared/common/Dialog/RemarkBox";
+import { ideaReportService } from "@/services/ideaReport";
 const IdeaDetailPage = () => {
   const params = useParams();
   const router = useRouter();
@@ -25,12 +26,20 @@ const IdeaDetailPage = () => {
   const [dislikeLoading, setDislikeLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
-
+  const [likeCount, setLikeCount] = useState(0);
+  const [dislikeCount, setDislikeCount] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [openConfirmBox, setOpenConfirmBox] = useState(false);
+  const [reportId, setReportId] = useState(null);
+  const [remark, setRemark] = useState("");
   useEffect(() => {
     const fetchIdeaDetail = async () => {
       try {
         const response = await getIdeaById(params.id);
         setIdea(response);
+        setLikeCount(response.likes_count);
+        setDislikeCount(response.dislikes_count);
+        setComments(response.comments);
       } catch (error) {
         console.error("Error fetching idea details:", error);
         toast.error("Something went wrong!");
@@ -54,7 +63,6 @@ const IdeaDetailPage = () => {
       }
 
       const response = await toggleLikeIdea(id, isLike);
-
       // Update idea with new like/dislike counts from response
       if (response && response.data) {
         setIdea((prevIdea) => ({
@@ -83,7 +91,7 @@ const IdeaDetailPage = () => {
     setCommentLoading(true);
     try {
       const res = await createComment(params.id, isAnonymous, commentText);
-
+      setComments((prevComments) => [{ispostedanon:isAnonymous, username: idea.posted_by.firstname + " " + idea.posted_by.lastname, comment: commentText, postedon: new Date().toISOString() }, ...prevComments]);
       // Update the idea state with the new comment
       if (res && res.data) {
         const newComment = res.data;
@@ -120,6 +128,18 @@ const IdeaDetailPage = () => {
       toast.error("Failed to export idea");
     } finally {
       setExportLoading(false);
+    }
+  };
+
+
+  const handleReportIdea = async (id) => {
+    try{
+      const res = await ideaReportService(id,remark);
+        toast.success("Idea reported successfully!");
+        setRemark("");
+        setOpenConfirmBox(false);
+    }catch(e){
+      toast.error("Failed to report idea");
     }
   };
 
@@ -161,9 +181,9 @@ const IdeaDetailPage = () => {
         <Button variant="ghost" size="sm" onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleExportCSV}
           disabled={exportLoading}
         >
@@ -246,7 +266,7 @@ const IdeaDetailPage = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</p>
+                  <p className="font-medium">{idea.ispostedanon ? 'Anonymous' : `${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</p>
                   <p className="text-sm text-gray-500 flex items-center">
                     {idea.category.name || "Uncategorized"}
                   </p>
@@ -265,10 +285,10 @@ const IdeaDetailPage = () => {
                 {idea.title || "Untitled"}
               </p>
               <div className="text-gray-700 mb-7 rdw-editor-wrapper">
-                <div dangerouslySetInnerHTML={{__html: idea.description}}>
+                <div dangerouslySetInnerHTML={{ __html: idea.description }}>
 
                 </div>
-                
+
               </div>
 
               {/* Comments section */}
@@ -335,43 +355,43 @@ const IdeaDetailPage = () => {
                 </div>
 
                 {/* Comments list */}
-                {idea.comments_count && idea.comments_count > 0 ? (
-                  <></>
-                  // <div>
-                  //   {idea.comments.map((comment, index) => (
-                  //     <div
-                  //       key={index}
-                  //       className="flex w-full justify-between my-5"
-                  //     >
-                  //       <div className="flex gap-3">
-                  //         <Avatar>
-                  //           <AvatarFallback>
-                  //             {typeof comment.user === "string"
-                  //               ? comment.user.charAt(0)
-                  //               : "U"}
-                  //           </AvatarFallback>
-                  //         </Avatar>
-                  //         <div className="leading-3">
-                  //           <div className="flex items-baseline justify-between gap-2">
-                  //             <p className="font-bold">
-                  //               {typeof comment.user === "string"
-                  //                 ? comment.user
-                  //                 : "Anonymous"}
-                  //             </p>
-                  //           </div>
-                  //           <p className="mt-1 text-gray-700 text-sm">
-                  //             {comment.text || "No comment text"}
-                  //           </p>
-                  //         </div>
-                  //       </div>
-                  //       <p className="text-xs text-gray-500">
-                  //         {comment.posted_on
-                  //           ? formatDate(comment.posted_on)
-                  //           : "Date unavailable"}
-                  //       </p>
-                  //     </div>
-                  //   ))}
-                  // </div>
+                {comments.length > 0 ? (
+                  // <></>
+                  <div>
+                    {comments.map((comment, index) => (
+                      <div
+                        key={index}
+                        className="flex w-full justify-between my-5"
+                      >
+                        <div className="flex gap-3">
+                          <Avatar>
+                            <AvatarFallback>
+                              {typeof comment.username === "string"
+                                ? comment.username.charAt(0)
+                                : "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="leading-3">
+                            <div className="flex items-baseline justify-between gap-2">
+                              <p className="font-bold">
+                                {comment.ispostedanon ?
+                                  'Anonymous'
+                                  : comment.username}
+                              </p>
+                            </div>
+                            <p className="mt-1 text-gray-700 text-sm">
+                              {comment.comment || "No comment text"}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          {comment.postedon
+                            ? formatDate(comment.postedon)
+                            : "Date unavailable"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <div className="p-4 text-center text-gray-500">
                     No comments yet. Be the first to comment!
@@ -393,9 +413,9 @@ const IdeaDetailPage = () => {
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
               ) : (
-                <Heart className="text-red-600" size={24} />
+                <Heart className="text-red-600 " size={24} />
               )}
-              <p className="text-sm">{idea.likes_count}</p>
+              <p className="text-sm">{likeCount}</p>
             </div>
 
             {/* Dislike button with loading state */}
@@ -406,19 +426,40 @@ const IdeaDetailPage = () => {
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
               ) : (
-                <ThumbsDown className="text-primary" size={24} />
+                <ThumbsDown className="text-primary " size={24} />
               )}
-              <p className="text-sm">{idea.dislikes_count}</p>
+              <p className="text-sm">{dislikeCount}</p>
             </div>
 
             {/* Views count (no interaction) */}
             <div className="flex flex-col justify-center items-center">
               <Eye className="text-primary" />
-              <p className="text-sm">{120}</p>
+              <p className="text-sm">{idea.views_count}</p>
+            </div>
+
+            {/* Report button */}
+            <div className="flex flex-col justify-center items-center cursor-pointer" onClick={() => setOpenConfirmBox(true)}>
+              <MessageCircleWarning className="text-primary" size={24} />
+              <p className="text-sm">Report</p>
             </div>
           </div>
         </div>
       </div>
+      <RemarkBox
+        title="Report Idea"
+        description="Are you sure you want to report this idea?"
+        remark={remark}
+        setRemark={setRemark}
+        onConfirm={() => {
+          if (idea.id) {
+            handleReportIdea(idea.id);
+            setOpenConfirmBox(false);
+          }
+        }}
+        onCancel={() => setOpenConfirmBox(false)}
+        isOpen={openConfirmBox}
+        setIsOpen={setOpenConfirmBox}
+      />
     </div>
   );
 };
