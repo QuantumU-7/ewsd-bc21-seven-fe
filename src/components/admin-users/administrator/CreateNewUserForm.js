@@ -61,7 +61,6 @@ export default function CreateNewUserForm({ isEditing = false }) {
   async function onSubmit(values) {
     await addUser(values);
     form.reset();
-    console.log("Form submitted:", values);
   }
 
   return (

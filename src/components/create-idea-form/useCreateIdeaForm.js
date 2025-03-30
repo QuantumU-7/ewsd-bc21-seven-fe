@@ -46,7 +46,6 @@ export const useCreateIdeaForm = () => {
       try {
         const data = await getAllCategories();
         setAllCategories(data.data);
-        console.log({ data });
       } catch (error) {
         console.error(error.message);
       }
@@ -132,11 +131,8 @@ const onSubmit = async (data) => {
         }
       });
     }
-
-    console.log("About to submit form data");
     
     const result = await createNewIdeaService(formData);
-    console.log("API Response:", result);
     setIsLoading(false);
     toast("Idea created successfully!");
     router.push('/')

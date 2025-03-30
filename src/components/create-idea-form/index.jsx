@@ -261,7 +261,6 @@ const CreateIdeaForm = () => {
                   let id = allCategories.find(
                     (category) => category?.name === val
                   ).id;
-                  // console.log({id})
                   setValue("facility", id.toString());
                 }}
               >

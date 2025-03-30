@@ -104,7 +104,6 @@ const UsersManagementTableQA = () => {
     </TableRow>
   ));
 
-  // console.log({ users });
   return (
     <Card>
       <CardContent className="p-6">

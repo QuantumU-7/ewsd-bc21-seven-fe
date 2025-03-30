@@ -63,7 +63,6 @@ const LatestIdeaSection = () => {
         const data = await getAllIdeasService(currentPage, limit);
         setIdeas(data.data);
         setTotalPages(data.pagination.total_pages || 1);
-        console.log(data);
         setLoading(false);
       } catch (error) {
         setLoading(false);

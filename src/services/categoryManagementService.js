@@ -11,7 +11,6 @@ export const getAllCategories = async (page, limit = 5) => {
       }
     });
 
-    console.log("Fetched Categories:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -44,7 +43,6 @@ export const createNewCategory = async (name) => {
       }
     );
 
-    console.log("Posted a new category", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -74,7 +72,6 @@ export const updateCategory = async (id, name) => {
       }
     );
 
-    console.log("Edited a new category", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -105,8 +102,7 @@ export const deleteCategory = async (id) => {
         },
       }
     );
-
-    console.log("Deleted a new category", response.data);
+    
     return response.data;
   } catch (error) {
     console.error(
