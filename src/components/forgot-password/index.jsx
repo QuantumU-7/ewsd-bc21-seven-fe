@@ -23,7 +23,6 @@ const ForgotPasswordForm = () => {
     try {
       const data = await emailOtpService(values.email);
       setValidEmail(values.email);
-      console.log("Otp request:", data);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -41,8 +40,6 @@ const ForgotPasswordForm = () => {
         values.OTP,
         values.newPassword
       );
-
-      console.log("password reset:", data);
       router.push("/login");
     } catch (error) {
       setError(error.message);
