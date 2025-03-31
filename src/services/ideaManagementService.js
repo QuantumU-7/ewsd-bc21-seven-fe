@@ -60,3 +60,31 @@ export const createNewIdeaService = async (formData) => {
     }
   }
 };
+
+export const deleteIdeaService = async (ideaId) => {
+  try {
+    const token = getAccessToken();
+
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting idea:",
+      error.response ? error.response.data : error.message
+    );
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "Delete idea failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+}
