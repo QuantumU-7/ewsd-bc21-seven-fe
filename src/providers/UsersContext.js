@@ -5,6 +5,7 @@ import {
   createNewUser,
   deleteUserById,
   getAllUsers,
+  updateUserById,
 } from "@/services/userManagementService";
 import { toast } from "sonner";
 
@@ -18,11 +19,23 @@ export const UsersProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   /* Note: API Search is equal to keyword form field */
-  const fetchUsers = async (page,limit = 5, department_id = null, keyword = null, role_id= null) => {
+  const fetchUsers = async (
+    page,
+    limit = 5,
+    department_id = null,
+    keyword = null,
+    role_id = null
+  ) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getAllUsers(page, limit, department_id, keyword, role_id);
+      const response = await getAllUsers(
+        page,
+        limit,
+        department_id,
+        keyword,
+        role_id
+      );
       setUsers(response.data);
       setTotalPages(response.pagination.total_pages);
     } catch (error) {
@@ -42,6 +55,19 @@ export const UsersProvider = ({ children }) => {
       toast("Crated New User");
     } catch (error) {
       console.error("Error adding user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const editUser = async (id, updatedUser) => {
+    setLoading(true);
+    try {
+      await updateUserById(id, updatedUser);
+      fetchUsers(currentPage);
+      toast("Updated User");
+    } catch (error) {
+      console.error("Error updating user:", error);
     } finally {
       setLoading(false);
     }
@@ -75,6 +101,7 @@ export const UsersProvider = ({ children }) => {
         error,
         totalPages,
         deleteUser,
+        editUser,
       }}
     >
       {children}

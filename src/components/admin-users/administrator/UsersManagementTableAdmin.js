@@ -28,10 +28,12 @@ import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationB
 import { Funnel } from "@phosphor-icons/react/dist/ssr";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
+import { useRouter } from "next/navigation";
 
 const filterSchema = z.object({
   department: z.string().optional(),
   keyword: z.string().optional(),
+  role: z.string().optional(),
 });
 
 const FilterForm = () => {
@@ -40,21 +42,20 @@ const FilterForm = () => {
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: { errors },
   } = useForm({ resolver: zodResolver(filterSchema) });
 
   const { fetchUsers, currentPage } = useUsers();
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
-  const [selectedRoleId, setSelectedRoleId] = useState(null);
   const [isFetchMode, setIsFetchMode] = useState(false);
 
   const onSubmit = (data) => {
     fetchUsers(
       currentPage,
       5,
-      selectedDepartmentId,
+      watch("department"),
       data.keyword,
-      selectedRoleId
+      watch("role")
     );
     setIsFetchMode(true);
   };
@@ -63,8 +64,6 @@ const FilterForm = () => {
     reset();
     setIsFetchMode(false);
     fetchUsers(currentPage);
-    setSelectedDepartmentId(null);
-    setSelectedRoleId(null);
   };
 
   return (
@@ -77,20 +76,19 @@ const FilterForm = () => {
           <Select
             onValueChange={(val) => {
               setValue("department", val);
-              const id = DEPARTMENT_DATA.find((dept) => dept.name === val).id;
-              setSelectedDepartmentId(id);
             }}
             {...register("department")}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select Department">
-                {DEPARTMENT_DATA.find((dept) => dept.id === selectedDepartmentId)
-                  ?.name || "Select Department"}
+                {DEPARTMENT_DATA.find(
+                  (dept) => dept.id === parseInt(watch("department"))
+                )?.name || "Select Department"}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {DEPARTMENT_DATA.map((dept) => (
-                <SelectItem key={dept.id} value={dept.name}>
+                <SelectItem key={dept.id} value={dept.id}>
                   {dept.name}
                 </SelectItem>
               ))}
@@ -112,14 +110,13 @@ const FilterForm = () => {
           <Select
             onValueChange={(val) => {
               setValue("role", val);
-              setSelectedRoleId(val);
             }}
             {...register("role")}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select Role">
-                {USER_ROLES.find((role) => role.id === parseInt(selectedRoleId))?.name ||
-                  "Select Role"}
+                {USER_ROLES.find((role) => role.id === parseInt(watch("role")))
+                  ?.name || "Select Role"}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -160,6 +157,8 @@ const UsersManagementTableAdmin = () => {
     deleteUser,
   } = useUsers();
 
+  const router = useRouter();
+
   useEffect(() => {
     if (users.length === 0) {
       fetchUsers(1);
@@ -189,7 +188,7 @@ const UsersManagementTableAdmin = () => {
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-            <p className="text-sm p-2 cursor-pointer hover:bg-gray-100">Edit</p>
+            <p onClick={() => router.push(`/admin/users/${user.id}`)} className="text-sm p-2 cursor-pointer hover:bg-gray-100">Edit</p>
             <span className="border-t"></span>
             <p
               onClick={() => {
@@ -218,7 +217,7 @@ const UsersManagementTableAdmin = () => {
             </Link>
           </div>
 
-          <FilterForm/>
+          <FilterForm />
 
           <CommonTable
             columns={["Name", "User ID", "Email", "Department", ""]}
