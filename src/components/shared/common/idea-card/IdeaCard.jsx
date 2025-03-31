@@ -19,7 +19,7 @@ const IdeaCard = ({ id, title, description, image }) => {
         <div className="flex-1">
           {image ? (
             <img
-              className="w-full"
+              className="w-full h-[345px] object-cover"
               src={convertBase64ToImage(image)}
               width={300}
               height={200}
@@ -27,7 +27,7 @@ const IdeaCard = ({ id, title, description, image }) => {
             />
           ) : (
             <Image
-              className="w-full"
+              className="w-full h-[345px] object-cover"
               src={DefaultThumbnail}
               width={300}
               height={200}

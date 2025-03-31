@@ -30,6 +30,35 @@ export const getAllIdeasService = async (pageNumber = 1, limit = 5) => {
   }
 };
 
+export const getPopularIdeas = async (pageNumber = 1, limit = 5) => {
+  try {
+    const token = getAccessToken();
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/ideas?page=${pageNumber}&limit=${limit}&sort[popularity]=-1`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching popular ideas:",
+      error.response ? error.response.data : error.message
+    );
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "Fetch Popular Ideas failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+}
+
 // Fix for the createNewIdeaService function
 export const createNewIdeaService = async (formData) => {
   try {
@@ -60,6 +89,36 @@ export const createNewIdeaService = async (formData) => {
     }
   }
 };
+
+export const updateIdeaService = async (ideaId, formData) => {
+  try {
+    const token = getAccessToken();
+
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API_URL}/ideas/${ideaId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Let axios set the content type with boundary
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error updating idea:",
+      error.response ? error.response.data : error.message
+    );
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "Update idea failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+}
 
 export const deleteIdeaService = async (ideaId) => {
   try {

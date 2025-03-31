@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorState, convertToRaw } from "draft-js";
 import { getAllCategories } from "@/services/categoryManagementService";
 import draftToHtml from "draftjs-to-html";
-import { createNewIdeaService } from "@/services/ideaManagementService";
+import { createNewIdeaService, updateIdeaService } from "@/services/ideaManagementService";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { getIdeaById } from "@/services/getIdeaById";
@@ -22,13 +22,15 @@ import ListItem from "@tiptap/extension-list-item";
 import Underline from "@tiptap/extension-underline";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Link from "@tiptap/extension-link";
+import { convertBase64ToImage } from "@/utils/image";
+import { getUser } from "@/utils/authentication";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
   facility: z.string().min(1, "Facility is required"),
   content: z.string().min(10, "Content must be at least 10 characters"),
   agree: z.boolean().refine((val) => val, "You must agree to the terms"),
-  image: z.any().refine((val) => val instanceof File, "Thumbnail is required"),
+  image: z.any().refine((val) => val, "Thumbnail is required"),
   isAnonymous: z.boolean(),
 });
 
@@ -43,6 +45,8 @@ export const useCreateIdeaForm = () => {
     resolver: zodResolver(formSchema),
   });
 
+  console.log({errors: errors})
+
   const router = useRouter();
   const pathName = usePathname();
 
@@ -56,6 +60,7 @@ export const useCreateIdeaForm = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -203,6 +208,8 @@ export const useCreateIdeaForm = () => {
       setValue("title", data.title);
       setValue("content", data.description);
       editor?.commands.setContent(data.description);
+      setValue("image", convertBase64ToImage(data.thumbnail));
+      setImage(convertBase64ToImage(data.thumbnail));
 
       setValue("isAnonymous", data.is_posted_anon);
       console.log({ data });
@@ -211,6 +218,8 @@ export const useCreateIdeaForm = () => {
     }
   };
 
+  console.log({image})
+
   useEffect(() => {
     fetchAllCategories();
     setValue("isAnonymous", isAnonymous);
@@ -218,6 +227,7 @@ export const useCreateIdeaForm = () => {
 
   useEffect(() => {
     if (pathName.includes("/edit")) {
+      setIsEditMode(true);
       fetchIdeaById();
     }
   }, [editor, allCategories]);
@@ -284,15 +294,15 @@ export const useCreateIdeaForm = () => {
       formData.append("title", data.title);
       formData.append("description", data.content);
       formData.append("category_id", Number(selectedCategoryId));
-      formData.append("posted_by", Number(1));
+      formData.append("posted_by", Number(getUser().id));
       formData.append(
         "is_posted_anon",
         data.isAnonymous === true ? "true" : "false"
       );
 
-      if (data.image instanceof File) {
+      // if (data.image instanceof File) {
         formData.append("thumbnail", data.image);
-      }
+      // }
 
       if (files.length > 0) {
         files.forEach((file) => {
@@ -304,10 +314,19 @@ export const useCreateIdeaForm = () => {
 
       console.log("About to submit form data");
 
-      const result = await createNewIdeaService(formData);
-      console.log("API Response:", result);
-      setIsLoading(false);
-      toast("Idea created successfully!");
+      if(!isEditMode){
+        const result = await createNewIdeaService(formData);
+        console.log("API Response:", result);
+        setIsLoading(false);
+        toast("Idea created successfully!");
+      }else{
+        const result = await updateIdeaService(pathName.split("/")[3], formData);
+        console.log("API Response:", result);
+        setIsLoading(false);
+        toast("Idea updated successfully!");
+      }
+
+
       router.push("/");
     } catch (error) {
       setIsLoading(false);
@@ -346,5 +365,6 @@ export const useCreateIdeaForm = () => {
     selectedCategory,
     setSelectedCategory,
     setSelectedCategoryId,
+    isEditMode,
   };
 };
