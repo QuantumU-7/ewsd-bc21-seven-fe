@@ -1,6 +1,6 @@
 import actionApi from "@/api/config";
 
-export const getAllUsers = async (page, limit =5, department_id = null, search = null) => {
+export const getAllUsers = async (page, limit =5, department_id = null, search = null, role_id=null) => {
   try {
 
     const response = await actionApi().get(`/users`, {
@@ -8,7 +8,8 @@ export const getAllUsers = async (page, limit =5, department_id = null, search =
         page,
         limit,
         department_id,
-        search
+        search,
+        role_id
       }
     });
 

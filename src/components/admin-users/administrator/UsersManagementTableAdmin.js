@@ -25,25 +25,46 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
+import { Funnel } from "@phosphor-icons/react/dist/ssr";
+import { X } from "@phosphor-icons/react/dist/ssr";
+import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
 
 const filterSchema = z.object({
   department: z.string().optional(),
   keyword: z.string().optional(),
 });
 
-const FilterForm = ({ departments}) => {
+const FilterForm = () => {
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(filterSchema) });
 
   const { fetchUsers, currentPage } = useUsers();
   const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
+  const [isFetchMode, setIsFetchMode] = useState(false);
 
   const onSubmit = (data) => {
-    fetchUsers(currentPage, 5, selectedDepartmentId, data.keyword);
+    fetchUsers(
+      currentPage,
+      5,
+      selectedDepartmentId,
+      data.keyword,
+      selectedRoleId
+    );
+    setIsFetchMode(true);
+  };
+
+  const handleReset = () => {
+    reset();
+    setIsFetchMode(false);
+    fetchUsers(currentPage);
+    setSelectedDepartmentId(null);
+    setSelectedRoleId(null);
   };
 
   return (
@@ -54,17 +75,21 @@ const FilterForm = ({ departments}) => {
       <div className="flex gap-5">
         <div>
           <Select
-            onValueChange={(val) => {setValue("department", val)
-              const id = departments.find((dept) => dept.name === val).id;
-              setSelectedDepartmentId(id)
+            onValueChange={(val) => {
+              setValue("department", val);
+              const id = DEPARTMENT_DATA.find((dept) => dept.name === val).id;
+              setSelectedDepartmentId(id);
             }}
             {...register("department")}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select Department" />
+              <SelectValue placeholder="Select Department">
+                {DEPARTMENT_DATA.find((dept) => dept.id === selectedDepartmentId)
+                  ?.name || "Select Department"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {departments.map((dept) => (
+              {DEPARTMENT_DATA.map((dept) => (
                 <SelectItem key={dept.id} value={dept.name}>
                   {dept.name}
                 </SelectItem>
@@ -82,8 +107,44 @@ const FilterForm = ({ departments}) => {
             <p className="text-red-500">{errors.keyword.message}</p>
           )}
         </div>
+
+        <div>
+          <Select
+            onValueChange={(val) => {
+              setValue("role", val);
+              setSelectedRoleId(val);
+            }}
+            {...register("role")}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Role">
+                {USER_ROLES.find((role) => role.id === parseInt(selectedRoleId))?.name ||
+                  "Select Role"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {USER_ROLES.map((role) => (
+                <SelectItem key={role.id} value={role.id}>
+                  {role.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.department && (
+            <p className="text-red-500">{errors.department.message}</p>
+          )}
+        </div>
       </div>
-      <Button type="submit">Filter</Button>
+      <div className="flex">
+        <Button type="submit">
+          <Funnel size={32} />
+        </Button>
+        {isFetchMode && (
+          <Button onClick={() => handleReset()} variant="ghost" type="button">
+            <X size={32} />
+          </Button>
+        )}
+      </div>
     </form>
   );
 };
@@ -144,7 +205,7 @@ const UsersManagementTableAdmin = () => {
       </TableCell>
     </TableRow>
   ));
-  
+
   return (
     <>
       <Card>
@@ -157,21 +218,7 @@ const UsersManagementTableAdmin = () => {
             </Link>
           </div>
 
-          <FilterForm
-            departments={[
-              {
-                id: 1,
-                name: "IT",
-              },
-              {
-                id: 2,
-                name: "HR",
-              },
-              {
-                id: 3,
-                name: "Finance",
-              },]}
-          />
+          <FilterForm/>
 
           <CommonTable
             columns={["Name", "User ID", "Email", "Department", ""]}
