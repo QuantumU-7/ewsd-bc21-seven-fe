@@ -63,6 +63,7 @@ const CreateIdeaForm = () => {
     selectedCategory,
     setSelectedCategory,
     setSelectedCategoryId,
+    isEditMode,
   } = useCreateIdeaForm();
 
   if (!editor) {
@@ -85,7 +86,7 @@ const CreateIdeaForm = () => {
               <input className="cursor-pointer" {...getInputProps()} />
               {image ? (
                 <img
-                  src={URL.createObjectURL(image)}
+                  src={isEditMode ? image : URL.createObjectURL(image)}
                   alt="Selected Image"
                   className="h-full w-full object-cover rounded-lg"
                 />
@@ -349,7 +350,7 @@ const CreateIdeaForm = () => {
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Upload Idea"
+                `${isEditMode ? 'Update this' : 'Submit this'} Idea`
               )}
             </Button>
 
