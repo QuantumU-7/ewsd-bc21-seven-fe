@@ -317,7 +317,7 @@ const IdeaDetailPage = () => {
                 {/* Comments list */}
                 {idea.comments_count && idea.comments_count > 0 ? (
                   <div>
-                    {/* {idea.comments.map((comment, index) => (
+                    {idea.comments.map((comment, index) => (
                       <div
                         key={index}
                         className="flex w-full justify-between my-5"
@@ -349,7 +349,7 @@ const IdeaDetailPage = () => {
                             : "Date unavailable"}
                         </p>
                       </div>
-                    ))} */}
+                    ))}
                   </div>
                 ) : (
                   <div className="p-4 text-center text-gray-500">
