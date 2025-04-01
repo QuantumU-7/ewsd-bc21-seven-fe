@@ -1,5 +1,4 @@
 "use client";
-import { HOME } from "@/constants/routes";
 import Link from "next/link";
 import CategoryCard from "./CategoryCard";
 import { getPopularIdeas } from "@/services/ideaManagementService";
@@ -23,10 +22,7 @@ const PopularSection = () => {
   return (
     <section className="max-w-7xl mx-auto space-y-8 my-8 px-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold text-dark">Popular</h1>
-        <Link href={HOME} className="text-gray-400">
-          View all
-        </Link>
+        <h1 className="text-4xl font-bold text-dark">Trending Now</h1>
       </div>
 
       <div>
@@ -49,9 +45,9 @@ const PopularSection = () => {
               {/* Content Overlay */}
               <div className="relative z-10 bg-primary w-full h-full bg-opacity-60 text-white rounded-md p-8 flex flex-col justify-between">
                 <div className="space-y-3">
-                  <p className="uppercase">
-                    BY {popularIdeas[0]?.posted_by.firstname} IN{" "}
-                    {popularIdeas[0]?.category.name}
+                  <p className="">
+                    By <b>{popularIdeas[0]?.posted_by.firstname}</b> from{" "}
+                    <b>{popularIdeas[0]?.category.name}</b>
                   </p>
                   <h1 className="text-2xl lg:text-4xl">
                     {popularIdeas[0]?.title}
