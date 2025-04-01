@@ -74,8 +74,9 @@ const LatestIdeaSection = () => {
   }, [currentPage]);
 
   return (
-    <section className="my-28">
+    <section className="my-16">
       <div className="max-w-7xl mx-auto px-4 space-y-6">
+        <h1 className="text-4xl font-bold text-dark">All Ideas</h1>
         {loading
           ? [...Array(5)].map((_, index) => <LoadingIdeaCard key={index} />)
           : ideas.map((idea) => (
@@ -87,11 +88,17 @@ const LatestIdeaSection = () => {
                     title={idea.title}
                     description={idea.description}
                     image={idea.thumbnail}
+                    category={idea.category.name}
+                    posted_At={idea.posted_on}
+                    user={`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}
+                    like_count={idea.likes_count}
+                    view_count={idea.views_count}
+                    dept_name={idea.department.name}
                   />
                 </Link>
               </div>
             ))}
-            
+
         {!loading && ideas.length === 0 && (
           <div className="flex justify-center items-center h-[300px]">
             <h2 className="text-2xl font-semibold text-gray-500">
