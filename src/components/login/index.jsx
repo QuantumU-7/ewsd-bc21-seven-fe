@@ -65,7 +65,7 @@ const LoginForm = () => {
       Cookies.set("refreshtoken", data.refresh_token, { expires: 7 });
 
       const decodedToken = jwtDecode(data.access_token);
-      redirectAfterLogin(decodedToken.lastlogin);
+      redirectAfterLogin(decodedToken.lastlogin, me.is_disabled);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -73,10 +73,14 @@ const LoginForm = () => {
     }
   }
 
-  const redirectAfterLogin = (lastlogin) => {
+  const redirectAfterLogin = (lastlogin, is_disabled) => {
     if (lastlogin === null) {
       router.push("/welcome");
-    } else {
+    }
+    else if(is_disabled){
+      router.push("/blocked-user");
+    }
+    else {
       router.push("/");
     }
   };

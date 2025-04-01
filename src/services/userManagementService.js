@@ -1,6 +1,6 @@
 import actionApi from "@/api/config";
 
-export const getAllUsers = async (page, limit =5, department_id = null, search = null, role_id=null) => {
+export const getAllUsers = async (page, limit =10, department_id = null, search = null, role_id=null) => {
   try {
 
     const response = await actionApi().get(`/users`, {
@@ -126,3 +126,23 @@ export const deleteUserById = (userId) => {
     }
   }
 }
+
+export const enableDisableUser = async (id, is_disabled) => {
+  const apiType = is_disabled ? "enable" : "disable";
+  try {
+    const response = await actionApi().patch(`/users/${id}/${apiType}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error disabling user:",
+      error.response ? error.response.data : error.message
+    );
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "disable user failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+};
