@@ -1,5 +1,4 @@
 "use client";
-import { HOME } from "@/constants/routes";
 import Link from "next/link";
 import CategoryCard from "./CategoryCard";
 import { getPopularIdeas } from "@/services/ideaManagementService";
