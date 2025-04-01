@@ -6,7 +6,7 @@ export const getAllIdeasService = async (pageNumber = 1, limit = 5) => {
     const token = getAccessToken();
 
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/ideas/?page=${pageNumber}&limit=${limit}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/ideas/?page=${pageNumber}&limit=${limit}&sort[date]=${-1}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
