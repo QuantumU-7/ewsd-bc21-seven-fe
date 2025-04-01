@@ -65,20 +65,20 @@ const LoginForm = () => {
       Cookies.set("refreshtoken", data.refresh_token, { expires: 7 });
 
       const decodedToken = jwtDecode(data.access_token);
-      redirectAfterLogin(decodedToken.lastlogin, me.is_disabled);
+      redirectAfterLogin(decodedToken.lastlogin);
     } catch (error) {
+      if(error.message === "403"){
+        router.push("/blocked-user")
+      }
       setError(error.message);
     } finally {
       setLoading(false);
     }
   }
 
-  const redirectAfterLogin = (lastlogin, is_disabled) => {
+  const redirectAfterLogin = (lastlogin) => {
     if (lastlogin === null) {
       router.push("/welcome");
-    }
-    else if(is_disabled){
-      router.push("/blocked-user");
     }
     else {
       router.push("/");

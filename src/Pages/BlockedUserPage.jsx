@@ -1,8 +1,8 @@
-import BlockedUserScreen from "@/components/first-login-screen";
+import BlockedUserScreen from "@/components/blocked-user-screen";
 import React from "react";
 
-const FirstLoginPage = () => {
+const BlockedUserPage = () => {
   return <BlockedUserScreen />;
 };
 
-export default FirstLoginPage;
+export default BlockedUserPage;
