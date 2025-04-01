@@ -1,12 +1,15 @@
 import actionApi from "@/api/config";
 
-export const getAllUsers = async (page, limit = 10) => {
+export const getAllUsers = async (page, limit =10, department_id = null, search = null, role_id=null) => {
   try {
 
     const response = await actionApi().get(`/users`, {
       params: {
         page,
         limit,
+        department_id,
+        search,
+        role_id
       }
     });
 
@@ -34,8 +37,8 @@ export const createNewUser = async (user) => {
       username: user.name,
       default_pwd: user.password,
       password: user.password,
-      is_disabled: false,
-      is_locked: false,
+      "isdisabled": true,
+      "islocked": true,
       lastlogin: "2025-03-20T01:26:42.978Z",
       role_id: user.userRole,
       department_id: user.department,
@@ -55,6 +58,55 @@ export const createNewUser = async (user) => {
     }
   }
 };
+
+export const updateUserById = async (userId, user) => {
+  try {
+    const response = await actionApi().patch(`/users/${userId}`, {
+      firstname: user.name,
+      lastname: "University",
+      email: user.email,
+      username: user.name,
+      default_pwd: user.password,
+      password: user.password,
+      "isdisabled": true,
+      "islocked": true,
+      lastlogin: "2025-03-20T01:26:42.978Z",
+      role_id: user.userRole,
+      department_id: user.department,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error updating user:",
+      error.response ? error.response.data : error.message
+    );
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "Update user failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+}
+export const getUserById = async (userId) => {
+  try {
+    const response = await actionApi().get(`/users/${userId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching user:",
+      error.response? error.response.data : error.message
+    );
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "Fetch User failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+}
 
 export const deleteUserById = (userId) => {
   try {

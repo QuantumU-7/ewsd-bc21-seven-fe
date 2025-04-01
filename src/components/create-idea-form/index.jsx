@@ -16,17 +16,8 @@ import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useCreateIdeaForm } from "./useCreateIdeaForm";
 import { Loader2 } from "lucide-react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
-import Strike from "@tiptap/extension-strike";
-import Heading from "@tiptap/extension-heading";
-import BulletList from "@tiptap/extension-bullet-list";
-import OrderedList from "@tiptap/extension-ordered-list";
-import ListItem from "@tiptap/extension-list-item";
-import Underline from "@tiptap/extension-underline";
-import HorizontalRule from "@tiptap/extension-horizontal-rule";
+import { EditorContent } from "@tiptap/react";
+
 import {
   ArrowUUpLeft,
   ArrowUUpRight,
@@ -41,8 +32,6 @@ import {
   TextStrikethrough,
   TextUnderline,
 } from "@phosphor-icons/react";
-import { useCallback } from "react";
-import Link from "@tiptap/extension-link";
 
 const CreateIdeaForm = () => {
   const {
@@ -69,127 +58,13 @@ const CreateIdeaForm = () => {
     isAnonymous,
     allCategories,
     isLoading,
+    editor,
+    setLink,
+    selectedCategory,
+    setSelectedCategory,
+    setSelectedCategoryId,
+    isEditMode,
   } = useCreateIdeaForm();
-
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Bold,
-      Italic,
-      Strike,
-      Underline,
-      Heading.configure({ levels: [1, 2, 3] }),
-      BulletList,
-      OrderedList,
-      ListItem,
-      HorizontalRule,
-      // History,
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        defaultProtocol: "https",
-        protocols: ["http", "https"],
-        isAllowedUri: (url, ctx) => {
-          try {
-            // construct URL
-            const parsedUrl = url.includes(":")
-              ? new URL(url)
-              : new URL(`${ctx.defaultProtocol}://${url}`);
-
-            // use default validation
-            if (!ctx.defaultValidate(parsedUrl.href)) {
-              return false;
-            }
-
-            // disallowed protocols
-            const disallowedProtocols = ["ftp", "file", "mailto"];
-            const protocol = parsedUrl.protocol.replace(":", "");
-
-            if (disallowedProtocols.includes(protocol)) {
-              return false;
-            }
-
-            // only allow protocols specified in ctx.protocols
-            const allowedProtocols = ctx.protocols.map((p) =>
-              typeof p === "string" ? p : p.scheme
-            );
-
-            if (!allowedProtocols.includes(protocol)) {
-              return false;
-            }
-
-            // disallowed domains
-            const disallowedDomains = [
-              "example-phishing.com",
-              "malicious-site.net",
-            ];
-            const domain = parsedUrl.hostname;
-
-            if (disallowedDomains.includes(domain)) {
-              return false;
-            }
-
-            // all checks have passed
-            return true;
-          } catch {
-            return false;
-          }
-        },
-        shouldAutoLink: (url) => {
-          try {
-            // construct URL
-            const parsedUrl = url.includes(":")
-              ? new URL(url)
-              : new URL(`https://${url}`);
-
-            // only auto-link if the domain is not in the disallowed list
-            const disallowedDomains = [
-              "example-no-autolink.com",
-              "another-no-autolink.com",
-            ];
-            const domain = parsedUrl.hostname;
-
-            return !disallowedDomains.includes(domain);
-          } catch {
-            return false;
-          }
-        },
-      }),
-    ],
-    content: "",
-    onUpdate: ({ editor }) => {
-      setValue("content", editor.getHTML());
-    },
-  });
-
-  const setLink = useCallback(() => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
-
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
-      return;
-    }
-
-    // update link
-    try {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run();
-    } catch (e) {
-      alert(e.message);
-    }
-  }, [editor]);
 
   if (!editor) {
     return null;
@@ -211,7 +86,7 @@ const CreateIdeaForm = () => {
               <input className="cursor-pointer" {...getInputProps()} />
               {image ? (
                 <img
-                  src={URL.createObjectURL(image)}
+                  src={isEditMode ? image : URL.createObjectURL(image)}
                   alt="Selected Image"
                   className="h-full w-full object-cover rounded-lg"
                 />
@@ -257,15 +132,20 @@ const CreateIdeaForm = () => {
               <Select
                 name="category"
                 id="category"
+                value={selectedCategory}
                 onValueChange={(val) => {
                   let id = allCategories.find(
                     (category) => category?.name === val
                   ).id;
-                  setValue("facility", id.toString());
+                  setSelectedCategoryId(id);
+                  setSelectedCategory(val);
+                  setValue("facility", val);
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Facility" />
+                  <SelectValue placeholder="Select Facility">
+                    {selectedCategory || "Select Facility"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {allCategories?.map((category) => (
@@ -437,7 +317,7 @@ const CreateIdeaForm = () => {
                     onClick={() => editor.chain().focus().undo().run()}
                     disabled={!editor.can().undo()}
                   >
-                     <ArrowUUpLeft size={22} />
+                    <ArrowUUpLeft size={22} />
                   </button>
                   <button
                     type="button"
@@ -470,7 +350,7 @@ const CreateIdeaForm = () => {
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Upload Idea"
+                `${isEditMode ? 'Update this' : 'Submit this'} Idea`
               )}
             </Button>
 

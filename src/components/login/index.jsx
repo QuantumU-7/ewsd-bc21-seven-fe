@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import uniImage from "@/public/images/uni.png";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 import {
   Form,
@@ -25,6 +25,7 @@ import { getMe } from "@/services/authService";
 import LoadingButton from "../shared/common/Button";
 import { TokenKeys } from "@/constants/tokenKeys";
 import Cookies from "js-cookie";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -38,6 +39,7 @@ const formSchema = z.object({
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const form = useForm({
@@ -81,7 +83,7 @@ const LoginForm = () => {
     else {
       router.push("/");
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center h-[90vh]">
@@ -107,7 +109,7 @@ const LoginForm = () => {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="username" {...field} />
+                        <Input placeholder="Enter your username" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -120,11 +122,24 @@ const LoginForm = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="password"
-                          {...field}
-                        />
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                          >
+                            {showPassword ? (
+                              <EyeSlash size={18} />
+                            ) : (
+                              <Eye size={18} />
+                            )}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
