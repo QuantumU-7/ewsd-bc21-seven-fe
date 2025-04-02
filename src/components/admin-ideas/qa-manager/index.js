@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAllIdeaService } from "@/services/getAllIdeas";
 import IdeaTable from "./components/IdeaTable";
@@ -129,7 +128,7 @@ const QAManagerIdeasList = () => {
   const handleExportCSV = async () => {
     try {
       setExportCSVLoading(true);
-      const response = await exportIdeaToCSV();
+      await exportIdeaToCSV();
       setExportCSVLoading(false);
       toast.success("CSV exported successfully!");
     } catch (error) {
