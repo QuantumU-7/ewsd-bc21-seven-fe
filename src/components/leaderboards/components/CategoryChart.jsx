@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, LabelList, Tooltip } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { ideasByCategoryService } from "@/services/ideasByCategoryService";
 import { Skeleton } from "@/components/ui/skeleton";

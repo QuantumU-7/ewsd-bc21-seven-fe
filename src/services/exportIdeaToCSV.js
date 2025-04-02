@@ -1,6 +1,6 @@
 import actionApi from "@/api/config";
 
-export const exportIdeaToCSV = async () => {
+export const exportIdeaToCSV = async (ideaId) => {
   try {
     const response = await actionApi().get(`/ideas/export/csv`, {
       responseType: "blob",
