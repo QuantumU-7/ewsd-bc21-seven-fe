@@ -33,7 +33,6 @@ const IdeaDetailPage = () => {
   const [dislikeCount, setDislikeCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
-  const [reportId, setReportId] = useState(null);
   const [remark, setRemark] = useState("");
   useEffect(() => {
     const fetchIdeaDetail = async () => {
@@ -124,7 +123,7 @@ const IdeaDetailPage = () => {
   const handleExportCSV = async () => {
     setExportLoading(true);
     try {
-      await exportIdeaToCSV(params.id);
+      await exportIdeaToCSV();
       toast.success("Idea exported successfully!");
     } catch (error) {
       toast.error("Failed to export idea");
@@ -136,7 +135,7 @@ const IdeaDetailPage = () => {
 
   const handleReportIdea = async (id) => {
     try{
-      const res = await ideaReportService(id,remark);
+      await ideaReportService(id,remark);
         toast.success("Idea reported successfully!");
         setRemark("");
         setOpenConfirmBox(false);
@@ -366,7 +365,6 @@ const IdeaDetailPage = () => {
 
                 {/* Comments list */}
                 {comments.length > 0 ? (
-                  // <></>
                   <div>
                     {comments.map((comment, index) => (
                       <div
@@ -400,7 +398,7 @@ const IdeaDetailPage = () => {
                             : "Date unavailable"}
                         </p>
                       </div>
-                    ))} */}
+                    ))}
                   </div>
                 ) : (
                   <div className="p-4 text-center text-gray-500">
