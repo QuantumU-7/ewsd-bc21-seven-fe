@@ -17,6 +17,10 @@ export const UsersProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFilterMode, setIsFilterMode] = useState(false);
+  const [roleId, setRoleId] = useState(null);
+  const [departmentId, setDepartmentId] = useState(null);
+  const [searchKey, setSearchKey] = useState(null);
 
   /* Note: API Search is equal to keyword form field */
   const fetchUsers = async (
@@ -102,6 +106,14 @@ export const UsersProvider = ({ children }) => {
         totalPages,
         deleteUser,
         editUser,
+        isFilterMode,
+        setIsFilterMode,
+        roleId,
+        setRoleId,
+        departmentId,
+        setDepartmentId,
+        searchKey,
+        setSearchKey
       }}
     >
       {children}
