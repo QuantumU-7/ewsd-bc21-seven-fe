@@ -365,7 +365,6 @@ const IdeaDetailPage = () => {
 
                 {/* Comments list */}
                 {comments.length > 0 ? (
-                  // <></>
                   <div>
                     {comments.map((comment, index) => (
                       <div
@@ -399,7 +398,7 @@ const IdeaDetailPage = () => {
                             : "Date unavailable"}
                         </p>
                       </div>
-                    ))} */}
+                    ))}
                   </div>
                 ) : (
                   <div className="p-4 text-center text-gray-500">
