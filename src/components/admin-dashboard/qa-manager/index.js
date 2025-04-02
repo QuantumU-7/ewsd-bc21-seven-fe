@@ -2,20 +2,17 @@
 import { CategoryChart } from "@/components/leaderboards/components/CategoryChart";
 import { DepartmentChart } from "@/components/leaderboards/components/DepartmentChart";
 import { ContributorsByDepartment } from "@/components/leaderboards/components/ContributorsByDepartment";
-import { HorizontalBarChart } from "@/components/shared/common/Chart/HorizontalBarChart";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAnonymousStatus } from "@/services/getAnonymousStatus";
 
 const QaMangerDashboard = () => {
 
-  const [loadingAnonymousStatus, setLoadingAnonymousStatus] = useState(false);
   const [anonymousStatus, setAnonymousStatus] = useState(null);
 
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoadingAnonymousStatus(true);
 
       try {
         const res = await getAnonymousStatus();
@@ -23,8 +20,6 @@ const QaMangerDashboard = () => {
         setAnonymousStatus(res);
       } catch (error) {
         console.error('Error fetching data:', error);
-      } finally {
-        setLoadingAnonymousStatus(false);
       }
     };
 
