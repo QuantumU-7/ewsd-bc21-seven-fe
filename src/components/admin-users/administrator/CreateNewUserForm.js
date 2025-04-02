@@ -24,6 +24,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useUsers } from "@/providers/UsersContext";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { getUserById } from "@/services/userManagementService";
+import { ADMIN } from "@/constants/routes";
 
 const formSchema = z
   .object({
@@ -47,8 +52,8 @@ export default function CreateNewUserForm({ isEditing = false }) {
     defaultValues: {
       name: "",
       phone: "",
-      department: 1,
-      userRole: 1,
+      department: null,
+      userRole: null,
       loginId: "",
       email: "",
       password: "",
@@ -56,12 +61,44 @@ export default function CreateNewUserForm({ isEditing = false }) {
     },
   });
 
-  const { loading, addUser } = useUsers();
+  const { loading, addUser, editUser } = useUsers();
+  const pathname = usePathname();
+  const userId = pathname.split("/").pop();
+  console.log({ userId });
+
+  const fetchUserById = async () => {
+    try {
+      const userData = await getUserById(userId);
+      form.setValue("name", userData.username);
+      form.setValue("phone", userData.phone);
+      form.setValue("department", userData.department.id.toString());
+      form.setValue("userRole", userData.role.id.toString());
+      form.setValue("loginId", userData.loginId);
+      form.setValue("email", userData.email);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isEditing) {
+      fetchUserById();
+    }
+  }, []);
 
   async function onSubmit(values) {
-    await addUser(values);
+    if (isEditing) {
+      await editUser(userId,values);
+      router.push(ADMIN.USERS)
+    } else {
+      await addUser(values);
+    }
     form.reset();
   }
+
+  console.log({role: form.watch('userRole')});
 
   return (
     <Card>
@@ -70,10 +107,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
           {isEditing ? "Update" : "Create New"} User
         </h1>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className=""
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="">
             <div className="grid grid-cols-2 gap-4 max-w-xl">
               <FormField
                 control={form.control}
@@ -88,7 +122,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="phone"
@@ -102,7 +136,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="department"
@@ -115,13 +149,19 @@ export default function CreateNewUserForm({ isEditing = false }) {
                         defaultValue={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue />
+                          <SelectValue>
+                            {DEPARTMENT_DATA.find(
+                              (dept) =>
+                                dept.id === parseInt(form.watch("department"))
+                            )?.name || "Select Department"}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="4">Human Resource</SelectItem>
-                          <SelectItem value="1">IT</SelectItem>
-                          <SelectItem value="2">Finance</SelectItem>
-                          <SelectItem value="3">Marketing</SelectItem>
+                          {DEPARTMENT_DATA.map((dept) => (
+                            <SelectItem key={dept.id} value={dept.id}>
+                              {dept.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -129,7 +169,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="userRole"
@@ -142,13 +182,18 @@ export default function CreateNewUserForm({ isEditing = false }) {
                         defaultValue={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue />
+                          <SelectValue placeholder="Select Role">
+                            {USER_ROLES.find(
+                              (role) => role.id === parseInt(form.watch("userRole"))
+                            )?.name || "Select Role"}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="3">Staff</SelectItem>
-                          <SelectItem value="4">QA Manager</SelectItem>
-                          <SelectItem value="1">Admin</SelectItem>
-                          <SelectItem value="5">QA Coordinator</SelectItem>
+                          {USER_ROLES.map((role) => (
+                            <SelectItem key={role.id} value={role.id}>
+                              {role.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -156,7 +201,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="loginId"
@@ -170,7 +215,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="email"
@@ -184,7 +229,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="password"
@@ -198,7 +243,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -215,7 +260,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
             </div>
 
             <div className="flex gap-4 justify-end w-full">
-            <Link href="/admin/users">
+              <Link href="/admin/users">
                 <Button type="button" variant="ghost" className="col-span-2">
                   Back
                 </Button>
@@ -224,10 +269,9 @@ export default function CreateNewUserForm({ isEditing = false }) {
                 {loading ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Add New User"
+                  `${isEditing ? 'Update' : 'Add New'} User`
                 )}
               </Button>
-
             </div>
           </form>
         </Form>

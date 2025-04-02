@@ -25,21 +25,60 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
+import { Funnel } from "@phosphor-icons/react/dist/ssr";
+import { X } from "@phosphor-icons/react/dist/ssr";
+import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
+import { useRouter } from "next/navigation";
 
 const filterSchema = z.object({
-  department: z.string().nonempty("Department is required"),
+  department: z.string().optional(),
   keyword: z.string().optional(),
+  role: z.string().optional(),
 });
 
-const FilterForm = ({ departments, onFilter }) => {
+export const FilterForm = () => {
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
+    watch,
     formState: { errors },
   } = useForm({ resolver: zodResolver(filterSchema) });
 
+  const {
+    fetchUsers,
+    currentPage,
+    setCurrentPage,
+    isFilterMode,
+    setIsFilterMode,
+    setDepartmentId,
+    setSearchKey,
+    setRoleId,
+  } = useUsers();
+
   const onSubmit = (data) => {
-    onFilter(data);
+    fetchUsers(
+      currentPage,
+      5,
+      watch("department"),
+      data.keyword,
+      watch("role")
+    );
+    setDepartmentId(watch("department"));
+    setSearchKey(data.keyword);
+    setRoleId(watch("role"));
+    setIsFilterMode(true);
+  };
+
+  const handleReset = () => {
+    reset();
+    setIsFilterMode(false);
+    fetchUsers(currentPage);
+    setDepartmentId(null);
+    setSearchKey(null);
+    setRoleId(null);
+    setCurrentPage(1);
   };
 
   return (
@@ -49,14 +88,23 @@ const FilterForm = ({ departments, onFilter }) => {
     >
       <div className="flex gap-5">
         <div>
-          <Select {...register("department")}>
+          <Select
+            onValueChange={(val) => {
+              setValue("department", val);
+            }}
+            {...register("department")}
+          >
             <SelectTrigger>
-              <SelectValue placeholder="Select Department" />
+              <SelectValue placeholder="Select Department">
+                {DEPARTMENT_DATA.find(
+                  (dept) => dept.id === parseInt(watch("department"))
+                )?.name || "Select Department"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {departments.map((dept) => (
-                <SelectItem key={dept} value={dept}>
-                  {dept}
+              {DEPARTMENT_DATA.map((dept) => (
+                <SelectItem key={dept.id} value={dept.id}>
+                  {dept.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -72,8 +120,43 @@ const FilterForm = ({ departments, onFilter }) => {
             <p className="text-red-500">{errors.keyword.message}</p>
           )}
         </div>
+
+        <div>
+          <Select
+            onValueChange={(val) => {
+              setValue("role", val);
+            }}
+            {...register("role")}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Role">
+                {USER_ROLES.find((role) => role.id === parseInt(watch("role")))
+                  ?.name || "Select Role"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {USER_ROLES.map((role) => (
+                <SelectItem key={role.id} value={role.id}>
+                  {role.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.department && (
+            <p className="text-red-500">{errors.department.message}</p>
+          )}
+        </div>
       </div>
-      <Button type="submit">Filter</Button>
+      <div className="flex">
+        <Button type="submit">
+          <Funnel size={32} />
+        </Button>
+        {isFilterMode && (
+          <Button onClick={() => handleReset()} variant="ghost" type="button">
+            <X size={32} />
+          </Button>
+        )}
+      </div>
     </form>
   );
 };
@@ -87,7 +170,13 @@ const UsersManagementTableAdmin = () => {
     currentPage,
     setCurrentPage,
     deleteUser,
+    roleId,
+    departmentId,
+    searchKey,
+    isFilterMode
   } = useUsers();
+
+  const router = useRouter();
 
   useEffect(() => {
     if (users.length === 0) {
@@ -99,8 +188,12 @@ const UsersManagementTableAdmin = () => {
   const [deleteId, setDeleteId] = useState(null);
 
   const handleClickPagination = (page) => {
+    if (isFilterMode) {
+      fetchUsers(page, roleId, departmentId, searchKey);
+    } else {
+      fetchUsers(page);
+    }
     setCurrentPage(page);
-    fetchUsers(page);
   };
 
   const tableBody = users.map((user) => (
@@ -118,7 +211,12 @@ const UsersManagementTableAdmin = () => {
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-            <p className="text-sm p-2 cursor-pointer hover:bg-gray-100">Edit</p>
+            <p
+              onClick={() => router.push(`/admin/users/${user.id}`)}
+              className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+            >
+              Edit
+            </p>
             <span className="border-t"></span>
             <p
               onClick={() => {
@@ -134,7 +232,7 @@ const UsersManagementTableAdmin = () => {
       </TableCell>
     </TableRow>
   ));
-  
+
   return (
     <>
       <Card>
@@ -147,7 +245,7 @@ const UsersManagementTableAdmin = () => {
             </Link>
           </div>
 
-          <FilterForm departments={["Human Resource", "IT"]} />
+          <FilterForm />
 
           <CommonTable
             columns={["Name", "User ID", "Email", "Department", ""]}

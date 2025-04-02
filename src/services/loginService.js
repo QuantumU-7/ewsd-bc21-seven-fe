@@ -23,7 +23,10 @@ export const loginService = async (username, password) => {
     return response.data;
   } catch (error) {
     if (error.response) {
-      throw new Error(error.response.data.detail || "Login failed");
+      if(error.response.status === 403){
+        throw new Error(403)
+      }
+      throw new Error(error.response.data.message || "Login failed");
     } else {
       throw new Error("Something went wrong. Please try again.");
     }

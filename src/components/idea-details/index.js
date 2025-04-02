@@ -400,7 +400,7 @@ const IdeaDetailPage = () => {
                             : "Date unavailable"}
                         </p>
                       </div>
-                    ))}
+                    ))} */}
                   </div>
                 ) : (
                   <div className="p-4 text-center text-gray-500">
