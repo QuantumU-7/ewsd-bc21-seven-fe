@@ -5,6 +5,7 @@ import Image from "next/image";
 import uniImage from "@/public/images/uni.png";
 import { Button } from "@/components/ui/button";
 import { getUser } from "@/utils/authentication";
+import { redirectByRole } from "@/utils/login";
 
 const ForgotPasswordForm = () => {
   const me  = getUser();
@@ -23,7 +24,7 @@ const ForgotPasswordForm = () => {
             </div>
             <div className="mt-4 text-center">
               <Button>
-                <Link href="/" className="text-sm text-white">
+                <Link href={redirectByRole(me?.role?.id) || "/"} className="text-sm text-white">
                   Start Contributing
                 </Link>
               </Button>
