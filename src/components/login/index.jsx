@@ -67,6 +67,9 @@ const LoginForm = () => {
       const decodedToken = jwtDecode(data.access_token);
       redirectAfterLogin(decodedToken.lastlogin);
     } catch (error) {
+      if(error.message === "403"){
+        router.push("/blocked-user")
+      }
       setError(error.message);
     } finally {
       setLoading(false);
@@ -76,7 +79,8 @@ const LoginForm = () => {
   const redirectAfterLogin = (lastlogin) => {
     if (lastlogin === null) {
       router.push("/welcome");
-    } else {
+    }
+    else {
       router.push("/");
     }
   };
