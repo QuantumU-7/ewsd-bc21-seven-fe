@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
 import CommonPagination from "@/components/shared/common/Pagination";
+import TableLoading from "@/components/shared/common/TableLoading/TableLoading";
 
 export default function CategoryManagementTable() {
   const router = useRouter();
@@ -31,6 +32,8 @@ export default function CategoryManagementTable() {
     setEditingCategory,
     deleteSelectedCategory,
     totalPages,
+    currentPage,
+    setCurrentPage,
   } = useCategory();
 
   useEffect(() => {
@@ -41,6 +44,11 @@ export default function CategoryManagementTable() {
     setEditingCategory(name);
     router.push(`/admin/categories/${id}`);
   };
+
+  const handlePageChange = (page) => {
+    fetchCategories(page);
+    setCurrentPage(page);
+  }
 
   return (
     <Card>
@@ -53,7 +61,7 @@ export default function CategoryManagementTable() {
         </div>
 
         {/* Table */}
-        <Table>
+        <Table className="border rounded-md mb-5">
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
@@ -62,7 +70,7 @@ export default function CategoryManagementTable() {
           </TableHeader>
           <TableBody>
             {loading ? (
-              <p>Loading...</p>
+              <TableLoading columns={2}/>
             ) : (
               categories?.map((category, index) => (
                 <TableRow key={index}>
@@ -103,7 +111,7 @@ export default function CategoryManagementTable() {
         </Table>
 
         {/* Pagination */}
-        <CommonPagination position="center" totalPages={totalPages} isLoading={loading} onPageChange={fetchCategories}/>
+        <CommonPagination position="center" currentPage={currentPage} totalPages={totalPages} isLoading={loading} onPageChange={handlePageChange}/>
       </CardContent>
     </Card>
   );

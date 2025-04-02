@@ -2,10 +2,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import uniImage from "@/public/images/uni.png";
-import { getUser } from "@/utils/authentication";
 
 const BlockedUserScreen = () => {
-  const me  = getUser();
   return (
     <div className="flex justify-center items-center h-[90vh]">
       <Card className="w-[50vw] h-[30vw]">
@@ -13,9 +11,9 @@ const BlockedUserScreen = () => {
           <div className="w-1/2 p-[4vw]">
             <div className="flex flex-col items-center justify-center mb-9">
               <p className="text-2xl font-bold mb-2 text-primary">
-                Sorry {me?.firstname + " " + me?.lastname}
+                Sorry
               </p>
-              <p className="text-sm text-center">
+              <p className="text-sm text-center mt-5">
                 Your account has been suspended. Please contact QA Manager for further details.
               </p>
             </div>

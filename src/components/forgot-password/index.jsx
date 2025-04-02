@@ -9,6 +9,7 @@ import { PasswordForm } from "../../components/forgot-password/components/Passwo
 import { emailOtpService } from "@/services/emailOtpService";
 import { passwordResetService } from "@/services/passwordResetService";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const ForgotPasswordForm = () => {
   const [validEmail, setValidEmail] = useState("");
@@ -23,7 +24,9 @@ const ForgotPasswordForm = () => {
     try {
       await emailOtpService(values.email);
       setValidEmail(values.email);
+      toast.success("OTP code sent to your email.");
     } catch (error) {
+      toast.error("Failed to send OTP code.");
       setError(error.message);
     } finally {
       setIsLoading(false);
@@ -40,6 +43,8 @@ const ForgotPasswordForm = () => {
         values.OTP,
         values.newPassword
       );
+
+      toast.success("Password reset successfully.");
       router.push("/login");
     } catch (error) {
       setError(error.message);
@@ -60,7 +65,7 @@ const ForgotPasswordForm = () => {
               <p className="text-tertiary">
                 {validEmail
                   ? "Enter the OTP and set a new password."
-                  : "A new password will be sent to your email."}
+                  : "OTP code will be sent to your email."}
               </p>
             </div>
             {!validEmail ? (

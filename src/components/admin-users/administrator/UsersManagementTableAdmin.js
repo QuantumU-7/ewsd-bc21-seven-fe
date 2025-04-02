@@ -36,7 +36,7 @@ const filterSchema = z.object({
   role: z.string().optional(),
 });
 
-const FilterForm = () => {
+export const FilterForm = () => {
   const {
     register,
     handleSubmit,
@@ -46,8 +46,16 @@ const FilterForm = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(filterSchema) });
 
-  const { fetchUsers, currentPage } = useUsers();
-  const [isFetchMode, setIsFetchMode] = useState(false);
+  const {
+    fetchUsers,
+    currentPage,
+    setCurrentPage,
+    isFilterMode,
+    setIsFilterMode,
+    setDepartmentId,
+    setSearchKey,
+    setRoleId,
+  } = useUsers();
 
   const onSubmit = (data) => {
     fetchUsers(
@@ -57,13 +65,20 @@ const FilterForm = () => {
       data.keyword,
       watch("role")
     );
-    setIsFetchMode(true);
+    setDepartmentId(watch("department"));
+    setSearchKey(data.keyword);
+    setRoleId(watch("role"));
+    setIsFilterMode(true);
   };
 
   const handleReset = () => {
     reset();
-    setIsFetchMode(false);
+    setIsFilterMode(false);
     fetchUsers(currentPage);
+    setDepartmentId(null);
+    setSearchKey(null);
+    setRoleId(null);
+    setCurrentPage(1);
   };
 
   return (
@@ -136,7 +151,7 @@ const FilterForm = () => {
         <Button type="submit">
           <Funnel size={32} />
         </Button>
-        {isFetchMode && (
+        {isFilterMode && (
           <Button onClick={() => handleReset()} variant="ghost" type="button">
             <X size={32} />
           </Button>
@@ -155,6 +170,10 @@ const UsersManagementTableAdmin = () => {
     currentPage,
     setCurrentPage,
     deleteUser,
+    roleId,
+    departmentId,
+    searchKey,
+    isFilterMode
   } = useUsers();
 
   const router = useRouter();
@@ -169,8 +188,12 @@ const UsersManagementTableAdmin = () => {
   const [deleteId, setDeleteId] = useState(null);
 
   const handleClickPagination = (page) => {
+    if (isFilterMode) {
+      fetchUsers(page, roleId, departmentId, searchKey);
+    } else {
+      fetchUsers(page);
+    }
     setCurrentPage(page);
-    fetchUsers(page);
   };
 
   const tableBody = users.map((user) => (
@@ -188,7 +211,12 @@ const UsersManagementTableAdmin = () => {
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-            <p onClick={() => router.push(`/admin/users/${user.id}`)} className="text-sm p-2 cursor-pointer hover:bg-gray-100">Edit</p>
+            <p
+              onClick={() => router.push(`/admin/users/${user.id}`)}
+              className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+            >
+              Edit
+            </p>
             <span className="border-t"></span>
             <p
               onClick={() => {

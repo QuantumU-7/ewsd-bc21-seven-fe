@@ -17,6 +17,7 @@ export const CategoryProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [editingCategory, setEditingCategory] = useState("");
   const [totalPages, setTotalPages] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchCategories = async (page) => {
     setLoading(true);
@@ -87,6 +88,8 @@ export const CategoryProvider = ({ children }) => {
         deleteSelectedCategory,
         totalPages,
         setTotalPages,
+        currentPage,
+        setCurrentPage,
       }}
     >
       {children}
