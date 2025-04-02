@@ -91,7 +91,6 @@ const UsersManagementTableAdmin = () => {
 
   useEffect(() => {
     if (users.length === 0) {
-      console.log("Users fetching...");
       fetchUsers(1);
     }
   }, [users.length, fetchUsers]);
@@ -135,8 +134,7 @@ const UsersManagementTableAdmin = () => {
       </TableCell>
     </TableRow>
   ));
-
-  // console.log({ users });
+  
   return (
     <>
       <Card>

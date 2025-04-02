@@ -1,6 +1,7 @@
 import { extractTextFromFirstP } from "@/utils/textContent";
 import Image from "next/image";
 import DefaultThumbnail from "@/public/images/default.png";
+import {convertBase64ToImage} from "@/utils/image";
 
 const IdeaCard = ({ id, title, description, image }) => {
   return (
@@ -17,9 +18,9 @@ const IdeaCard = ({ id, title, description, image }) => {
 
         <div className="flex-1">
           {image ? (
-            <Image
+            <img
               className="w-full"
-              src={image}
+              src={convertBase64ToImage(image)}
               width={300}
               height={200}
               alt={title}

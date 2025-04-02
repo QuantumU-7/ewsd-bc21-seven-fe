@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Heart, ThumbsDown, Eye, Loader2, Download, MessageCircleWarning } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import Image from "next/image";
 import { getIdeaById } from "@/services/getIdeaById";
 import { toggleLikeIdea } from "@/services/ideaInteraction";
 import { toast } from "sonner";
@@ -15,6 +15,9 @@ import { createComment } from "@/services/createComment";
 import { exportIdeaToCSV } from "@/services/exportIdeaToCSV";
 import { RemarkBox } from "../shared/common/Dialog/RemarkBox";
 import { ideaReportService } from "@/services/ideaReport";
+import { convertBase64ToImage } from "@/utils/image";
+import DefaultThumbnail from "@/public/images/default.png";
+
 const IdeaDetailPage = () => {
   const params = useParams();
   const router = useRouter();
@@ -108,7 +111,6 @@ const IdeaDetailPage = () => {
       toast.success("Comment posted successfully!");
     } catch (e) {
       toast.error("Failed to post comment");
-      console.log(e);
     } finally {
       setCommentLoading(false);
     }
@@ -198,15 +200,23 @@ const IdeaDetailPage = () => {
       {/* Image and documents section */}
       <div className="w-full h-[450px] flex gap-7 p-2">
         <div className="w-2/3 h-full relative flex justify-center">
-          <Image
-            src={
-              idea.thumbnail ||
-              "https://images.unsplash.com/photo-1562825606-7e7187e44a83?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            }
-            alt="idea detail logo"
-            fill
-            style={{ objectFit: "cover" }}
-          />
+           {idea.thumbnail ? (
+              <img
+                className="w-full"
+                src={convertBase64ToImage(idea.thumbnail)}
+                width={300}
+                height={200}
+                alt={idea.title}
+              />
+            ) : (
+              <Image
+                className="w-full"
+                src={DefaultThumbnail}
+                width={300}
+                height={200}
+                alt={idea.title}
+              />
+            )}
         </div>
         <div className="w-1/3 h-[200px] shadow-md p-4 bg-white rounded-lg">
           <p className="text-lg font-medium text-center mb-4">

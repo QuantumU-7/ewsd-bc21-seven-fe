@@ -37,8 +37,7 @@ export const CategoryProvider = ({ children }) => {
   const addCategory = async (name) => {
     setLoading(true);
     try {
-      const response = await createNewCategory(name);
-      console.log({ response });
+      await createNewCategory(name);
       fetchCategories();
       toast("Crated New Category");
     } catch (error) {
@@ -51,8 +50,7 @@ export const CategoryProvider = ({ children }) => {
   const editCategory = async (id, newName) => {
     setLoading(true);
     try {
-      const response = await updateCategory(id, newName);
-      console.log({ response });
+      await updateCategory(id, newName);
       fetchCategories();
       toast("Updated Category");
     } catch (error) {
@@ -65,8 +63,7 @@ export const CategoryProvider = ({ children }) => {
   const deleteSelectedCategory = async (id) => {
     setLoading(true);
     try {
-      const response = await deleteCategory(id);
-      console.log({ response });
+      await deleteCategory(id);
       fetchCategories();
       toast("Deleted Category");
     } catch (error) {
