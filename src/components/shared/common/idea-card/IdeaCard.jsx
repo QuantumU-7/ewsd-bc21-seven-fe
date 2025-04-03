@@ -22,7 +22,7 @@ const IdeaCard = ({
   return (
     <div className="cursor-pointer">
       <div className="flex flex-col lg:flex-row rounded-md overflow-hidden bg-white shadow-lg">
-        <div className="flex-1 p-8 flex flex-col justify-between gap-6">
+        <div className="flex-1 p-4 lg:p-8 flex flex-col justify-between gap-6">
           <div className="space-y-4">
             <p className="text-xl mt-4 hidden">{id}</p>
             <h1 className="text-3xl text-primary font-bold line-clamp-1">
@@ -58,7 +58,7 @@ const IdeaCard = ({
         <div className="flex-1">
           {image ? (
             <Image
-              className="w-full h-[345px] object-cover"
+              className="w-full h-[250px] lg:h-[345px] object-cover"
               src={convertBase64ToImage(image)}
               width={300}
               height={200}
