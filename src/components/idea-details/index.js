@@ -293,7 +293,7 @@ const IdeaDetailPage = () => {
               <p className="text-2xl font-bold text-primary mb-2">
                 {idea.title || "Untitled"}
               </p>
-              <div className="text-gray-700 mb-7 rdw-editor-wrapper">
+              <div className="text-gray-700 mb-7 rdw-editor-wrapper prose">
                 <div dangerouslySetInnerHTML={{ __html: idea.description }}>
 
                 </div>
