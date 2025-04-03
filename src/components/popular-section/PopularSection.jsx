@@ -2,7 +2,7 @@
 import Link from "next/link";
 import CategoryCard from "./CategoryCard";
 import { getPopularIdeas } from "@/services/ideaManagementService";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { convertBase64ToImage } from "@/utils/image";
 import defaultImg from "@/public/images/default.png";
 import { extractTextFromFirstP } from "@/utils/textContent";
