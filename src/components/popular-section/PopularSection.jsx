@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 import { convertBase64ToImage } from "@/utils/image";
 import defaultImg from "@/public/images/default.png";
 import { extractTextFromFirstP } from "@/utils/textContent";
+import { useIdeas } from "@/providers/IdeasContext";
 
 const PopularSection = () => {
-  const [popularIdeas, setPopularIdeas] = useState([]);
+  const {popularIdeas, setPopularIdeas, } = useIdeas();
 
   const fetchPopularIdeas = async () => {
     const data = await getPopularIdeas();
@@ -16,8 +17,10 @@ const PopularSection = () => {
   };
 
   useEffect(() => {
-    fetchPopularIdeas();
+    popularIdeas.length === 0 && fetchPopularIdeas();
   }, []);
+
+  console.log({items: popularIdeas.length})
 
   return (
     <section className="max-w-7xl mx-auto space-y-8 my-8 px-4">
