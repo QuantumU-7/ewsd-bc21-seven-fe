@@ -26,6 +26,7 @@ import LoadingButton from "../shared/common/Button";
 import { TokenKeys } from "@/constants/tokenKeys";
 import Cookies from "js-cookie";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { redirectByRole } from "@/utils/login";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -63,9 +64,8 @@ const LoginForm = () => {
 
       Cookies.set("accesstoken", data.access_token, { expires: 1 }); // 1 day expiry
       Cookies.set("refreshtoken", data.refresh_token, { expires: 7 });
-
       const decodedToken = jwtDecode(data.access_token);
-      redirectAfterLogin(decodedToken.lastlogin);
+      redirectAfterLogin(decodedToken.lastlogin, me.role.id);
     } catch (error) {
       if(error.message === "403"){
         router.push("/blocked-user")
@@ -76,12 +76,12 @@ const LoginForm = () => {
     }
   }
 
-  const redirectAfterLogin = (lastlogin) => {
+  const redirectAfterLogin = (lastlogin, role) => {
     if (lastlogin === null) {
       router.push("/welcome");
     }
     else {
-      router.push("/");
+      router.push(redirectByRole(role));
     }
   };
 

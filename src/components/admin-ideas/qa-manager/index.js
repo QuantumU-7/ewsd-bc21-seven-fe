@@ -1,9 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAllIdeaService } from "@/services/getAllIdeas";
 import IdeaTable from "./components/IdeaTable";
+import { exportIdeaToCSV } from "@/services/exportIdeaToCSV";
+import LoadingButton from "@/components/shared/common/Button";
+import { downloadAttachments } from "@/services/downloadAttachments";
+import { toast } from "sonner";
 
 const QAManagerIdeasList = () => {
 
@@ -16,6 +19,8 @@ const QAManagerIdeasList = () => {
   const [allIdeasLoading, setAllIdeasLoading] = useState(true);
   const [popularIdeasLoading, setPopularIdeasLoading] = useState(true);
   const [viewedIdeasLoading, setViewedIdeasLoading] = useState(true);
+  const [exportCSVLoading, setExportCSVLoading] = useState(false);
+  const [downloadAttachmentsLoading, setDownloadAttachmentsLoading] = useState(false);
 
   // Separate pagination states
   const [allPagination, setAllPagination] = useState({
@@ -45,11 +50,14 @@ const QAManagerIdeasList = () => {
     fetchPopularIdeas(1);
     fetchViewedIdeas(1);
   }, []);
+  console.log("allIdeas", allIdeas);
+  console.log("popularIdeas", popularIdeas);
+  console.log("viewedIdeas", viewedIdeas);
 
   const fetchAllIdeas = async (page) => {
     setAllIdeasLoading(true);
     try {
-      const response = await getAllIdeaService(page);
+      const response = await getAllIdeaService({ page: page });
       setAllIdeas(response.data);
       setAllPagination({
         totalRecords: response.pagination.total_records,
@@ -68,9 +76,7 @@ const QAManagerIdeasList = () => {
   const fetchPopularIdeas = async (page) => {
     setPopularIdeasLoading(true);
     try {
-      // In a real implementation, you'd likely use a different endpoint or parameters
-      // to fetch popular ideas. For now, we're using the same service.
-      const response = await getAllIdeaService(page);
+      const response = await getAllIdeaService({ page: page, sortPopularity: -1 });
       setPopularIdeas(response.data);
       setPopularPagination({
         totalRecords: response.pagination.total_records,
@@ -89,9 +95,7 @@ const QAManagerIdeasList = () => {
   const fetchViewedIdeas = async (page) => {
     setViewedIdeasLoading(true);
     try {
-      // In a real implementation, you'd likely use a different endpoint or parameters
-      // to fetch most viewed ideas. For now, we're using the same service.
-      const response = await getAllIdeaService(page);
+      const response = await getAllIdeaService({ page: page, most_viewed: -1 });
       setViewedIdeas(response.data);
       setViewedPagination({
         totalRecords: response.pagination.total_records,
@@ -121,23 +125,38 @@ const QAManagerIdeasList = () => {
     }
   };
 
+  const handleExportCSV = async () => {
+    try {
+      setExportCSVLoading(true);
+      await exportIdeaToCSV();
+      setExportCSVLoading(false);
+      toast.success("CSV exported successfully!");
+    } catch (error) {
+      toast.error("Error exporting CSV");
+      console.error("Error exporting CSV:", error);
+    }
+  };
+
+  const handleDownloadAttachments = async () => {
+    try {
+      setDownloadAttachmentsLoading(true);
+      await downloadAttachments();
+      toast.success("Attachments downloaded successfully!");
+    } catch (error) {
+      toast.error("Error downloading attachments");
+      console.error("Error downloading attachments:", error);
+    } finally {
+      setDownloadAttachmentsLoading(false);
+    }
+  };
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Ideas</h2>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="bg-black text-white hover:bg-gray-800"
-          >
-            Export (.csv)
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-black text-white hover:bg-gray-800"
-          >
-            Download Attachments
-          </Button>
+          <div className="min-w-[100px]"><LoadingButton label="Export (.csv)" isLoading={exportCSVLoading} onClick={handleExportCSV} /></div>
+          <div className="min-w-[150px]"><LoadingButton label="Download Attachments" isLoading={downloadAttachmentsLoading} onClick={handleDownloadAttachments} /></div>
         </div>
       </div>
 

@@ -1,21 +1,41 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { ideasByCategoryService } from "@/services/ideasByCategoryService";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const colorPalette = [
+  "hsl(var(--chart-1))", // blue
+  "hsl(var(--chart-2))", // green
+  "hsl(var(--chart-3))", // yellow
+  "hsl(var(--chart-4))", // red
+  "hsl(var(--chart-5))", // purple
+  "hsl(var(--chart-6))", // cyan
+  "hsl(var(--chart-7))", // orange
+  "hsl(var(--chart-8))", // pink
+];
 const chartConfig = {
   count: {
     label: "Ideas Count",
-    color: "hsl(var(--chart-1))",
   },
+};
+
+// Custom tooltip component
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-4 border rounded shadow-lg">
+        <p className="font-bold">{payload[0].payload.category}</p>
+        <p>Ideas: {payload[0].value}</p>
+      </div>
+    );
+  }
+  return null;
 };
 
 export function CategoryChart() {
@@ -32,6 +52,7 @@ export function CategoryChart() {
           const formattedData = categoryData.labels.map((label, index) => ({
             category: label,
             count: categoryData.data[index],
+            color: colorPalette[index % colorPalette.length]
           }));
           setChartData(formattedData);
         } else {
@@ -82,18 +103,14 @@ export function CategoryChart() {
               }}
             >
               <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Bar dataKey="count" fill="var(--color-count)" radius={8}>
+              <Tooltip content={<CustomTooltip />} cursor={false} />
+              <Bar 
+                dataKey="count" 
+                radius={4}
+                fill={'hsl(var(--chart-5))'}
+              >
                 <LabelList
+                  dataKey="count"
                   position="top"
                   offset={12}
                   className="text-foreground"
