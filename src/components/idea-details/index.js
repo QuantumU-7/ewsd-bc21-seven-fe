@@ -177,7 +177,7 @@ const IdeaDetailPage = () => {
   };
 
   return (
-    <div className="max-w-7xl h-[77.5vh] overflow-auto mx-auto my-8">
+    <div className="lg:max-w-7xl h-[77.5vh] overflow-auto mx-auto my-8">
       <div className="flex justify-between items-center mb-4">
         <Button variant="ghost" size="sm" onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4" />
@@ -197,8 +197,8 @@ const IdeaDetailPage = () => {
         </Button>
       </div>
       {/* Image and documents section */}
-      <div className="w-full h-[450px] flex gap-7 p-2">
-        <div className="w-2/3 h-full relative flex justify-center">
+      <div className="w-full h-[450px] flex flex-col lg:flex-row gap-7 p-2">
+        <div className="w-full lg:w-2/3 h-full relative flex justify-center">
            {idea.thumbnail ? (
               <img
                 className="w-full"
@@ -217,7 +217,7 @@ const IdeaDetailPage = () => {
               />
             )}
         </div>
-        <div className="w-1/3 h-[200px] shadow-md p-4 bg-white rounded-lg">
+        <div className="w-full lg:w-1/3 h-[200px] shadow-md p-4 bg-white rounded-lg">
           <p className="text-lg font-medium text-center mb-4">
             Additional Documents
           </p>
@@ -264,7 +264,7 @@ const IdeaDetailPage = () => {
 
       {/* Content and interactions section */}
       <div className="w-full flex gap-7 p-2">
-        <div className="w-2/3 gap-7 flex">
+        <div className="w-full lg:w-2/3 gap-7 flex">
           <div className="w-full">
             {/* User info and title */}
             <div className="w-full flex justify-between">
@@ -293,7 +293,7 @@ const IdeaDetailPage = () => {
               <p className="text-2xl font-bold text-primary mb-2">
                 {idea.title || "Untitled"}
               </p>
-              <div className="text-gray-700 mb-7 rdw-editor-wrapper">
+              <div className="text-gray-700 mb-7 rdw-editor-wrapper prose">
                 <div dangerouslySetInnerHTML={{ __html: idea.description }}>
 
                 </div>
@@ -411,7 +411,7 @@ const IdeaDetailPage = () => {
         </div>
 
         {/* Like/Dislike interactions */}
-        <div className="w-1/3 pt-[4vw]">
+        <div className="fixed bg-white border lg:border-none top-1/2 py-2 w-16 flex justify-center lg:justify-start shadow-md lg:shadow-none rounded-md right-3 lg:relative lg:w-1/3 pt-[4vw]">
           <div className="w-[2vw] space-y-4">
             {/* Like button with loading state */}
             <div

@@ -11,6 +11,8 @@ import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationB
 import { TableCell, TableRow } from "@/components/ui/table";
 import CommonTable from "@/components/shared/common/Table";
 import CommonPagination from "@/components/shared/common/Pagination";
+import { deleteIdeaService } from "@/services/ideaManagementService";
+import { toast } from "sonner";
 
 const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
@@ -70,6 +72,10 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
 
   const handleDelete = async (ideaId) => {
     try {
+      const response = await deleteIdeaService(ideaId);
+      if (response.status === 200) {
+        toast.success("Idea deleted successfully");
+      }
       // Refresh the current page data - use appropriate function based on mode
       console.log(ideaId)
       if (handlePageChange) {

@@ -27,15 +27,14 @@ const CommonPagination = ({
       // Show all pages if total pages is less than or equal to maxPagesToShow
       for (let i = 1; i <= totalPages; i++) {
         items.push(
-          <PaginationItem key={i}>
+          <PaginationItem key={i} className="cursor-pointer">
             <PaginationLink
-
               onClick={(e) => {
                 e.preventDefault();
                 onPageChange(i);
               }}
               isActive={i === currentPage}
-              className={`cursor-pointer ${i === currentPage ? "bg-primary text-white" : ""}`}
+              className={`${i === currentPage ? "bg-primary text-white" : ""}`}
             >
               {i}
             </PaginationLink>
@@ -85,7 +84,7 @@ const CommonPagination = ({
       // Show middle pages
       for (let i = startPage; i <= endPage; i++) {
         items.push(
-          <PaginationItem key={i}>
+          <PaginationItem key={i} className="cursor-pointer">
             <PaginationLink
               onClick={(e) => {
                 e.preventDefault();
@@ -111,7 +110,7 @@ const CommonPagination = ({
 
       // Always show last page
       items.push(
-        <PaginationItem key={totalPages}>
+        <PaginationItem key={totalPages} className="cursor-pointer">
           <PaginationLink
 
             onClick={(e) => {
@@ -141,12 +140,12 @@ const CommonPagination = ({
             if (currentPage > 1) onPageChange(currentPage - 1);
           }}
           disabled={currentPage === 1}
-          className={'cursor-pointer'}
+          className={'cursor-pointer p-0 lg:p-2'}
         >
           Previous
         </PaginationPrevious>
       )}
-      <PaginationContent>{renderPaginationItems()}</PaginationContent>
+      <PaginationContent className="gap-0">{renderPaginationItems()}</PaginationContent>
       {showNextPrevious && (
         <PaginationNext
           onClick={(e) => {
@@ -154,7 +153,7 @@ const CommonPagination = ({
             if (currentPage < totalPages) onPageChange(currentPage + 1);
           }}
           disabled={currentPage === totalPages}
-          className={'cursor-pointer'}
+          className={'cursor-pointer p-0 lg:p-2'}
         >
           Next
         </PaginationNext>

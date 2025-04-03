@@ -33,7 +33,7 @@ const PopularSection = () => {
           {/* Most Popular Idea */}
           {/* This is a dynamic component with api data */}
           <Link href={`/ideas/${popularIdeas[0]?.id}`} className="flex-1">
-            <div className=" group relative h-[358px] rounded-md cursor-pointer overflow-hidden">
+            <div className=" group relative h-[250px] lg:h-[358px] rounded-md cursor-pointer overflow-hidden">
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-110"
                 style={{
