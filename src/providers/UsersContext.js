@@ -69,7 +69,7 @@ export const UsersProvider = ({ children }) => {
     try {
       await updateUserById(id, updatedUser);
       fetchUsers(currentPage);
-      toast("Updated User");
+      toast.success("Updated User");
     } catch (error) {
       console.error("Error updating user:", error);
     } finally {
@@ -85,7 +85,7 @@ export const UsersProvider = ({ children }) => {
         fetchUsers(currentPage);
       }, 300);
 
-      toast("Deleted User");
+      toast.success("Deleted User");
     } catch (error) {
       console.error("Error deleting user:", error);
     } finally {

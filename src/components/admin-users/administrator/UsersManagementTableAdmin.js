@@ -202,6 +202,7 @@ const UsersManagementTableAdmin = () => {
       <TableCell>{user.id}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>{user.department.name}</TableCell>
+      <TableCell>{user.role.name}</TableCell>
       <TableCell className="w-12">
         {" "}
         <Popover>
@@ -248,7 +249,7 @@ const UsersManagementTableAdmin = () => {
           <FilterForm />
 
           <CommonTable
-            columns={["Name", "User ID", "Email", "Department", ""]}
+            columns={["Name", "User ID", "Email", "Department", "Role",""]}
             loading={loading}
             tableBody={tableBody}
           />
