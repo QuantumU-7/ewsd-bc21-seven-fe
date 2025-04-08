@@ -30,13 +30,12 @@ import { useEffect } from "react";
 import { getUserById } from "@/services/userManagementService";
 import { ADMIN } from "@/constants/routes";
 
-const formSchema = z
+const newFormSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
     phone: z.string().optional(),
     department: z.enum(["1", "2", "3", "4"]).transform(Number),
-    userRole: z.enum(["1", "2", "3", "4"]).transform(Number),
-    loginId: z.string().min(1, "Login ID is required"),
+    userRole: z.enum(["1", "2", "3", "4", "5"]).transform(Number),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(6, "Confirm Password is required"),
@@ -46,9 +45,22 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
+const updateFormSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    phone: z.string().optional(),
+    department: z.enum(["1", "2", "3", "4"]).transform(Number),
+    userRole: z.enum(["1", "2", "3", "4", "5"]).transform(Number),
+    email: z.string().email("Invalid email address"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
 export default function CreateNewUserForm({ isEditing = false }) {
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(isEditing ? updateFormSchema : newFormSchema),
     defaultValues: {
       name: "",
       phone: "",
@@ -90,15 +102,16 @@ export default function CreateNewUserForm({ isEditing = false }) {
 
   async function onSubmit(values) {
     if (isEditing) {
-      await editUser(userId,values);
-      router.push(ADMIN.USERS)
+      await editUser(userId, values);
+      router.push(ADMIN.USERS);
     } else {
       await addUser(values);
+      router.push(ADMIN.USERS);
     }
     form.reset();
   }
 
-  console.log({role: form.watch('userRole')});
+  console.log({ role: form.watch("userRole") });
 
   return (
     <Card>
@@ -184,7 +197,8 @@ export default function CreateNewUserForm({ isEditing = false }) {
                         <SelectTrigger>
                           <SelectValue placeholder="Select Role">
                             {USER_ROLES.find(
-                              (role) => role.id === parseInt(form.watch("userRole"))
+                              (role) =>
+                                role.id === parseInt(form.watch("userRole"))
                             )?.name || "Select Role"}
                           </SelectValue>
                         </SelectTrigger>
@@ -202,61 +216,53 @@ export default function CreateNewUserForm({ isEditing = false }) {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="loginId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Login ID *</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="col-span-2">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email *</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email *</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {!isEditing && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Default Password *</FormLabel>
+                        <FormControl>
+                          <Input type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Default Password *</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Default Password *</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Default Password *</FormLabel>
+                        <FormControl>
+                          <Input type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
             </div>
 
             <div className="flex gap-4 justify-end w-full">
@@ -269,7 +275,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                 {loading ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  `${isEditing ? 'Update' : 'Add New'} User`
+                  `${isEditing ? "Update" : "Add New"} User`
                 )}
               </Button>
             </div>
