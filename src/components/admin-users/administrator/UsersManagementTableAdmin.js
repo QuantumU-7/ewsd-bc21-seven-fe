@@ -25,8 +25,6 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
-import { Funnel } from "@phosphor-icons/react/dist/ssr";
-import { X } from "@phosphor-icons/react/dist/ssr";
 import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
 import { useRouter } from "next/navigation";
 
@@ -59,8 +57,8 @@ export const FilterForm = () => {
 
   const onSubmit = (data) => {
     fetchUsers(
-      currentPage,
-      5,
+      1,
+      10,
       watch("department"),
       data.keyword,
       watch("role")
@@ -69,12 +67,13 @@ export const FilterForm = () => {
     setSearchKey(data.keyword);
     setRoleId(watch("role"));
     setIsFilterMode(true);
+    setCurrentPage(1);
   };
 
   const handleReset = () => {
     reset();
     setIsFilterMode(false);
-    fetchUsers(currentPage);
+    fetchUsers(1);
     setDepartmentId(null);
     setSearchKey(null);
     setRoleId(null);
@@ -95,16 +94,44 @@ export const FilterForm = () => {
             {...register("department")}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select Department">
+              <SelectValue placeholder="All Departments">
                 {DEPARTMENT_DATA.find(
                   (dept) => dept.id === parseInt(watch("department"))
-                )?.name || "Select Department"}
+                )?.name || "All Departments"}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value={0}>All Departments</SelectItem>
               {DEPARTMENT_DATA.map((dept) => (
                 <SelectItem key={dept.id} value={dept.id}>
                   {dept.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.department && (
+            <p className="text-red-500">{errors.department.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Select
+            onValueChange={(val) => {
+              setValue("role", val);
+            }}
+            {...register("role")}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="All Roles">
+                {USER_ROLES.find((role) => role.id === parseInt(watch("role")))
+                  ?.name || "All Roles"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={0}>All Roles</SelectItem>
+              {USER_ROLES.map((role) => (
+                <SelectItem key={role.id} value={role.id}>
+                  {role.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -120,40 +147,12 @@ export const FilterForm = () => {
             <p className="text-red-500">{errors.keyword.message}</p>
           )}
         </div>
-
-        <div>
-          <Select
-            onValueChange={(val) => {
-              setValue("role", val);
-            }}
-            {...register("role")}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Role">
-                {USER_ROLES.find((role) => role.id === parseInt(watch("role")))
-                  ?.name || "Select Role"}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {USER_ROLES.map((role) => (
-                <SelectItem key={role.id} value={role.id}>
-                  {role.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.department && (
-            <p className="text-red-500">{errors.department.message}</p>
-          )}
-        </div>
       </div>
       <div className="flex">
-        <Button type="submit">
-          <Funnel size={32} />
-        </Button>
+        <Button type="submit">Filter</Button>
         {isFilterMode && (
           <Button onClick={() => handleReset()} variant="ghost" type="button">
-            <X size={32} />
+            Clear
           </Button>
         )}
       </div>
@@ -173,23 +172,24 @@ const UsersManagementTableAdmin = () => {
     roleId,
     departmentId,
     searchKey,
-    isFilterMode
+    isFilterMode,
   } = useUsers();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (users.length === 0) {
+    if (users.length === 0 && !isFilterMode) {
+      console.log("Users fetched from start");
       fetchUsers(1);
     }
-  }, [users.length, fetchUsers]);
+  }, [users.length, fetchUsers, isFilterMode]);
 
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const handleClickPagination = (page) => {
     if (isFilterMode) {
-      fetchUsers(page, roleId, departmentId, searchKey);
+      fetchUsers(page, 10, departmentId, searchKey, roleId);
     } else {
       fetchUsers(page);
     }

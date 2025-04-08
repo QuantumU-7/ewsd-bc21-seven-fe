@@ -25,7 +25,7 @@ export const UsersProvider = ({ children }) => {
   /* Note: API Search is equal to keyword form field */
   const fetchUsers = async (
     page,
-    limit = 5,
+    limit = 10,
     department_id = null,
     keyword = null,
     role_id = null
