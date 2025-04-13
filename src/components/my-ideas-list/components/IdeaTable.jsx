@@ -168,7 +168,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
         tableBody={renderTableBody()}
       />
       {/** Pagination */}
-      {!isLoading && currentPagination.totalPages > 0 && (
+      {currentPagination.totalPages > 0 && (
         <div className="flex w-full mt-3">
           <CommonPagination
             currentPage={currentPagination.currentPage}
