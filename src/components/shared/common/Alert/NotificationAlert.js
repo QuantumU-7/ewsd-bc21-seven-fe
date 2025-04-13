@@ -5,8 +5,7 @@ export default function NotificationAlert({
     onClose, 
     title, 
     message, 
-    icon = "ⓘ",
-    variant = "warning" // can be warning, success, error, info
+    variant = "warning"
 }) {
     if (!show) return null;
 
