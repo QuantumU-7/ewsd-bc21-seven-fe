@@ -12,5 +12,5 @@ export const ADMIN = {
 	CATEGORIES : "/admin/categories",
 	USERS : "/admin/users",
 	IDEAS : "/admin/ideas",
-	SETTING: "/admin/setting"
+	SETTING: "/admin/settings"
 }

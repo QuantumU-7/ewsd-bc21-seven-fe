@@ -34,16 +34,20 @@ const IdeaDetailPage = () => {
   const [comments, setComments] = useState([]);
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
   const [remark, setRemark] = useState("");
+  const [likebyauthor, setLikebyauthor] = useState(false);
+  const [dislikebyauthor, setDislikebyauthor] = useState(false);
+
   useEffect(() => {
     const fetchIdeaDetail = async () => {
       try {
         const response = await getIdeaById(params.id);
         setIdea(response);
+        setLikebyauthor(response.current_user_reaction == "liked");
+        setDislikebyauthor(response.current_user_reaction == "disliked");
         setLikeCount(response.likes_count);
         setDislikeCount(response.dislikes_count);
         setComments(response.comments);
       } catch (error) {
-        console.error("Error fetching idea details:", error);
         toast.error("Something went wrong!");
       } finally {
         setLoading(false);
@@ -56,6 +60,15 @@ const IdeaDetailPage = () => {
   }, [params.id]);
 
   const toggleLike = async (id, isLike) => {
+    if(isLike) {
+      setLikeCount((prevCount) => prevCount + 1);
+      setDislikeCount((prevCount) => Math.max(prevCount - 1, 0));
+    }else {
+      setDislikeCount((prevCount) => prevCount + 1);
+      setLikeCount((prevCount) => Math.max(prevCount - 1, 0));
+    }
+    setLikebyauthor(isLike);
+    setDislikebyauthor(!isLike);
     try {
       // Set loading state based on if it's a like or dislike
       if (isLike) {
@@ -93,7 +106,7 @@ const IdeaDetailPage = () => {
     setCommentLoading(true);
     try {
       const res = await createComment(params.id, isAnonymous, commentText);
-      setComments((prevComments) => [{ispostedanon:isAnonymous, username: idea.posted_by.firstname + " " + idea.posted_by.lastname, comment: commentText, postedon: new Date().toISOString() }, ...prevComments]);
+      setComments((prevComments) => [{ ispostedanon: isAnonymous, username: idea.posted_by.firstname + " " + idea.posted_by.lastname, comment: commentText, postedon: new Date().toISOString() }, ...prevComments]);
       // Update the idea state with the new comment
       if (res && res.data) {
         const newComment = res.data;
@@ -134,12 +147,12 @@ const IdeaDetailPage = () => {
 
 
   const handleReportIdea = async (id) => {
-    try{
-      await ideaReportService(id,remark);
-        toast.success("Idea reported successfully!");
-        setRemark("");
-        setOpenConfirmBox(false);
-    }catch(e){
+    try {
+      await ideaReportService(id, remark);
+      toast.success("Idea reported successfully!");
+      setRemark("");
+      setOpenConfirmBox(false);
+    } catch (e) {
       toast.error("Failed to report idea");
     }
   };
@@ -199,23 +212,23 @@ const IdeaDetailPage = () => {
       {/* Image and documents section */}
       <div className="w-full h-[450px] flex flex-col lg:flex-row gap-7 p-2">
         <div className="w-full lg:w-2/3 h-full relative flex justify-center">
-           {idea.thumbnail ? (
-              <img
-                className="w-full"
-                src={convertBase64ToImage(idea.thumbnail)}
-                width={300}
-                height={200}
-                alt={idea.title}
-              />
-            ) : (
-              <Image
-                className="w-full"
-                src={DefaultThumbnail}
-                width={300}
-                height={200}
-                alt={idea.title}
-              />
-            )}
+          {idea.thumbnail ? (
+            <img
+              className="w-full"
+              src={convertBase64ToImage(idea.thumbnail)}
+              width={300}
+              height={200}
+              alt={idea.title}
+            />
+          ) : (
+            <Image
+              className="w-full"
+              src={DefaultThumbnail}
+              width={300}
+              height={200}
+              alt={idea.title}
+            />
+          )}
         </div>
         <div className="w-full lg:w-1/3 h-[200px] shadow-md p-4 bg-white rounded-lg">
           <p className="text-lg font-medium text-center mb-4">
@@ -420,6 +433,8 @@ const IdeaDetailPage = () => {
             >
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
+              ) : likebyauthor ? (
+                <Heart className="text-red-600 fill-current" size={24} />
               ) : (
                 <Heart className="text-red-600 " size={24} />
               )}
@@ -433,8 +448,10 @@ const IdeaDetailPage = () => {
             >
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
+              ) : dislikebyauthor ? (
+                <ThumbsDown className="text-primary fill-current" size={24} />
               ) : (
-                <ThumbsDown className="text-primary " size={24} />
+                <ThumbsDown className="text-primary" size={24} />
               )}
               <p className="text-sm">{dislikeCount}</p>
             </div>

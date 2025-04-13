@@ -101,7 +101,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
         tableBody={tableBody}
       />
       {/** Pagination */}
-      {!loading && pagination.totalPages > 0 && (
+      {pagination.totalPages > 0 && (
         <div className="flex w-full mt-3">
           <CommonPagination
             currentPage={pagination.currentPage}
