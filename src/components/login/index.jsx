@@ -87,7 +87,7 @@ const LoginForm = () => {
 
   return (
     <div className="flex  justify-center items-center h-screen">
-      <Card className="w-full mx-6 md:w-[70vw] lg:w-[70vw] lg:h-[50vh] xl:w-[50vw] xl:h-[30vh]">
+      <Card className="w-full mx-6 md:w-[70vw] lg:w-[70vw] lg:h-[50vh] xl:w-[50vw] xl:h-[50vh]">
         <CardContent className="flex flex-col lg:flex-row p-0 justify-between items-center h-full">
           <div className="w-full lg:w-1/2 p-[4vw]">
             <div className="flex flex-col items-center justify-center mb-4">
