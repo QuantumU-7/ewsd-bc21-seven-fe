@@ -41,7 +41,7 @@ const CreateIdeaForm = () => {
     errors,
     // editorState,
     // handleEditorChange,
-    image,
+    // image,
     getRootProps,
     getInputProps,
     getFileRootProps,
@@ -64,11 +64,13 @@ const CreateIdeaForm = () => {
     setSelectedCategory,
     setSelectedCategoryId,
     isEditMode,
+    imagePreview
   } = useCreateIdeaForm();
 
   if (!editor) {
     return null;
   }
+
   return (
     <section>
       <div className="max-w-7xl mx-auto px-4 mb-10">
@@ -84,12 +86,14 @@ const CreateIdeaForm = () => {
               className="border-2 border-solid border-slate-300 flex justify-center items-center p-4 text-center cursor-pointe h-[434px] rounded-lg"
             >
               <input className="cursor-pointer" {...getInputProps()} />
-              {image ? (
-                <img
-                  src={isEditMode ? image : URL.createObjectURL(image)}
-                  alt="Selected Image"
-                  className="h-full w-full object-cover rounded-lg"
-                />
+              {imagePreview ? (
+                <Image
+                src={imagePreview}
+                alt="Preview"
+                className="mt-2 rounded-md w-full h-full object-cover"
+                width={200}
+                height={200}
+              />
               ) : (
                 <div className="space-y-2 text-gray-600">
                   <p>Drop Image Here</p>
@@ -350,7 +354,7 @@ const CreateIdeaForm = () => {
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                `${isEditMode ? 'Update this' : 'Submit this'} Idea`
+                `${isEditMode ? "Update this" : "Submit this"} Idea`
               )}
             </Button>
 
