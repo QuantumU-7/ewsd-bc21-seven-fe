@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
-import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
+import { USER_ROLES } from "@/constants/common";
 import { useRouter } from "next/navigation";
 
 const filterSchema = z.object({
