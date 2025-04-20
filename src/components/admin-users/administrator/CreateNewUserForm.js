@@ -24,7 +24,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useUsers } from "@/providers/UsersContext";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
+import { USER_ROLES } from "@/constants/common";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { getUserById } from "@/services/userManagementService";
@@ -73,7 +73,8 @@ export default function CreateNewUserForm({ isEditing = false }) {
     },
   });
 
-  const { loading, addUser, editUser } = useUsers();
+  const { loading, addUser, editUser, departments, fetchAllDepartments } =
+    useUsers();
   const pathname = usePathname();
   const userId = pathname.split("/").pop();
   console.log({ userId });
@@ -98,6 +99,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
     if (isEditing) {
       fetchUserById();
     }
+    departments.length === 0 && fetchAllDepartments();
   }, []);
 
   async function onSubmit(values) {
@@ -150,38 +152,46 @@ export default function CreateNewUserForm({ isEditing = false }) {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="department"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Department *</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue>
-                            {DEPARTMENT_DATA.find(
-                              (dept) =>
-                                dept.id === parseInt(form.watch("department"))
-                            )?.name || "Select Department"}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {DEPARTMENT_DATA.map((dept) => (
-                            <SelectItem key={dept.id} value={dept.id}>
-                              {dept.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div
+                className={
+                  departments.length === 0
+                    ? "select-none opacity-45 pointer-events-none"
+                    : ""
+                }
+              >
+                <FormField
+                  control={form.control}
+                  name="department"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Department *</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue>
+                              {departments.find(
+                                (dept) =>
+                                  dept.id === parseInt(form.watch("department"))
+                              )?.name || "Select Department"}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {departments.map((dept) => (
+                              <SelectItem key={dept.id} value={dept.id}>
+                                {dept.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}

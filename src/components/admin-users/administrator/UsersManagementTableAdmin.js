@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
-import { DEPARTMENT_DATA, USER_ROLES } from "@/constants/common";
+import { USER_ROLES } from "@/constants/common";
 import { useRouter } from "next/navigation";
 
 const filterSchema = z.object({
@@ -52,16 +52,12 @@ export const FilterForm = () => {
     setDepartmentId,
     setSearchKey,
     setRoleId,
+    departments,
+    fetchAllDepartments,
   } = useUsers();
 
   const onSubmit = (data) => {
-    fetchUsers(
-      1,
-      10,
-      watch("department"),
-      data.keyword,
-      watch("role")
-    );
+    fetchUsers(1, 10, watch("department"), data.keyword, watch("role"));
     setDepartmentId(watch("department"));
     setSearchKey(data.keyword);
     setRoleId(watch("role"));
@@ -79,13 +75,24 @@ export const FilterForm = () => {
     setCurrentPage(1);
   };
 
+  useEffect(() => {
+    departments.length === 0 && fetchAllDepartments();
+  }
+  , [fetchAllDepartments]);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className=" flex justify-between mb-5"
     >
       <div className="flex gap-5">
-        <div>
+        <div
+          className={
+            departments.length === 0
+              ? "select-none opacity-45 pointer-events-none"
+              : ""
+          }
+        >
           <Select
             onValueChange={(val) => {
               setValue("department", val);
@@ -94,14 +101,14 @@ export const FilterForm = () => {
           >
             <SelectTrigger>
               <SelectValue placeholder="All Departments">
-                {DEPARTMENT_DATA.find(
+                {departments.find(
                   (dept) => dept.id === parseInt(watch("department"))
                 )?.name || "All Departments"}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={0}>All Departments</SelectItem>
-              {DEPARTMENT_DATA.map((dept) => (
+              {departments.map((dept) => (
                 <SelectItem key={dept.id} value={dept.id}>
                   {dept.name}
                 </SelectItem>
@@ -248,7 +255,7 @@ const UsersManagementTableAdmin = () => {
           <FilterForm />
 
           <CommonTable
-            columns={["Name", "User ID", "Email", "Department", "Role",""]}
+            columns={["Name", "User ID", "Email", "Department", "Role", ""]}
             loading={loading}
             tableBody={tableBody}
           />
