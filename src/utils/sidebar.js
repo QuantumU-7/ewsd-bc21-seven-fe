@@ -37,8 +37,8 @@ const QACOORDINATOR_MENU = [
 
 const ADMINISTRATOR_MENU = [
 	{
-		title: "Ideas",
-		url: ADMIN.IDEAS,
+		title: "Reports",
+		url: ADMIN.REPORTS,
 		icon: Lightbulb,
 	},
 	{
