@@ -24,11 +24,13 @@ const UserTracker = () => {
     };
 
     useEffect(() => {
+        if (!pathname) return;
+        
         // Format the pathname by removing the first slash
         const formattedPathname = pathname.startsWith('/') ? pathname.substring(1) : pathname;
         
         // Create the full URL with the formatted pathname
-        const url = formattedPathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
+        const url = formattedPathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
         
         // Only track if the path has changed
         if (url !== prevPath) {

@@ -1,7 +1,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import UserTracker from "@/utils/userTracker"; // Correctly imported UserTracker
+import { Suspense } from "react";
+import UserTracker from "@/utils/userTracker";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -27,7 +28,9 @@ export default function RootLayout({ children }) {
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased w-full`}
             >
-                <UserTracker /> 
+                <Suspense fallback={null}>
+                    <UserTracker />
+                </Suspense>
                 {children}
                 <Toaster position="top-center" richColors duration={2000} />
             </body>
