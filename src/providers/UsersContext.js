@@ -8,6 +8,7 @@ import {
   updateUserById,
 } from "@/services/userManagementService";
 import { toast } from "sonner";
+import { getAllDepartments } from "@/services/departmentManagementService";
 
 const UsersContext = createContext();
 
@@ -21,6 +22,17 @@ export const UsersProvider = ({ children }) => {
   const [roleId, setRoleId] = useState(null);
   const [departmentId, setDepartmentId] = useState(null);
   const [searchKey, setSearchKey] = useState(null);
+  const [departments, setDepartments] = useState([]);
+
+  const fetchAllDepartments = async () => {
+    try {
+      const response = await getAllDepartments();
+      setDepartments(response.data);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      throw error;
+    }
+  };
 
   /* Note: API Search is equal to keyword form field */
   const fetchUsers = async (
@@ -113,7 +125,9 @@ export const UsersProvider = ({ children }) => {
         departmentId,
         setDepartmentId,
         searchKey,
-        setSearchKey
+        setSearchKey,
+        departments,
+        fetchAllDepartments,
       }}
     >
       {children}

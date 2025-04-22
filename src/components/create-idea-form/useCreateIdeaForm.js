@@ -333,6 +333,15 @@ export const useCreateIdeaForm = () => {
     }
   };
 
+  const imageValue = watch("image");
+  let imagePreview = "";
+
+  if (typeof imageValue === "string") {
+    imagePreview = imageValue;
+  } else if (imageValue && imageValue.length > 0) {
+    imagePreview = URL.createObjectURL(imageValue[0]);
+  }
+
   return {
     register,
     handleSubmit,
@@ -364,5 +373,7 @@ export const useCreateIdeaForm = () => {
     setSelectedCategory,
     setSelectedCategoryId,
     isEditMode,
+    imageValue,
+    imagePreview,
   };
 };
