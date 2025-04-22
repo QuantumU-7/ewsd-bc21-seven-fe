@@ -7,6 +7,8 @@ import { getMostActiveUsers } from "@/services/getMostActiveUsers";
 import { getMostUsedBrowsers } from "@/services/getMostUsedBrowsers";
 import MostActiveUsersTable from "./components/MostActiveUsersTable";
 import MostUsedBrowsersTable from "./components/MostUsedBrowsersTable";
+import { getMostViewedPageService } from "@/services/getMostViewedPageService";
+import MostViewedPagesTable from "./components/MostViewedPagesTable";
 
 const AdminReports = () => {
 
@@ -31,6 +33,16 @@ const AdminReports = () => {
     const [mostUsedBrowsers, setMostUsedBrowsers] = useState([]);
     const [mostUsedBrowsersLoading, setMostUsedBrowsersLoading] = useState(true);
     const [mostUsedBrowsersPagination, setMostUsedBrowsersPagination] = useState({
+        totalRecords: 0,
+        currentPage: 1,
+        totalPages: 1,
+        nextPage: null,
+        prevPage: null,
+    });
+
+    const [mostViewedPages, setMostViewedPages] = useState([]);
+    const [mostViewedPagesLoading, setMostViewedPagesLoading] = useState(true);
+    const [mostViewedPagesPagination, setMostViewedPagesPagination] = useState({
         totalRecords: 0,
         currentPage: 1,
         totalPages: 1,
@@ -68,6 +80,7 @@ const AdminReports = () => {
         fetchViewedIdeas(1);
         fetchMostActiveUsers(1);
         fetchMostUsedBrowsers(1);
+        fetchMostViewedPages(1);
     }, []);
 
     const fetchAllIdeas = async (page) => {
@@ -166,6 +179,26 @@ const AdminReports = () => {
         }
     };
 
+    const fetchMostViewedPages = async (page) => {
+        setMostViewedPagesLoading(true);
+        try {
+            const response = await getMostViewedPageService({ page: page });
+
+            setMostViewedPages(response.data);
+            setMostViewedPagesPagination({
+                totalRecords: response.pagination.total_records,
+                currentPage: response.pagination.current_page,
+                totalPages: response.pagination.total_pages,
+                nextPage: response.pagination.next_page,
+                prevPage: response.pagination.prev_page,
+            });
+        } catch (error) {
+            console.error("Error fetching most active users:", error);
+        } finally {
+            setMostViewedPagesLoading(false);
+        }
+    };
+
     const handlePageChange = (page, tab) => {
         switch (tab) {
             case "popular":
@@ -243,6 +276,15 @@ const AdminReports = () => {
                         loading={mostUsedBrowsersLoading}
                         pagination={mostUsedBrowsersPagination}
                         handlePageChange={(page) => handlePageChange(page, "most_used_browser")}
+                    />
+                </TabsContent>
+
+                <TabsContent value="most_viewed_page">
+                    <MostViewedPagesTable
+                        pages={mostViewedPages}
+                        loading={mostViewedPagesLoading}
+                        pagination={mostViewedPagesPagination}
+                        handlePageChange={(page) => handlePageChange(page, "most_viewed_page")}
                     />
                 </TabsContent>
             </Tabs>

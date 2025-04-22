@@ -1,7 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import CommonTable from "@/components/shared/common/Table";
-import CommonPagination from "@/components/shared/common/Pagination";
-const MostUsedBrowsersTable = ({ browsers, loading, pagination, handlePageChange }) => {
+const MostUsedBrowsersTable = ({ browsers, loading }) => {
 
   const tableBody = (
     <>
@@ -22,18 +21,6 @@ const MostUsedBrowsersTable = ({ browsers, loading, pagination, handlePageChange
         loading={loading}
         tableBody={tableBody}
       />
-      {/** Pagination */}
-      {pagination.totalPages > 0 && (
-        <div className="flex w-full mt-3">
-          <CommonPagination
-            currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            onPageChange={handlePageChange}
-            position="end"
-          />
-        </div>
-      )}
-
     </>
   );
 };
