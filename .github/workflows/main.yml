@@ -17,11 +17,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: Enable Corepack and Prepare Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@4.4.1 --activate
+
       - name: Install Dependencies
-        run: npm install
+        run: yarn install
 
       - name: Run Lint
-        run: npm run lint
+        run: yarn lint
 
       - name: Run Build
-        run: npm run build
+        run: yarn build
