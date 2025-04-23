@@ -23,6 +23,7 @@ jobs:
         run: |
           corepack enable
           corepack prepare yarn@4.4.1 --activate
+          yarn set version 4.4.1
 
       - name: Install Dependencies
         run: yarn install --immutable
