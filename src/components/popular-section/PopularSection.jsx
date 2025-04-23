@@ -2,13 +2,14 @@
 import Link from "next/link";
 import CategoryCard from "./CategoryCard";
 import { getPopularIdeas } from "@/services/ideaManagementService";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { convertBase64ToImage } from "@/utils/image";
 import defaultImg from "@/public/images/default.png";
 import { extractTextFromFirstP } from "@/utils/textContent";
+import { useIdeas } from "@/providers/IdeasContext";
 
 const PopularSection = () => {
-  const [popularIdeas, setPopularIdeas] = useState([]);
+  const {popularIdeas, setPopularIdeas, } = useIdeas();
 
   const fetchPopularIdeas = async () => {
     const data = await getPopularIdeas();
@@ -16,8 +17,10 @@ const PopularSection = () => {
   };
 
   useEffect(() => {
-    fetchPopularIdeas();
+    popularIdeas.length === 0 && fetchPopularIdeas();
   }, []);
+
+  console.log({items: popularIdeas.length})
 
   return (
     <section className="max-w-7xl mx-auto space-y-8 my-8 px-4">
@@ -30,7 +33,7 @@ const PopularSection = () => {
           {/* Most Popular Idea */}
           {/* This is a dynamic component with api data */}
           <Link href={`/ideas/${popularIdeas[0]?.id}`} className="flex-1">
-            <div className=" group relative h-[358px] rounded-md cursor-pointer overflow-hidden">
+            <div className=" group relative h-[250px] lg:h-[358px] rounded-md cursor-pointer overflow-hidden">
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-110"
                 style={{

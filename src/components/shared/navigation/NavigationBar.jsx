@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
@@ -28,11 +29,18 @@ import { handleLogout, getUser } from "@/utils/authentication";
 
 const NavigationBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const user = getUser()
+  const pathname = usePathname();
+  const user = getUser();
   const username = user?.firstname + " " + user?.lastname;
 
+  const navItems = [
+    { href: HOME, label: "Latest" },
+    { href: LEADERBOARDS, label: "Leaderboards" },
+    { href: MY_IDEAS, label: "My Ideas" },
+  ];
+
   return (
-    <nav className="bg-white">
+    <nav className="bg-white sticky top-0 z-50 shadow-md">
       <div className="max-w-7xl mx-auto py-5 px-4 flex justify-between items-center">
         {/* Left Section */}
         <div className="flex items-center gap-4">
@@ -46,16 +54,18 @@ const NavigationBar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex gap-6">
-            <Link href={HOME} className="hover:text-gray-700">
-              Latest
-            </Link>
-            <Link href={LEADERBOARDS} className="hover:text-gray-700">
-              Leaderboards
-            </Link>
-            <Link href={MY_IDEAS} className="hover:text-gray-700">
-              My Ideas
-            </Link>
+          <div className="hidden md:flex gap-4 ml-10">
+            {navItems.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`px-2 hover:text-gray-700 ${
+                  pathname === href ? "underline text-primary font-semibold" : ""
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -68,30 +78,15 @@ const NavigationBar = () => {
           <Popover>
             <PopoverTrigger asChild>
               <div className="cursor-pointer">
-                <Image
-                  src={profile}
-                  width={28}
-                  height={28}
-                  alt="user profile"
-                />
+                <Image src={profile} width={28} height={28} alt="user profile" />
               </div>
             </PopoverTrigger>
             <PopoverContent className="w-[250px] rounded-xl p-0 flex flex-col text-center" align="end" sideOffset={20}>
-              <p
-                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
-              >
-                Welcome, {username || "User"}
-              </p>
+              <p className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">Welcome, {username || "User"}</p>
               <div className="border-t"></div>
-              <p
-                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
-              >
-                Last Login: {new Date(user?.lastlogin).toLocaleString() || "N/A"}
-              </p>
+              <p className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">Last Login: {new Date(user?.lastlogin).toLocaleString() || "N/A"}</p>
               <div className="border-t"></div>
-              <p onClick={handleLogout} className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">
-                Logout
-              </p>
+              <p onClick={handleLogout} className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">Logout</p>
               <div className="border-t"></div>
             </PopoverContent>
           </Popover>
@@ -109,23 +104,21 @@ const NavigationBar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300`}
       >
-        <button
-          className="absolute top-5 right-5"
-          onClick={() => setIsOpen(false)}
-        >
+        <button className="absolute top-5 right-5" onClick={() => setIsOpen(false)}>
           <X size={28} />
         </button>
 
         <div className="flex flex-col items-center gap-6 mt-16">
-          <Link href={HOME} onClick={() => setIsOpen(false)}>
-            Latest
-          </Link>
-          <Link href={LEADERBOARDS} onClick={() => setIsOpen(false)}>
-            Leaderboards
-          </Link>
-          <Link href={MY_IDEAS} onClick={() => setIsOpen(false)}>
-            My Ideas
-          </Link>
+          {navItems.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setIsOpen(false)}
+              className={`${pathname === href ? "text-orange-600 font-semibold" : ""}`}
+            >
+              {label}
+            </Link>
+          ))}
           <Link href={UPLOAD_IDEA} onClick={() => setIsOpen(false)}>
             <Button>Upload Idea</Button>
           </Link>
@@ -133,30 +126,15 @@ const NavigationBar = () => {
           <Popover>
             <PopoverTrigger asChild>
               <div className="cursor-pointer">
-                <Image
-                  src={profile}
-                  width={28}
-                  height={28}
-                  alt="user profile"
-                />
+                <Image src={profile} width={28} height={28} alt="user profile" />
               </div>
             </PopoverTrigger>
             <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-              <p
-                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
-              >
-                Welcome, {username || "User"}
-              </p>
+              <p className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">Welcome, {username || "User"}</p>
               <div className="border-t"></div>
-              <p
-                className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100"
-              >
-                Last Login: {new Date(user?.lastlogin).toLocaleString() || "N/A"}
-              </p>
+              <p className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">Last Login: {new Date(user?.lastlogin).toLocaleString() || "N/A"}</p>
               <div className="border-t"></div>
-              <p onClick={handleLogout} className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">
-                Logout
-              </p>
+              <p onClick={handleLogout} className="text-sm px-2 py-3 cursor-pointer hover:bg-gray-100">Logout</p>
               <div className="border-t"></div>
             </PopoverContent>
           </Popover>

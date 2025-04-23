@@ -312,18 +312,16 @@ export const useCreateIdeaForm = () => {
         });
       }
 
-      console.log("About to submit form data");
-
       if(!isEditMode){
         const result = await createNewIdeaService(formData);
         console.log("API Response:", result);
         setIsLoading(false);
-        toast("Idea created successfully!");
+        toast.success("Idea created successfully!");
       }else{
         const result = await updateIdeaService(pathName.split("/")[3], formData);
         console.log("API Response:", result);
         setIsLoading(false);
-        toast("Idea updated successfully!");
+        toast.error("Idea updated successfully!");
       }
 
 
@@ -334,6 +332,15 @@ export const useCreateIdeaForm = () => {
       toast(error.message || "Failed to create idea");
     }
   };
+
+  const imageValue = watch("image");
+  let imagePreview = "";
+
+  if (typeof imageValue === "string") {
+    imagePreview = imageValue;
+  } else if (imageValue && imageValue.length > 0) {
+    imagePreview = URL.createObjectURL(imageValue[0]);
+  }
 
   return {
     register,
@@ -366,5 +373,7 @@ export const useCreateIdeaForm = () => {
     setSelectedCategory,
     setSelectedCategoryId,
     isEditMode,
+    imageValue,
+    imagePreview,
   };
 };

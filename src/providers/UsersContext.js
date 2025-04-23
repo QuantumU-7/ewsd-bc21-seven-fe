@@ -8,6 +8,7 @@ import {
   updateUserById,
 } from "@/services/userManagementService";
 import { toast } from "sonner";
+import { getAllDepartments } from "@/services/departmentManagementService";
 
 const UsersContext = createContext();
 
@@ -21,11 +22,22 @@ export const UsersProvider = ({ children }) => {
   const [roleId, setRoleId] = useState(null);
   const [departmentId, setDepartmentId] = useState(null);
   const [searchKey, setSearchKey] = useState(null);
+  const [departments, setDepartments] = useState([]);
+
+  const fetchAllDepartments = async () => {
+    try {
+      const response = await getAllDepartments();
+      setDepartments(response.data);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      throw error;
+    }
+  };
 
   /* Note: API Search is equal to keyword form field */
   const fetchUsers = async (
     page,
-    limit = 5,
+    limit = 10,
     department_id = null,
     keyword = null,
     role_id = null
@@ -69,7 +81,7 @@ export const UsersProvider = ({ children }) => {
     try {
       await updateUserById(id, updatedUser);
       fetchUsers(currentPage);
-      toast("Updated User");
+      toast.success("Updated User");
     } catch (error) {
       console.error("Error updating user:", error);
     } finally {
@@ -85,7 +97,7 @@ export const UsersProvider = ({ children }) => {
         fetchUsers(currentPage);
       }, 300);
 
-      toast("Deleted User");
+      toast.success("Deleted User");
     } catch (error) {
       console.error("Error deleting user:", error);
     } finally {
@@ -113,7 +125,9 @@ export const UsersProvider = ({ children }) => {
         departmentId,
         setDepartmentId,
         searchKey,
-        setSearchKey
+        setSearchKey,
+        departments,
+        fetchAllDepartments,
       }}
     >
       {children}

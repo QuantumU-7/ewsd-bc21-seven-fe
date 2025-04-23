@@ -1,3 +1,5 @@
+import { ADMIN } from "@/constants/routes";
+
 export const ROLES = {
 	Admin: 1,
 	Staff: 3,
@@ -8,7 +10,7 @@ export const ROLES = {
 export const redirectByRole = (role) => {
 	switch (role) {
 		case ROLES.Admin:
-			return "/admin/ideas";
+			return ADMIN.REPORTS;
 		case ROLES.Staff:
 			return "/";
 		case ROLES.QA_Manager:
