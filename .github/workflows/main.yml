@@ -17,18 +17,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'yarn'
-
-      - name: Enable Corepack and Prepare Yarn
-        run: |
-          corepack enable
-          corepack prepare yarn@4.4.1 --activate
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: npm install
 
       - name: Run Lint
-        run: yarn lint
+        run: npm run lint
 
       - name: Run Build
-        run: yarn build
+        run: npm run build
