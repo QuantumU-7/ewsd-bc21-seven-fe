@@ -212,23 +212,23 @@ const IdeaDetailPage = () => {
       {/* Image and documents section */}
       <div className="w-full h-[450px] flex flex-col lg:flex-row gap-7 p-2">
         <div className="w-full lg:w-2/3 h-full relative flex justify-center">
-           {idea.thumbnail ? (
-              <img
-                className="w-full"
-                src={convertBase64ToImage(idea.thumbnail)}
-                width={300}
-                height={200}
-                alt={idea.title}
-              />
-            ) : (
-              <Image
-                className="w-full"
-                src={DefaultThumbnail}
-                width={300}
-                height={200}
-                alt={idea.title}
-              />
-            )}
+          {idea.thumbnail ? (
+            <img
+              className="w-full"
+              src={convertBase64ToImage(idea.thumbnail)}
+              width={300}
+              height={200}
+              alt={idea.title}
+            />
+          ) : (
+            <Image
+              className="w-full"
+              src={DefaultThumbnail}
+              width={300}
+              height={200}
+              alt={idea.title}
+            />
+          )}
         </div>
         <div className="w-full lg:w-1/3 h-[200px] shadow-md p-4 bg-white rounded-lg">
           <p className="text-lg font-medium text-center mb-4">
