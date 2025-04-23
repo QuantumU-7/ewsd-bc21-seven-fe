@@ -24,7 +24,7 @@ const UserTracker = () => {
     };
 
     useEffect(() => {
-        if (!pathname) return;
+        if (!pathname || pathname?.includes('login')) return;
         
         // Format the pathname by removing the first slash
         const formattedPathname = pathname.startsWith('/') ? pathname.substring(1) : pathname;

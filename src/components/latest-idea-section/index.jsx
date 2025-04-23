@@ -8,15 +8,23 @@ import CommonPagination from "../shared/common/Pagination";
 import { useIdeas } from "@/providers/IdeasContext";
 
 const LatestIdeaSection = () => {
-  const {
-    ideas,
-    setIdeas,
-    homeCurrentPage,
-    setHomeCurrentPage,
-    homeTotalPages,
-    setHomeTotalPages,
-  } = useIdeas();
+  // Initialize local state as fallback
+  const [localIdeas, setLocalIdeas] = useState([]);
+  const [localCurrentPage, setLocalCurrentPage] = useState(1);
+  const [localTotalPages, setLocalTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  
+  // Try to use context, but fall back to local state if undefined
+  const ideasContext = useIdeas();
+  const {
+    ideas = localIdeas,
+    setIdeas = setLocalIdeas,
+    homeCurrentPage = localCurrentPage,
+    setHomeCurrentPage = setLocalCurrentPage,
+    homeTotalPages = localTotalPages,
+    setHomeTotalPages = setLocalTotalPages,
+  } = ideasContext || {};
+  
   const limit = 5;
 
   const fetchIdeas = async (page) => {
@@ -33,7 +41,9 @@ const LatestIdeaSection = () => {
   };
 
   useEffect(() => {
-    ideas.length === 0 && fetchIdeas(homeCurrentPage);
+    if (ideas.length === 0) {
+      fetchIdeas(homeCurrentPage);
+    }
   }, []);
 
   const handlePageChange = (page) => {
