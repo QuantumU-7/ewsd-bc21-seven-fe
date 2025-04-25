@@ -8,6 +8,7 @@ import {
   updateCategory,
 } from "@/services/categoryManagementService";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const CategoryContext = createContext();
 
@@ -18,6 +19,8 @@ export const CategoryProvider = ({ children }) => {
   const [editingCategory, setEditingCategory] = useState("");
   const [totalPages, setTotalPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const router = useRouter();
 
   const fetchCategories = async (page) => {
     setLoading(true);
@@ -39,8 +42,9 @@ export const CategoryProvider = ({ children }) => {
     setLoading(true);
     try {
       await createNewCategory(name);
-      fetchCategories();
+      fetchCategories(currentPage);
       toast("Crated New Category");
+      router.push("/admin/categories");
     } catch (error) {
       console.error("Error adding category:", error);
     } finally {
@@ -52,7 +56,7 @@ export const CategoryProvider = ({ children }) => {
     setLoading(true);
     try {
       await updateCategory(id, newName);
-      fetchCategories();
+      fetchCategories(currentPage);
       toast("Updated Category");
     } catch (error) {
       console.error("Error editing category:", error);
@@ -65,7 +69,7 @@ export const CategoryProvider = ({ children }) => {
     setLoading(true);
     try {
       await deleteCategory(id);
-      fetchCategories();
+      fetchCategories(currentPage);
       toast("Deleted Category");
     } catch (error) {
       console.error("Error deleted category:", error);

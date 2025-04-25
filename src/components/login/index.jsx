@@ -87,9 +87,9 @@ const LoginForm = () => {
 
   return (
     <div className="flex  justify-center items-center h-screen">
-      <Card className="w-full mx-6 md:w-[70vw] lg:w-[70vw] lg:h-[50vh] xl:w-[50vw] xl:h-[50vh]">
-        <CardContent className="flex flex-col lg:flex-row p-0 justify-between items-center h-full">
-          <div className="w-full lg:w-1/2 p-[4vw]">
+      <Card className="w-full mx-6 max-w-3xl">
+        <CardContent className="flex flex-col lg:flex-row p-0 justify-between items-center h-[388px]">
+          <div className="w-full lg:w-1/2 p-7">
             <div className="flex flex-col items-center justify-center mb-4">
               <p className="text-2xl font-bold uppercase mb-2 text-primary">
                 Welcome
@@ -155,13 +155,13 @@ const LoginForm = () => {
               </form>
             </Form>
           </div>
-          <div className="lg:w-1/2 lg:h-full relative justify-center hidden lg:flex">
+          <div className="lg:w-1/2 relative justify-center hidden lg:flex h-[388px]" >
             <Image
               src={uniImage}
               alt="university logo"
               fill
               style={{ objectFit: "cover" }}
-              className="rounded-l-none rounded-r-lg"
+              className="rounded-l-none rounded-r-lg w-full "
             />
           </div>
         </CardContent>

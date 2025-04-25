@@ -8,7 +8,7 @@ export const getAllCategories = async (page, limit = 5) => {
       params: {
         page,
         limit,
-      }
+      },
     });
 
     return response.data;
@@ -60,14 +60,12 @@ export const createNewCategory = async (name) => {
 
 export const updateCategory = async (id, name) => {
   try {
-    const token = getAccessToken();
-    const response = await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_URL}/categories/${id}?category_name=${name}`,
+    const response = await actionApi().patch(
+      `/categories/${id}?category_name=${name}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
+        params: {
+          category_id: id,
+          category_name: name,
         },
       }
     );
@@ -102,7 +100,7 @@ export const deleteCategory = async (id) => {
         },
       }
     );
-    
+
     return response.data;
   } catch (error) {
     console.error(
