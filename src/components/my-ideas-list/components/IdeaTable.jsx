@@ -174,7 +174,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
             currentPage={currentPagination.currentPage}
             totalPages={currentPagination.totalPages}
             onPageChange={pageChangeHandler}
-            position="end"
+            position="center"
           />
         </div>
       )}
