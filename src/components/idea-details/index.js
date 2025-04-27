@@ -17,6 +17,7 @@ import { RemarkBox } from "../shared/common/Dialog/RemarkBox";
 import { ideaReportService } from "@/services/ideaReport";
 import { convertBase64ToImage } from "@/utils/image";
 import DefaultThumbnail from "@/public/images/default.png";
+import { getClosureDateService } from "@/services/getClosureDates";
 
 const IdeaDetailPage = () => {
   const params = useParams();
@@ -36,6 +37,10 @@ const IdeaDetailPage = () => {
   const [remark, setRemark] = useState("");
   const [likebyauthor, setLikebyauthor] = useState(false);
   const [dislikebyauthor, setDislikebyauthor] = useState(false);
+  const [submissionDate, setSubmissionDate] = useState(null);
+  const [finalClosureDate, setFinalClosureDate] = useState(null);
+  const [showComments, setShowComments] = useState(true);
+  const [showVotingFeature, setShowVotingFeature] = useState(true);
 
   useEffect(() => {
     const fetchIdeaDetail = async () => {
@@ -59,11 +64,46 @@ const IdeaDetailPage = () => {
     }
   }, [params.id]);
 
+  useEffect(() => {
+    fetchClosureDates();
+  }, [])
+
+  useEffect(() => {
+    checkDates();
+  }, [submissionDate, finalClosureDate]);
+
+
+  const checkDates = () => {
+    const currentDate = new Date();
+    if (submissionDate && currentDate.toDateString() === submissionDate.toDateString()) {
+      setShowComments(false);
+      setShowVotingFeature(true);
+    } else if (finalClosureDate && currentDate.toDateString() === finalClosureDate.toDateString()) {
+      setShowComments(false);
+      setShowVotingFeature(false);
+    } else {
+      setShowComments(true);
+      setShowVotingFeature(true);
+    }
+  };
+
+  const fetchClosureDates = async () => {
+    try {
+      const response = await getClosureDateService();
+      if (response) {
+        setSubmissionDate(new Date(response.submission_date));
+        setFinalClosureDate(new Date(response.final_closure_date));
+      }
+    } catch (error) {
+      toast.error(error.response.data.detail || "Failed to fetch closure dates!");
+    }
+  }
+
   const toggleLike = async (id, isLike) => {
-    if(isLike) {
+    if (isLike) {
       setLikeCount((prevCount) => prevCount + 1);
       setDislikeCount((prevCount) => Math.max(prevCount - 1, 0));
-    }else {
+    } else {
       setDislikeCount((prevCount) => prevCount + 1);
       setLikeCount((prevCount) => Math.max(prevCount - 1, 0));
     }
@@ -318,7 +358,7 @@ const IdeaDetailPage = () => {
                 {/* Comment input */}
                 <div className="flex gap-3">
                   <Avatar>
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarFallback> {idea.posted_by.firstname.charAt(0) || "U"}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <Input
@@ -326,7 +366,7 @@ const IdeaDetailPage = () => {
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
                       className="mb-2"
-                      disabled={commentLoading}
+                      disabled={commentLoading || !showComments}
                     />
 
                     <div className="flex justify-between items-center">
@@ -335,7 +375,7 @@ const IdeaDetailPage = () => {
                           id="anonymous"
                           checked={isAnonymous}
                           onCheckedChange={setIsAnonymous}
-                          disabled={commentLoading}
+                          disabled={commentLoading || !showComments}
                         />
                         <label
                           htmlFor="anonymous"
@@ -428,8 +468,9 @@ const IdeaDetailPage = () => {
           <div className="w-[2vw] space-y-4">
             {/* Like button with loading state */}
             <div
-              className="flex flex-col justify-center items-center cursor-pointer"
-              onClick={() => !likeLoading && toggleLike(idea.id, true)}
+              className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              onClick={showVotingFeature ? () => !likeLoading && toggleLike(idea.id, true) : null}
             >
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
@@ -443,8 +484,9 @@ const IdeaDetailPage = () => {
 
             {/* Dislike button with loading state */}
             <div
-              className="flex flex-col justify-center items-center cursor-pointer"
-              onClick={() => !dislikeLoading && toggleLike(idea.id, false)}
+              className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              onClick={showVotingFeature ? () => !dislikeLoading && toggleLike(idea.id, false) : null}
             >
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
@@ -457,13 +499,20 @@ const IdeaDetailPage = () => {
             </div>
 
             {/* Views count (no interaction) */}
-            <div className="flex flex-col justify-center items-center">
+            <div
+              className={`flex flex-col justify-center items-center ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+            >
               <Eye className="text-primary" />
               <p className="text-sm">{idea.views_count}</p>
             </div>
 
             {/* Report button */}
-            <div className="flex flex-col justify-center items-center cursor-pointer" onClick={() => setOpenConfirmBox(true)}>
+            <div
+              className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              onClick={showVotingFeature ? () => setOpenConfirmBox(true) : null}
+            >
               <MessageCircleWarning className="text-primary" size={24} />
               <p className="text-sm">Report</p>
             </div>
