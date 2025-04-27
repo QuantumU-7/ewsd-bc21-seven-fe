@@ -25,8 +25,9 @@ import {
 import { cn } from "@/lib/utils"
 import { closureDateService } from "@/services/closureDateService"
 import { toast } from "sonner"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import LoadingButton from "../shared/common/Button"
+import { getClosureDateService } from "@/services/getClosureDates"
 
 const formSchema = z.object({
     submission_date: z.date({
@@ -39,7 +40,7 @@ const formSchema = z.object({
 
 export default function AdminSettings() {
     const [loading, setLoading] = useState(false);
-    
+
     // Calculate the next academic year (2025-2026)
     const nextAcademicYear = useMemo(() => {
         const now = new Date();
@@ -49,7 +50,23 @@ export default function AdminSettings() {
         const endYear = startYear + 1;
         return `${startYear}-${endYear}`;
     }, []);
-    
+
+    useEffect(() => {
+        fetchClosureDates();
+    }, [])
+
+    const fetchClosureDates = async () => {
+        try {
+            const response = await getClosureDateService();
+            if (response) {
+                form.setValue("submission_date", new Date(response.submission_date));
+                form.setValue("final_closure_date", new Date(response.final_closure_date));
+            }
+        } catch (error) {
+            toast.error(error.response.data.detail || "Failed to fetch closure dates!");
+        }
+    }
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {},
@@ -58,22 +75,22 @@ export default function AdminSettings() {
     async function onSubmit(values) {
         // Format dates to match API expectations
         const payload = {
-            submission_date: format(values.submission_date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
-            final_closure_date: format(values.final_closure_date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            submission_date: format(values.submission_date, "yyyy-MM-dd"),
+            final_closure_date: format(values.final_closure_date, "yyyy-MM-dd")
         };
-        
+
         try {
             setLoading(true);
             await closureDateService(payload);
             toast.success("Closure dates updated successfully");
-            
+
             // Reset form fields
-            form.reset();
+            // form.reset();
         } catch (error) {
             toast.error(error.response.data.detail || "Failed to save closure dates!");
         } finally {
             setLoading(false);
-            
+
         }
     }
 
@@ -155,7 +172,7 @@ export default function AdminSettings() {
                                                         format(field.value, "MM/dd/yyyy")
                                                     ) : (
                                                         <span>
-                                                            {form.watch("submission_date") 
+                                                            {form.watch("submission_date")
                                                                 ? "MM/DD/YYYY"
                                                                 : "Select Submission End Date first"}
                                                         </span>
