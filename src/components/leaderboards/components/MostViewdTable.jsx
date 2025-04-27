@@ -15,8 +15,8 @@ const MostViewdTable = ({ ideas, loading }) => {
   ));
 
   return (
-    <div className="max-w-7xl h-[40vh] overflow-auto mx-auto space-y-8 my-8 px-4">
-      <h2 className="text-2xl font-bold my-4">Most Popular Ideas</h2>
+    <div className="max-w-7xl mx-auto space-y-2 my-8 px-4">
+      <h2 className="text-2xl font-bold">Most View Ideas</h2>
       <CommonTable
         columns={["Title", "Author", "Department", "Total Views", "Category"]}
         loading={loading}
