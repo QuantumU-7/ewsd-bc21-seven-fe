@@ -470,14 +470,14 @@ const IdeaDetailPage = () => {
             <div
               className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-              onClick={showVotingFeature ? () => !likeLoading && toggleLike(idea.id, true) : null}
+
             >
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
               ) : likebyauthor ? (
                 <Heart className="text-red-600 fill-current" size={24} />
               ) : (
-                <Heart className="text-red-600 " size={24} />
+                <Heart className="text-red-600 " size={24} onClick={showVotingFeature ? () => !likeLoading && toggleLike(idea.id, true) : null} />
               )}
               <p className="text-sm">{likeCount}</p>
             </div>
@@ -486,14 +486,14 @@ const IdeaDetailPage = () => {
             <div
               className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-              onClick={showVotingFeature ? () => !dislikeLoading && toggleLike(idea.id, false) : null}
+
             >
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
               ) : dislikebyauthor ? (
                 <ThumbsDown className="text-primary fill-current" size={24} />
               ) : (
-                <ThumbsDown className="text-primary" size={24} />
+                <ThumbsDown className="text-primary" size={24} onClick={showVotingFeature ? () => !dislikeLoading && toggleLike(idea.id, false) : null} />
               )}
               <p className="text-sm">{dislikeCount}</p>
             </div>
