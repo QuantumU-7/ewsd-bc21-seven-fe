@@ -56,7 +56,7 @@ const IdeasDashboard = () => {
       </div>
 
       <Tabs defaultValue="popular" className="w-full">
-        <TabsList className="grid w-[15vw] grid-cols-2 mb-2">
+        <TabsList className="grid w-full lg:w-[15vw] grid-cols-2 mb-2">
           <TabsTrigger value="popular">Most Popular</TabsTrigger>
           <TabsTrigger value="viewed">Most Viewed</TabsTrigger>
         </TabsList>
