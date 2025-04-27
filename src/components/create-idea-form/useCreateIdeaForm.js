@@ -211,8 +211,9 @@ export const useCreateIdeaForm = () => {
       setValue("image", convertBase64ToImage(data.thumbnail));
       setImage(convertBase64ToImage(data.thumbnail));
 
-      setValue("isAnonymous", data.is_posted_anon);
-      console.log({ data });
+      setValue("isAnonymous", data.is_posted_anon ? true : false);
+      setIsAnonymous(data.is_posted_anon ? true : false);
+      console.log({ isAnonymous: data.is_posted_anon });
     } catch (error) {
       console.error(error.message);
     }
