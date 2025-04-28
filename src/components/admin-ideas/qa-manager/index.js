@@ -152,7 +152,7 @@ const QAManagerIdeasList = () => {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4">
         <h2 className="text-xl font-bold">Ideas</h2>
         <div className="flex gap-2">
           <div className="min-w-[100px]"><LoadingButton label="Export (.csv)" isLoading={exportCSVLoading} onClick={handleExportCSV} /></div>
@@ -161,7 +161,7 @@ const QAManagerIdeasList = () => {
       </div>
 
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-[20vw] grid-cols-3 mb-4">
+        <TabsList className="grid lg:w-[20vw] grid-cols-3 mb-4">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="popular">Most Popular</TabsTrigger>
           <TabsTrigger value="viewed">Most Viewed</TabsTrigger>

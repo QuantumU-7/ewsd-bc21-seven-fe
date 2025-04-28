@@ -23,7 +23,7 @@ export const AdminSidebar = () => {
     setMenuList(list)
   }, []);
 	return (
-		<div className="w-64 bg-gray-200 p-4 min-h-screen">
+		<div className=" bg-gray-200 min-h-screen">
 			<Sidebar>
 				<SidebarContent>
 					<SidebarMenu className="d-flex flex-col justify-between h-full">

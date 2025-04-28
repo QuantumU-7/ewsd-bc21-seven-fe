@@ -49,7 +49,7 @@ const IdeasDashboard = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 my-8 px-4 h-[85vh] overflow-auto">
+    <div className="max-w-7xl mx-auto space-y-8 my-8 px-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <DepartmentChart />
         <CategoryChart />

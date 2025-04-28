@@ -226,13 +226,13 @@ const AdminReports = () => {
             </div>
 
             <Tabs defaultValue="all" className="w-full">
-                <TabsList className="grid w-[60vw] grid-cols-6 mb-4">
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="popular">Most Popular</TabsTrigger>
-                    <TabsTrigger value="viewed">Most Viewed</TabsTrigger>
-                    <TabsTrigger value="most_active_users">Most Active Users</TabsTrigger>
-                    <TabsTrigger value="most_used_browser">Most Used Browsers</TabsTrigger>
-                    <TabsTrigger value="most_viewed_page">Most Viewed Pages</TabsTrigger>
+                <TabsList className="flex overflow-x-auto whitespace-nowrap mb-4 gap-2 lg:w-fit justify-normal">
+                    <TabsTrigger className="" value="all">All</TabsTrigger>
+                    <TabsTrigger className="" value="popular">Most Popular</TabsTrigger>
+                    <TabsTrigger className="" value="viewed">Most Viewed</TabsTrigger>
+                    <TabsTrigger className="" value="most_active_users">Most Active Users</TabsTrigger>
+                    <TabsTrigger className="" value="most_used_browser">Most Used Browsers</TabsTrigger>
+                    <TabsTrigger className="" value="most_viewed_page">Most Viewed Pages</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="all">
