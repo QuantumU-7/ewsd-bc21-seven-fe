@@ -72,12 +72,12 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
 
   const handleDelete = async (ideaId) => {
     try {
-      const response = await deleteIdeaService(ideaId);
-      if (response.status === 200) {
-        toast.success("Idea deleted successfully");
-      }
+      await deleteIdeaService(ideaId);
+
+      toast.success("Idea deleted successfully");
+
       // Refresh the current page data - use appropriate function based on mode
-      console.log(ideaId)
+      console.log(ideaId);
       if (handlePageChange) {
         handlePageChange(pagination.currentPage);
       } else {
