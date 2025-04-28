@@ -203,7 +203,7 @@ export default function AdminSettings() {
                         />
 
                         <div className="flex justify-end pt-4">
-                            <div className="w-[7vw]">
+                            <div className="lg:w-[7vw]">
                                 <LoadingButton label="Save Changes" type="submit" isLoading={loading} />
                             </div>
                         </div>

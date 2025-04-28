@@ -83,9 +83,9 @@ export const FilterForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className=" flex justify-between mb-5"
+      className=" flex flex-col lg:flex-row items-end gap-4 justify-between mb-5"
     >
-      <div className="flex gap-5">
+      <div className="flex flex-wrap gap-5">
         <div
           className={
             departments.length === 0
@@ -155,7 +155,7 @@ export const FilterForm = () => {
         </div>
       </div>
       <div className="flex">
-        <Button type="submit">Filter</Button>
+        <Button type="submit" >Filter</Button>
         {isFilterMode && (
           <Button onClick={() => handleReset()} variant="ghost" type="button">
             Clear
@@ -242,8 +242,7 @@ const UsersManagementTableAdmin = () => {
 
   return (
     <>
-      <Card>
-        <CardContent className="p-6">
+
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Users</h2>
 
@@ -267,8 +266,7 @@ const UsersManagementTableAdmin = () => {
             currentPage={currentPage}
             onPageChange={handleClickPagination}
           />
-        </CardContent>
-      </Card>
+  
 
       <ConfirmationBox
         title="Delete User"
