@@ -1,7 +1,6 @@
 "use client";
 import CommonPagination from "@/components/shared/common/Pagination";
 import CommonTable from "@/components/shared/common/Table";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
   PopoverContent,
