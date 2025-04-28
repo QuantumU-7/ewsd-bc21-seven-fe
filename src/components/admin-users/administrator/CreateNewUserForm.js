@@ -123,7 +123,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
         </h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
-            <div className="grid grid-cols-2 gap-4 max-w-xl">
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 max-w-xl">
               <FormField
                 control={form.control}
                 name="name"
@@ -275,13 +275,13 @@ export default function CreateNewUserForm({ isEditing = false }) {
               )}
             </div>
 
-            <div className="flex gap-4 justify-end w-full">
+            <div className="flex mt-5 gap-4 justify-end w-full">
               <Link href="/admin/users">
                 <Button type="button" variant="ghost" className="col-span-2">
                   Back
                 </Button>
               </Link>
-              <Button type="submit" className="col-span-2">
+              <Button type="submit" className=" col-span-2">
                 {loading ? (
                   <Loader2 className="animate-spin" />
                 ) : (

@@ -31,6 +31,7 @@ import {
   TextItalic,
   TextStrikethrough,
   TextUnderline,
+  X,
 } from "@phosphor-icons/react";
 
 const CreateIdeaForm = () => {
@@ -64,7 +65,8 @@ const CreateIdeaForm = () => {
     setSelectedCategory,
     setSelectedCategoryId,
     isEditMode,
-    imagePreview
+    imagePreview,
+    handleRemoveThumbnail,
   } = useCreateIdeaForm();
 
   if (!editor) {
@@ -85,22 +87,36 @@ const CreateIdeaForm = () => {
               {...getRootProps()}
               className="border-2 border-solid border-slate-300 flex justify-center items-center p-4 text-center cursor-pointe h-[434px] rounded-lg"
             >
-              <input className="cursor-pointer" {...getInputProps()} />
               {imagePreview ? (
-                <Image
-                src={imagePreview}
-                alt="Preview"
-                className="mt-2 rounded-md w-full h-full object-cover"
-                width={200}
-                height={200}
-              />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    className="rounded-md w-full h-full object-cover"
+                    width={200}
+                    height={200}
+                  />
+                  {isEditMode && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      className="absolute top-2 w-10 h-10 right-2 z-10 rounded-full shadow-lg"
+                      onClick={handleRemoveThumbnail}
+                    >
+                      <X fill="white" size={45} />
+                    </Button>
+                  )}
+                </div>
               ) : (
-                <div className="space-y-2 text-gray-600">
-                  <p>Drop Image Here</p>
-                  <p>OR</p>
-                  <Button type="button" variant="outline" size="lg">
-                    Browse
-                  </Button>
+                <div>
+                  <input className="cursor-pointer" {...getInputProps()} />
+                  <div className="space-y-2 text-gray-600">
+                    <p>Drop Image Here</p>
+                    <p>OR</p>
+                    <Button type="button" variant="outline" size="lg">
+                      Browse
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
