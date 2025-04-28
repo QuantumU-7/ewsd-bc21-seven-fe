@@ -48,7 +48,7 @@ export const useCreateIdeaForm = () => {
     resolver: zodResolver(formSchema),
   });
 
-  console.log({ errors: errors });
+  // console.log({ errors: errors });
 
   const router = useRouter();
   const pathName = usePathname();
@@ -215,6 +215,7 @@ export const useCreateIdeaForm = () => {
       editor?.commands.setContent(data.description);
       setValue("image", convertBase64ToImage(data.thumbnail));
       setImage(convertBase64ToImage(data.thumbnail));
+      setSelectedCategoryId(data.category.id);
 
       setValue("isAnonymous", data.is_posted_anon ? true : false);
       setIsAnonymous(data.is_posted_anon ? true : false);
@@ -224,7 +225,7 @@ export const useCreateIdeaForm = () => {
     }
   };
 
-  console.log({ image });
+  // console.log({ image });
 
   useEffect(() => {
     fetchAllCategories();
@@ -321,7 +322,7 @@ export const useCreateIdeaForm = () => {
         );
         console.log("API Response:", result);
         setIsLoading(false);
-        toast.error("Idea updated successfully!");
+        toast.success("Idea updated successfully!");
       }
 
       router.push("/");
