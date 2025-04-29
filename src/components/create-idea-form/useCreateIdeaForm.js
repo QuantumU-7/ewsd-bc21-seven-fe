@@ -66,6 +66,7 @@ export const useCreateIdeaForm = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
 
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -188,7 +189,7 @@ export const useCreateIdeaForm = () => {
 
   const fetchAllCategories = async () => {
     try {
-      const data = await getAllCategories();
+      const data = await getAllCategories(1, 99);
       setAllCategories(data.data);
       console.log({ data });
     } catch (error) {
@@ -200,6 +201,7 @@ export const useCreateIdeaForm = () => {
     try {
       const data = await getIdeaById(pathName.split("/")[3]);
 
+
       if (allCategories.length > 0) {
         let categoryName = allCategories?.find(
           (category) => category?.id === data.category.id
@@ -208,6 +210,7 @@ export const useCreateIdeaForm = () => {
         setValue("facility", categoryName);
         setSelectedCategory(categoryName);
       }
+
 
       // setAllCategories(data.data);
       setValue("title", data.title);
@@ -298,9 +301,11 @@ export const useCreateIdeaForm = () => {
         data.isAnonymous === true ? "true" : "false"
       );
 
+
       if (!isEditMode || isThumbnailReplaced) {
         formData.append("thumbnail", data.image);
       }
+
 
       if (files.length > 0) {
         files.forEach((file) => {
@@ -309,6 +314,7 @@ export const useCreateIdeaForm = () => {
           }
         });
       }
+
 
       if (!isEditMode) {
         const result = await createNewIdeaService(formData);
