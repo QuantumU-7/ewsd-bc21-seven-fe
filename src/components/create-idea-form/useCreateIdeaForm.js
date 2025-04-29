@@ -50,6 +50,7 @@ export const useCreateIdeaForm = () => {
   });
 
   // console.log({ errors: errors });
+  // console.log({ errors: errors });
 
   const router = useRouter();
   const pathName = usePathname();
@@ -67,7 +68,9 @@ export const useCreateIdeaForm = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
 
+
   const { fetchIdeas, editingIdeaId, setEditingIdeaId } = useIdeas()
+
 
   const editor = useEditor({
     extensions: [
@@ -226,14 +229,13 @@ export const useCreateIdeaForm = () => {
 
       setValue("isAnonymous", data.posted_by.id === null ? true : false);
       setIsAnonymous(data.posted_by.id === null ? true : false);
-      // console.log({ isAnonymous: data.posted_by.id === null });
+      console.log({ isAnonymous: data.posted_by.id === null });
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.error(error.message);
     }
   };
-
   // console.log({ image });
 
   useEffect(() => {
@@ -312,10 +314,15 @@ export const useCreateIdeaForm = () => {
         data.isAnonymous === true ? "true" : "false"
       );
 
+
+
       if (!isEditMode || isThumbnailReplaced) {
         formData.append("thumbnail", data.image);
         formData.append("update_thumbnail", true);
+        formData.append("update_thumbnail", true);
       }
+
+
 
       if (files.length > 0) {
         files.forEach((file) => {
