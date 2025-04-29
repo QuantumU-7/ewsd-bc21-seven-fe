@@ -27,6 +27,7 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Link from "@tiptap/extension-link";
 import { convertBase64ToImage } from "@/utils/image";
 import { getUser } from "@/utils/authentication";
+import { useIdeas } from "@/providers/IdeasContext";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -48,7 +49,7 @@ export const useCreateIdeaForm = () => {
     resolver: zodResolver(formSchema),
   });
 
-  console.log({ errors: errors });
+  // console.log({ errors: errors });
 
   const router = useRouter();
   const pathName = usePathname();
@@ -65,6 +66,10 @@ export const useCreateIdeaForm = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
+
+
+  const { fetchIdeas } = useIdeas()
+
 
   const editor = useEditor({
     extensions: [
@@ -188,7 +193,7 @@ export const useCreateIdeaForm = () => {
 
   const fetchAllCategories = async () => {
     try {
-      const data = await getAllCategories();
+      const data = await getAllCategories(1, 99);
       setAllCategories(data.data);
       console.log({ data });
     } catch (error) {
@@ -197,8 +202,10 @@ export const useCreateIdeaForm = () => {
   };
 
   const fetchIdeaById = async () => {
+    setIsLoading(true);
     try {
       const data = await getIdeaById(pathName.split("/")[3]);
+
 
       if (allCategories.length > 0) {
         let categoryName = allCategories?.find(
@@ -209,22 +216,26 @@ export const useCreateIdeaForm = () => {
         setSelectedCategory(categoryName);
       }
 
+
       // setAllCategories(data.data);
       setValue("title", data.title);
       setValue("content", data.description);
       editor?.commands.setContent(data.description);
       setValue("image", convertBase64ToImage(data.thumbnail));
       setImage(convertBase64ToImage(data.thumbnail));
+      setSelectedCategoryId(data.category.id);
 
-      setValue("isAnonymous", data.is_posted_anon ? true : false);
-      setIsAnonymous(data.is_posted_anon ? true : false);
-      console.log({ isAnonymous: data.is_posted_anon });
+      setValue("isAnonymous", data.posted_by.id === null ? true : false);
+      setIsAnonymous(data.posted_by.id === null ? true : false);
+      console.log({ isAnonymous: data.posted_by.id === null });
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error(error.message);
     }
   };
 
-  console.log({ image });
+  // console.log({ image });
 
   useEffect(() => {
     fetchAllCategories();
@@ -297,9 +308,12 @@ export const useCreateIdeaForm = () => {
         data.isAnonymous === true ? "true" : "false"
       );
 
+
       if (!isEditMode || isThumbnailReplaced) {
         formData.append("thumbnail", data.image);
+        formData.append("update_thumbnail", true);
       }
+
 
       if (files.length > 0) {
         files.forEach((file) => {
@@ -308,6 +322,7 @@ export const useCreateIdeaForm = () => {
           }
         });
       }
+
 
       if (!isEditMode) {
         const result = await createNewIdeaService(formData);
@@ -321,9 +336,9 @@ export const useCreateIdeaForm = () => {
         );
         console.log("API Response:", result);
         setIsLoading(false);
-        toast.error("Idea updated successfully!");
+        toast.success("Idea updated successfully!");
       }
-
+      fetchIdeas(1);
       router.push("/");
     } catch (error) {
       setIsLoading(false);

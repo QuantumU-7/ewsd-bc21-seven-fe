@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import IdeaCard from "../shared/common/idea-card/IdeaCard";
-import { getAllIdeasService } from "@/services/ideaManagementService";
 import LoadingIdeaCard from "../shared/common/idea-card/LoadingIdeaCard";
 import Link from "next/link";
 import CommonPagination from "../shared/common/Pagination";
@@ -9,36 +8,24 @@ import { useIdeas } from "@/providers/IdeasContext";
 
 const LatestIdeaSection = () => {
   // Initialize local state as fallback
-  const [localIdeas, setLocalIdeas] = useState([]);
-  const [localCurrentPage, setLocalCurrentPage] = useState(1);
-  const [localTotalPages, setLocalTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
+  // const [localIdeas, setLocalIdeas] = useState([]);
+  // const [localCurrentPage, setLocalCurrentPage] = useState(1);
+  // const [localTotalPages, setLocalTotalPages] = useState(1);
+  // const [loading, setLoading] = useState(false);
   
   // Try to use context, but fall back to local state if undefined
   const ideasContext = useIdeas();
   const {
-    ideas = localIdeas,
-    setIdeas = setLocalIdeas,
-    homeCurrentPage = localCurrentPage,
-    setHomeCurrentPage = setLocalCurrentPage,
-    homeTotalPages = localTotalPages,
-    setHomeTotalPages = setLocalTotalPages,
+    ideas ,
+    // setIdeas = setLocalIdeas,
+    homeCurrentPage ,
+    setHomeCurrentPage ,
+    homeTotalPages,
+    // setHomeTotalPages = setLocalTotalPages,
+    fetchIdeas,
+    loading
   } = ideasContext || {};
   
-  const limit = 5;
-
-  const fetchIdeas = async (page) => {
-    setLoading(true);
-    try {
-      const data = await getAllIdeasService(page, limit);
-      setIdeas(data.data);
-      setHomeTotalPages(data.pagination.total_pages || 1);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error(error.message);
-    }
-  };
 
   useEffect(() => {
     if (ideas.length === 0) {

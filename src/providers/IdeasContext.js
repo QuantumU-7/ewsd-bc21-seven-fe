@@ -1,5 +1,6 @@
 "use client";
 
+import { getAllIdeasService } from "@/services/ideaManagementService";
 import { createContext, useContext, useState } from "react";
 
 const IdeasContext = createContext();
@@ -10,6 +11,21 @@ export const IdeasProvider = ({ children }) => {
   const [popularIdeas, setPopularIdeas] = useState([]);
   const [homeCurrentPage, setHomeCurrentPage] = useState(1);
   const [homeTotalPages, setHomeTotalPages] = useState(5);
+  const [loading, setLoading] = useState(false);
+  const limit = 5;
+
+    const fetchIdeas = async (page) => {
+      setLoading(true);
+      try {
+        const data = await getAllIdeasService(page, limit);
+        setIdeas(data.data);
+        setHomeTotalPages(data.pagination.total_pages || 1);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.error(error.message);
+      }
+    };
 
   return (
     <IdeasContext.Provider
@@ -22,6 +38,8 @@ export const IdeasProvider = ({ children }) => {
         setHomeCurrentPage,
         homeTotalPages,
         setHomeTotalPages,
+        fetchIdeas,
+        loading,
       }}
     >
       {children}
