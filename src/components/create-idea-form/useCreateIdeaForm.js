@@ -225,9 +225,9 @@ export const useCreateIdeaForm = () => {
       setImage(convertBase64ToImage(data.thumbnail));
       setSelectedCategoryId(data.category.id);
 
-      setValue("isAnonymous", data.is_posted_anon ? true : false);
-      setIsAnonymous(data.is_posted_anon ? true : false);
-      // console.log({ isAnonymous: data.is_posted_anon });
+      setValue("isAnonymous", data.posted_by.id === null ? true : false);
+      setIsAnonymous(data.posted_by.id === null ? true : false);
+      console.log({ isAnonymous: data.posted_by.id === null });
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -311,6 +311,7 @@ export const useCreateIdeaForm = () => {
 
       if (!isEditMode || isThumbnailReplaced) {
         formData.append("thumbnail", data.image);
+        formData.append("update_thumbnail", true);
       }
 
 
