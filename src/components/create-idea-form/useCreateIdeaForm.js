@@ -68,7 +68,7 @@ export const useCreateIdeaForm = () => {
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
 
 
-  const { fetchIdeas, editingIdeaId } = useIdeas()
+  const { fetchIdeas, editingIdeaId, setEditingIdeaId } = useIdeas()
 
 
   const editor = useEditor({
@@ -340,6 +340,7 @@ export const useCreateIdeaForm = () => {
           formData
         );
         console.log("API Response:", result);
+        setEditingIdeaId(null)
         setIsLoading(false);
         toast.success("Idea updated successfully!");
       }
