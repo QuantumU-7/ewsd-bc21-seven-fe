@@ -369,7 +369,7 @@ const IdeaDetailPage = () => {
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
                       className="mb-2"
-                      disabled={commentLoading || !showComments}
+                      disabled={commentLoading || !showVotingFeature}
                     />
 
                     <div className="flex justify-between items-center">
@@ -378,7 +378,7 @@ const IdeaDetailPage = () => {
                           id="anonymous"
                           checked={isAnonymous}
                           onCheckedChange={setIsAnonymous}
-                          disabled={commentLoading || !showComments}
+                          disabled={commentLoading || !showVotingFeature}
                         />
                         <label
                           htmlFor="anonymous"

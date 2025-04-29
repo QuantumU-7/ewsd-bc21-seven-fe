@@ -80,6 +80,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
             </Popover>
           </TableCell>
         </TableRow>
+
       ))}
     </>
   );

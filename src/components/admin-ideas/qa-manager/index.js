@@ -14,11 +14,13 @@ const QAManagerIdeasList = () => {
   const [allIdeas, setAllIdeas] = useState([]);
   const [popularIdeas, setPopularIdeas] = useState([]);
   const [viewedIdeas, setViewedIdeas] = useState([]);
+  const [reportedIdeas, setReportedIdeas] = useState([]);
 
   // Separate loading states
   const [allIdeasLoading, setAllIdeasLoading] = useState(true);
   const [popularIdeasLoading, setPopularIdeasLoading] = useState(true);
   const [viewedIdeasLoading, setViewedIdeasLoading] = useState(true);
+  const [reportedIdeasLoading, setReportedIdeasLoading] = useState(true);
   const [exportCSVLoading, setExportCSVLoading] = useState(false);
   const [downloadAttachmentsLoading, setDownloadAttachmentsLoading] = useState(false);
 
@@ -49,6 +51,7 @@ const QAManagerIdeasList = () => {
     fetchAllIdeas(1);
     fetchPopularIdeas(1);
     fetchViewedIdeas(1);
+    fetchReportedIdeas(1);
   }, []);
   console.log("allIdeas", allIdeas);
   console.log("popularIdeas", popularIdeas);
@@ -111,6 +114,25 @@ const QAManagerIdeasList = () => {
     }
   };
 
+  const fetchReportedIdeas = async (page) => {
+    setViewedIdeasLoading(true);
+    try {
+      const response = await getAllIdeaService({ page: page, reported: -1 });
+      setReportedIdeas(response.data);
+      setViewedPagination({
+        totalRecords: response.pagination.total_records,
+        currentPage: response.pagination.current_page,
+        totalPages: response.pagination.total_pages,
+        nextPage: response.pagination.next_page,
+        prevPage: response.pagination.prev_page,
+      });
+    } catch (error) {
+      console.error("Error fetching reported ideas:", error);
+    } finally {
+      setReportedIdeasLoading(false);
+    }
+  };
+
   const handlePageChange = (page, tab) => {
     switch (tab) {
       case "popular":
@@ -119,6 +141,9 @@ const QAManagerIdeasList = () => {
       case "viewed":
         fetchViewedIdeas(page);
         break;
+      case "reported":
+        fetchReportedIdeas(page);
+        break
       default:
         fetchAllIdeas(page);
         break;
@@ -165,6 +190,7 @@ const QAManagerIdeasList = () => {
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="popular">Most Popular</TabsTrigger>
           <TabsTrigger value="viewed">Most Viewed</TabsTrigger>
+          <TabsTrigger value="reported">Reported Ideas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all">
@@ -191,6 +217,15 @@ const QAManagerIdeasList = () => {
             loading={viewedIdeasLoading}
             pagination={viewedPagination}
             handlePageChange={(page) => handlePageChange(page, "viewed")}
+          />
+        </TabsContent>
+
+        <TabsContent value="reported">
+          <IdeaTable
+            ideas={reportedIdeas}
+            loading={reportedIdeasLoading}
+            pagination={viewedPagination}
+            handlePageChange={(page) => handlePageChange(page, "reported")}
           />
         </TabsContent>
       </Tabs>
