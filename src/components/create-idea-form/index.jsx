@@ -12,7 +12,15 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Image from "next/image";
 import { useCreateIdeaForm } from "./useCreateIdeaForm";
 import { Loader2 } from "lucide-react";
@@ -67,7 +75,6 @@ const CreateIdeaForm = () => {
     isEditMode,
     imagePreview,
     handleRemoveThumbnail,
-
   } = useCreateIdeaForm();
 
   if (!editor) {
@@ -75,7 +82,11 @@ const CreateIdeaForm = () => {
   }
 
   return (
-    <section className={`${isLoading ? 'select-none pointer-events-none opacity-50' : ''} `}>
+    <section
+      className={`${
+        isLoading ? "select-none pointer-events-none opacity-50" : ""
+      } `}
+    >
       <div className="max-w-7xl mx-auto px-4 mb-10">
         <h1 className="my-10 text-4xl font-bold">Post an idea</h1>
         <div className="flex flex-col lg:flex-row gap-10">
@@ -361,7 +372,104 @@ const CreateIdeaForm = () => {
                 id="terms"
                 onCheckedChange={(val) => setValue("agree", val)}
               />
-              <label htmlFor="terms">I agree to the terms and conditions</label>
+              <label htmlFor="terms">I agree to the</label>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <p className="underline text-primary cursor-pointer">Terms and Conditions</p>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-lg max-h-[50%] overflow-scroll">
+                  <DialogHeader>
+                    <DialogTitle> Quantum University Idea Submission System – Terms and
+                    Conditions</DialogTitle>
+
+                  </DialogHeader>
+
+                  <ol className="space-y-4 list-decimal list-inside text-base leading-relaxed">
+                    <li>
+                      <strong>Purpose:</strong> The system collects ideas from
+                      staff members (academic and support) to improve University
+                      processes, services, and operations.
+                    </li>
+                    <li>
+                      <strong>Eligibility:</strong> Only current University
+                      staff members with valid institutional accounts may
+                      submit, view, or comment on ideas.
+                    </li>
+                    <li>
+                      <strong>Submission Rules:</strong> Submissions must be
+                      original and relevant to the University’s goals.
+                      Offensive, discriminatory, unlawful, or plagiarized
+                      content is prohibited. Supporting documents must follow
+                      the same guidelines (PDF, JPEG, PNG, XLSX; max 10MB).
+                    </li>
+                    <li>
+                      <strong>Anonymity and Accountability:</strong> Anonymous
+                      submissions are allowed; however, real identities are
+                      stored securely for audit purposes. Users remain
+                      responsible for any content they submit, even anonymously.
+                    </li>
+                    <li>
+                      <strong>Voting and Comments:</strong> Each staff member
+                      can vote once (Thumbs Up/Down) per idea. Comments must
+                      remain respectful and relevant.
+                    </li>
+                    <li>
+                      <strong>Notifications:</strong> QA Coordinators are
+                      notified when a new idea is submitted. Idea authors are
+                      notified when comments are added to their ideas.
+                    </li>
+                    <li>
+                      <strong>Closure Dates:</strong> New ideas cannot be
+                      submitted after the idea closure date. Comments close
+                      after the final closure date.
+                    </li>
+                    <li>
+                      <strong>Data Usage:</strong> Ideas and comments may be
+                      used internally for evaluation and reporting. Uploaded
+                      documents are securely stored and exported by the QA
+                      Manager post-final closure.
+                    </li>
+                    <li>
+                      <strong>Intellectual Property:</strong> The University has
+                      the right to use submitted ideas for institutional
+                      improvement. Idea ownership remains with the submitter
+                      unless otherwise agreed.
+                    </li>
+                    <li>
+                      <strong>Prohibited Actions:</strong> Spam, disruptive
+                      behavior, misuse of the system, and multiple identical
+                      submissions are forbidden.
+                    </li>
+                    <li>
+                      <strong>Changes to Terms:</strong> The University may
+                      amend these terms at any time. Continued use indicates
+                      acceptance of any updates.
+                    </li>
+                    <li>
+                      <strong>Acceptance:</strong> By submitting an idea, you
+                      confirm you have read and accepted these Terms and
+                      Conditions.
+                    </li>
+                  </ol>
+
+                  <div className="mt-8 pt-4 border-t border-gray-200 text-sm text-gray-600">
+                    Contact:{" "}
+                    <a
+                      href="mailto:qaoffice@university.edu"
+                      className="text-blue-600 hover:underline"
+                    >
+                      qaoffice@university.edu
+                    </a>
+                  </div>
+                  <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                      <Button type="button" variant="secondary">
+                        Close
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
             {errors.agree && (
               <p className="text-red-500 text-sm">{errors.agree.message}</p>
