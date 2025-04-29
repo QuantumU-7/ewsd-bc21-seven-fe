@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { getAllIdeaService } from "@/services/getAllIdeas";
 import {
   Popover,
@@ -13,6 +14,7 @@ import CommonTable from "@/components/shared/common/Table";
 import CommonPagination from "@/components/shared/common/Pagination";
 import { deleteIdeaService } from "@/services/ideaManagementService";
 import { toast } from "sonner";
+import { useIdeas } from "@/providers/IdeasContext";
 
 const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
@@ -29,6 +31,8 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
     nextPage: null,
     prevPage: null,
   });
+
+  const { fetchIdeas : fetchHomeIdeas, setEditingIdeaId} = useIdeas();
 
   // Fetch ideas based on page number (for standalone mode)
   const fetchIdeas = async (page) => {
@@ -67,17 +71,19 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   };
 
   const handleEdit = (ideaId) => {
-    router.push(`/ideas/edit/${ideaId}`);
+    setEditingIdeaId(ideaId);
+    router.push(`/ideas/edit/`);
   };
 
   const handleDelete = async (ideaId) => {
     try {
       await deleteIdeaService(ideaId);
-
+      fetchHomeIdeas(1);
+      fetchHomeIdeas(1);
       toast.success("Idea deleted successfully");
-
       // Refresh the current page data - use appropriate function based on mode
-      console.log(ideaId);
+      // console.log(ideaId);
+      // console.log(ideaId);
       if (handlePageChange) {
         handlePageChange(pagination.currentPage);
       } else {

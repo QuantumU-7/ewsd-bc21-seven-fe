@@ -298,7 +298,9 @@ const IdeaDetailPage = () => {
                     </svg>
                   </div>
                   <a
-                    href="#"
+                    href={doc.filelocation}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm text-gray-700 hover:text-blue-600"
                   >
                     {typeof doc === "object"

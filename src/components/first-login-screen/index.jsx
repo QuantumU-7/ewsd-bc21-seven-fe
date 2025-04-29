@@ -10,10 +10,10 @@ import { redirectByRole } from "@/utils/login";
 const ForgotPasswordForm = () => {
   const me  = getUser();
   return (
-    <div className="flex justify-center items-center h-[90vh]">
-      <Card className="w-[50vw] h-[30vw]">
-        <CardContent className="flex p-0 justify-between items-center h-full">
-          <div className="w-1/2 p-[4vw]">
+    <div className="flex  justify-center items-center h-screen">
+      <Card className="w-full mx-6 max-w-3xl">
+        <CardContent className="flex flex-col lg:flex-row p-0 justify-center lg:justify-between items-center h-[388px]">
+          <div className="w-full lg:w-1/2 p-7">
             <div className="flex flex-col items-center justify-center mb-9">
               <p className="text-2xl font-bold mb-2 text-primary">
                 Welcome {me?.firstname + " " + me?.lastname}
@@ -30,7 +30,7 @@ const ForgotPasswordForm = () => {
               </Button>
             </div>
           </div>
-          <div className="w-1/2 h-full relative flex justify-center">
+          <div className="lg:w-1/2 relative justify-center hidden lg:flex h-[388px]">
             <Image
               src={uniImage}
               alt="university logo"
