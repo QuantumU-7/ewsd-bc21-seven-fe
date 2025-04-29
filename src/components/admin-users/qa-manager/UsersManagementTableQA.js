@@ -1,7 +1,6 @@
 "use client";
 import CommonPagination from "@/components/shared/common/Pagination";
 import CommonTable from "@/components/shared/common/Table";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
   PopoverContent,
@@ -23,10 +22,10 @@ const UsersManagementTableQA = () => {
     totalPages,
     currentPage,
     setCurrentPage,
-	isFilterMode,
+    isFilterMode,
     roleId,
     departmentId,
-	searchKey
+    searchKey,
   } = useUsers();
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -37,11 +36,11 @@ const UsersManagementTableQA = () => {
   }, [users.length, fetchUsers]);
 
   const handlePageChange = (page) => {
-	console.log({isFilterMode})
-	if(isFilterMode) {
-        fetchUsers(page, roleId, departmentId, searchKey);
+    console.log({ isFilterMode });
+    if (isFilterMode) {
+      fetchUsers(page, roleId, departmentId, searchKey);
     } else {
-        fetchUsers(page);
+      fetchUsers(page);
     }
     setCurrentPage(page);
   };
@@ -52,6 +51,7 @@ const UsersManagementTableQA = () => {
       <TableCell>{user.id}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>{user.department.name}</TableCell>
+      <TableCell>{user.role.name}</TableCell>
       <TableCell className="w-12">
         {" "}
         <Popover>
@@ -91,28 +91,27 @@ const UsersManagementTableQA = () => {
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Users</h2>
-        </div>
+    <section className="px-4">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Users</h2>
+      </div>
 
-        <FilterForm />
+      <FilterForm />
 
-        <CommonTable
-          columns={["Name", "User ID", "Email", "Department", ""]}
-          loading={loading}
-          tableBody={tableBody}
-        />
-        <CommonPagination
-          className="mt-5"
-          position="center"
-          isLoading={loading}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </CardContent>
+      <CommonTable
+        columns={["Name", "User ID", "Email", "Department","Role", ""]}
+        loading={loading}
+        tableBody={tableBody}
+      />
+      <CommonPagination
+        className="mt-5"
+        position="center"
+        isLoading={loading}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
+
       <ConfirmationBox
         title={selectedUser?.is_disabled ? "Unblock User" : "Block User"}
         message={`Are you sure you want to ${
@@ -123,7 +122,7 @@ const UsersManagementTableQA = () => {
         onCancel={() => setIsOpen(false)}
         onClose={() => setIsOpen(false)}
       />
-    </Card>
+    </section>
   );
 };
 

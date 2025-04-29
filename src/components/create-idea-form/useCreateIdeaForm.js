@@ -6,7 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorState, convertToRaw } from "draft-js";
 import { getAllCategories } from "@/services/categoryManagementService";
 import draftToHtml from "draftjs-to-html";
-import { createNewIdeaService, updateIdeaService } from "@/services/ideaManagementService";
+import {
+  createNewIdeaService,
+  updateIdeaService,
+} from "@/services/ideaManagementService";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { getIdeaById } from "@/services/getIdeaById";
@@ -24,6 +27,7 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Link from "@tiptap/extension-link";
 import { convertBase64ToImage } from "@/utils/image";
 import { getUser } from "@/utils/authentication";
+import { useIdeas } from "@/providers/IdeasContext";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -45,7 +49,8 @@ export const useCreateIdeaForm = () => {
     resolver: zodResolver(formSchema),
   });
 
-  console.log({errors: errors})
+  // console.log({ errors: errors });
+  // console.log({ errors: errors });
 
   const router = useRouter();
   const pathName = usePathname();
@@ -61,6 +66,11 @@ export const useCreateIdeaForm = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
+
+
+  const { fetchIdeas, editingIdeaId, setEditingIdeaId } = useIdeas()
+
 
   const editor = useEditor({
     extensions: [
@@ -184,7 +194,7 @@ export const useCreateIdeaForm = () => {
 
   const fetchAllCategories = async () => {
     try {
-      const data = await getAllCategories();
+      const data = await getAllCategories(1, 99);
       setAllCategories(data.data);
       console.log({ data });
     } catch (error) {
@@ -193,32 +203,40 @@ export const useCreateIdeaForm = () => {
   };
 
   const fetchIdeaById = async () => {
-
+    setIsLoading(true);
     try {
-      const data = await getIdeaById(pathName.split("/")[3]);
+      const data = await getIdeaById(editingIdeaId);
 
-      if(allCategories.length > 0) {
-        let categoryName = allCategories?.find((category) => category?.id === data.category.id).name;
-        console.log(categoryName)
+
+      if (allCategories.length > 0) {
+        let categoryName = allCategories?.find(
+          (category) => category?.id === data.category.id
+        ).name;
+        console.log(categoryName);
         setValue("facility", categoryName);
         setSelectedCategory(categoryName);
       }
-     
+
+
+
       // setAllCategories(data.data);
       setValue("title", data.title);
       setValue("content", data.description);
       editor?.commands.setContent(data.description);
       setValue("image", convertBase64ToImage(data.thumbnail));
       setImage(convertBase64ToImage(data.thumbnail));
+      setSelectedCategoryId(data.category.id);
 
-      setValue("isAnonymous", data.is_posted_anon);
-      console.log({ data });
+      setValue("isAnonymous", data.posted_by.id === null ? true : false);
+      setIsAnonymous(data.posted_by.id === null ? true : false);
+      console.log({ isAnonymous: data.posted_by.id === null });
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error(error.message);
     }
   };
-
-  console.log({image})
+  // console.log({ image });
 
   useEffect(() => {
     fetchAllCategories();
@@ -226,25 +244,21 @@ export const useCreateIdeaForm = () => {
   }, []);
 
   useEffect(() => {
-    if (pathName.includes("/edit")) {
+    if (pathName.includes("/edit") && editingIdeaId) {
       setIsEditMode(true);
       fetchIdeaById();
+    } else if(pathName.includes("/edit") && editingIdeaId === null) {
+      setIsEditMode(false);
+      router.push("/ideas");
     }
+
+
   }, [editor, allCategories]);
 
   const onDrop = (acceptedFiles) => {
     setImage(acceptedFiles[0]);
     setValue("image", acceptedFiles[0]);
-
-    // const file = acceptedFiles[0];
-    // setImage(file);
-
-    // const reader = new FileReader();
-    // reader.readAsDataURL(file);
-    // reader.onloadend = () => {
-    //   console.log({ imageData: reader.result });
-    //   setValue("image", reader.result);
-    // };
+    setIsThumbnailReplaced(true);
   };
 
   const handleEditorChange = (state) => {
@@ -300,9 +314,15 @@ export const useCreateIdeaForm = () => {
         data.isAnonymous === true ? "true" : "false"
       );
 
-      // if (data.image instanceof File) {
+
+
+      if (!isEditMode || isThumbnailReplaced) {
         formData.append("thumbnail", data.image);
-      // }
+        formData.append("update_thumbnail", true);
+        formData.append("update_thumbnail", true);
+      }
+
+
 
       if (files.length > 0) {
         files.forEach((file) => {
@@ -312,19 +332,22 @@ export const useCreateIdeaForm = () => {
         });
       }
 
-      if(!isEditMode){
+      if (!isEditMode) {
         const result = await createNewIdeaService(formData);
         console.log("API Response:", result);
         setIsLoading(false);
         toast.success("Idea created successfully!");
-      }else{
-        const result = await updateIdeaService(pathName.split("/")[3], formData);
+      } else {
+        const result = await updateIdeaService(
+          editingIdeaId,
+          formData
+        );
         console.log("API Response:", result);
+        setEditingIdeaId(null)
         setIsLoading(false);
-        toast.error("Idea updated successfully!");
+        toast.success("Idea updated successfully!");
       }
-
-
+      fetchIdeas(1);
       router.push("/");
     } catch (error) {
       setIsLoading(false);
@@ -338,9 +361,17 @@ export const useCreateIdeaForm = () => {
 
   if (typeof imageValue === "string") {
     imagePreview = imageValue;
-  } else if (imageValue && imageValue.length > 0) {
+  } else if (imageValue instanceof File) {
+    imagePreview = URL.createObjectURL(imageValue);
+  } else if (imageValue && Array.isArray(imageValue) && imageValue.length > 0) {
     imagePreview = URL.createObjectURL(imageValue[0]);
   }
+
+  const handleRemoveThumbnail = () => {
+    setImage(null);
+    setValue("image", null);
+    setIsThumbnailReplaced(true);
+  };
 
   return {
     register,
@@ -375,5 +406,6 @@ export const useCreateIdeaForm = () => {
     isEditMode,
     imageValue,
     imagePreview,
+    handleRemoveThumbnail,
   };
 };

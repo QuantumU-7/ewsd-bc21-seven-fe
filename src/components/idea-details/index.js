@@ -199,15 +199,16 @@ const IdeaDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-3xl h-[77.5vh] overflow-auto mx-auto my-8 px-4 flex justify-center">
+      <div className="max-w-3xl h-screen mx-auto my-8 px-4 flex justify-center items-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="ml-4 text-lg">Loading...</p>
       </div>
     );
   }
 
   if (!idea) {
     return (
-      <div className="max-w-3xl h-[77.5vh] overflow-auto mx-auto my-8 px-4">
+      <div className="max-w-3xl h-screen mx-auto my-8 px-4">
         <h2 className="text-2xl font-bold">Idea not found</h2>
         <Button
           className="mt-4"
@@ -230,7 +231,7 @@ const IdeaDetailPage = () => {
   };
 
   return (
-    <div className="lg:max-w-7xl h-[77.5vh] overflow-auto mx-auto my-8">
+    <div className="lg:max-w-7xl mx-auto my-8">
       <div className="flex justify-between items-center mb-4">
         <Button variant="ghost" size="sm" onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4" />
@@ -297,7 +298,9 @@ const IdeaDetailPage = () => {
                     </svg>
                   </div>
                   <a
-                    href="#"
+                    href={doc.filelocation}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm text-gray-700 hover:text-blue-600"
                   >
                     {typeof doc === "object"

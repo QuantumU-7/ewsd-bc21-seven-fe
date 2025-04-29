@@ -20,9 +20,9 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
     router.push(`/ideas/${ideaId}`);
   };
 
-  const handleEdit = (ideaId) => {
-    router.push(`/ideas/edit/${ideaId}`);
-  };
+  // const handleEdit = (ideaId) => {
+  //   router.push(`/ideas/edit/${ideaId}`);
+  // };
 
   const handleDelete = async (ideaId) => {
     console.log(ideaId)
@@ -60,13 +60,13 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
                   >
                     View
                   </p>
-                  <div className="border-t"></div>
+                  {/* <div className="border-t"></div>
                   <p
                     className="text-sm p-2 cursor-pointer hover:bg-gray-100"
                     onClick={() => handleEdit(idea.id)}
                   >
                     Edit
-                  </p>
+                  </p> */}
                   <div className="border-t"></div>
                   <p
                     className="text-sm p-2 cursor-pointer hover:bg-gray-100"

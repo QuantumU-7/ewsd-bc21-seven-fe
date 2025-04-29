@@ -67,8 +67,8 @@ const LoginForm = () => {
       const decodedToken = jwtDecode(data.access_token);
       redirectAfterLogin(decodedToken.lastlogin, me.role.id);
     } catch (error) {
-      if(error.message === "403"){
-        router.push("/blocked-user")
+      if (error.message === "403") {
+        router.push("/blocked-user");
       }
       setError(error.message);
     } finally {
@@ -79,8 +79,7 @@ const LoginForm = () => {
   const redirectAfterLogin = (lastlogin, role) => {
     if (lastlogin === null) {
       router.push("/welcome");
-    }
-    else {
+    } else {
       router.push(redirectByRole(role));
     }
   };
@@ -134,9 +133,9 @@ const LoginForm = () => {
                             className="absolute right-2 top-1/2 transform -translate-y-1/2"
                           >
                             {showPassword ? (
-                              <EyeSlash size={18} />
-                            ) : (
                               <Eye size={18} />
+                            ) : (
+                              <EyeSlash size={18} />
                             )}
                           </button>
                         </div>
@@ -155,7 +154,7 @@ const LoginForm = () => {
               </form>
             </Form>
           </div>
-          <div className="lg:w-1/2 relative justify-center hidden lg:flex h-[388px]" >
+          <div className="lg:w-1/2 relative justify-center hidden lg:flex h-[388px]">
             <Image
               src={uniImage}
               alt="university logo"

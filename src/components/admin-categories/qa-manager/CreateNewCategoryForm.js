@@ -26,15 +26,14 @@ const CategoryManagementForm = ({ isEditing = false }) => {
 
   const params = useParams();
 
-  const {
-    loading,
-    addCategory,
-    editCategory,
-    editingCategory,
-  } = useCategory();
+  const { loading, addCategory, editCategory, editingCategory } = useCategory();
 
   useEffect(() => {
-    setValue("name", editingCategory);
+    if (params.id === undefined) {
+      setValue("name", "");
+    } else {
+      editCategory !== "" && setValue("name", editingCategory);
+    }
   }, [setValue, editingCategory]);
 
   const onSubmit = (data) => {
