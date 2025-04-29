@@ -43,7 +43,7 @@ export const CategoryProvider = ({ children }) => {
     try {
       await createNewCategory(name);
       fetchCategories(currentPage);
-      toast("Crated New Category");
+      toast.success("Crated New Category");
       router.push("/admin/categories");
     } catch (error) {
       console.error("Error adding category:", error);
@@ -57,7 +57,9 @@ export const CategoryProvider = ({ children }) => {
     try {
       await updateCategory(id, newName);
       fetchCategories(currentPage);
-      toast("Updated Category");
+      toast.success("Updated Category");
+      setEditingCategory("");
+      router.push("/admin/categories");
     } catch (error) {
       console.error("Error editing category:", error);
     } finally {
@@ -70,7 +72,7 @@ export const CategoryProvider = ({ children }) => {
     try {
       await deleteCategory(id);
       fetchCategories(currentPage);
-      toast("Deleted Category");
+      toast.success("Deleted Category");
     } catch (error) {
       console.error("Error deleted category:", error);
     } finally {
