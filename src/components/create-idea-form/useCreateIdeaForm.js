@@ -67,6 +67,7 @@ export const useCreateIdeaForm = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
 
+
   const { fetchIdeas } = useIdeas()
 
 
@@ -201,6 +202,7 @@ export const useCreateIdeaForm = () => {
   };
 
   const fetchIdeaById = async () => {
+    setIsLoading(true);
     try {
       const data = await getIdeaById(pathName.split("/")[3]);
 
@@ -226,7 +228,9 @@ export const useCreateIdeaForm = () => {
       setValue("isAnonymous", data.is_posted_anon ? true : false);
       setIsAnonymous(data.is_posted_anon ? true : false);
       // console.log({ isAnonymous: data.is_posted_anon });
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error(error.message);
     }
   };

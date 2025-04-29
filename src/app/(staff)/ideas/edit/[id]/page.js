@@ -3,7 +3,7 @@ import React from 'react'
 
 const EditIdeaPage = () => {
   return (
-    <div>
+    <div className='min-h-screen'>
         <CreateIdeaForm/>
     </div>
   )

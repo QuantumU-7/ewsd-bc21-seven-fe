@@ -67,6 +67,7 @@ const CreateIdeaForm = () => {
     isEditMode,
     imagePreview,
     handleRemoveThumbnail,
+
   } = useCreateIdeaForm();
 
   if (!editor) {
@@ -74,7 +75,7 @@ const CreateIdeaForm = () => {
   }
 
   return (
-    <section>
+    <section className={`${isLoading ? 'select-none pointer-events-none opacity-50' : ''} `}>
       <div className="max-w-7xl mx-auto px-4 mb-10">
         <h1 className="my-10 text-4xl font-bold">Post an idea</h1>
         <div className="flex flex-col lg:flex-row gap-10">

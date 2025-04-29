@@ -6,7 +6,7 @@ const CreateIdeaForm = dynamic(() => import("@/components/create-idea-form"), {
 });
 const CreateIdeaPage = () => {
   return (
-    <div>
+    <div className="min-h-screen">
       <CreateIdeaForm/>
     </div>
   )
