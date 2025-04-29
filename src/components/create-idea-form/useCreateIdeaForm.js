@@ -27,6 +27,7 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Link from "@tiptap/extension-link";
 import { convertBase64ToImage } from "@/utils/image";
 import { getUser } from "@/utils/authentication";
+import { useIdeas } from "@/providers/IdeasContext";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -65,6 +66,8 @@ export const useCreateIdeaForm = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
+
+  const { fetchIdeas } = useIdeas()
 
 
   const editor = useEditor({
@@ -222,7 +225,7 @@ export const useCreateIdeaForm = () => {
 
       setValue("isAnonymous", data.is_posted_anon ? true : false);
       setIsAnonymous(data.is_posted_anon ? true : false);
-      console.log({ isAnonymous: data.is_posted_anon });
+      // console.log({ isAnonymous: data.is_posted_anon });
     } catch (error) {
       console.error(error.message);
     }
@@ -330,7 +333,7 @@ export const useCreateIdeaForm = () => {
         setIsLoading(false);
         toast.success("Idea updated successfully!");
       }
-
+      fetchIdeas(1);
       router.push("/");
     } catch (error) {
       setIsLoading(false);

@@ -12,7 +12,7 @@ const LatestIdeaSection = () => {
   const [localIdeas, setLocalIdeas] = useState([]);
   const [localCurrentPage, setLocalCurrentPage] = useState(1);
   const [localTotalPages, setLocalTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   
   // Try to use context, but fall back to local state if undefined
   const ideasContext = useIdeas();
@@ -23,22 +23,10 @@ const LatestIdeaSection = () => {
     setHomeCurrentPage = setLocalCurrentPage,
     homeTotalPages = localTotalPages,
     setHomeTotalPages = setLocalTotalPages,
+    fetchIdeas,
+    loading
   } = ideasContext || {};
   
-  const limit = 5;
-
-  const fetchIdeas = async (page) => {
-    setLoading(true);
-    try {
-      const data = await getAllIdeasService(page, limit);
-      setIdeas(data.data);
-      setHomeTotalPages(data.pagination.total_pages || 1);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error(error.message);
-    }
-  };
 
   useEffect(() => {
     if (ideas.length === 0) {
