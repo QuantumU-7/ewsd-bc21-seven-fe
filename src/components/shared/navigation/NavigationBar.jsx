@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,12 +26,53 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { handleLogout, getUser } from "@/utils/authentication";
+import { getClosureDateService } from "@/services/getClosureDates";
 
 const NavigationBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const user = getUser();
   const username = user?.firstname + " " + user?.lastname;
+  const [submissionDate, setSubmissionDate] = useState(null);
+  const [finalClosureDate, setFinalClosureDate] = useState(null);
+  const [disabledButtonDisabled, setDisabledButton] = useState(false);
+
+  useEffect(() => {
+    fetchClosureDates();
+  }, []);
+
+  useEffect(() => {
+    if (submissionDate && finalClosureDate) {
+      checkDates();
+    }
+  }, [submissionDate, finalClosureDate]);
+
+  const fetchClosureDates = async () => {
+    try {
+      const response = await getClosureDateService();
+      if (response) {
+        setSubmissionDate(new Date(response.submission_date));
+        setFinalClosureDate(new Date(response.final_closure_date));
+      }
+    } catch (error) {
+      console.error("Error fetching closure dates:", error);
+    }
+  };
+
+  const checkDates = () => {
+    const currentDate = new Date();
+
+    // First check if we're past the final closure date
+    if (finalClosureDate && currentDate >= finalClosureDate) {
+      setDisabledButton(true);
+    }
+    // If not past either date
+    else {
+      setDisabledButton(false);
+    }
+  };
+
+
 
   const navItems = [
     { href: HOME, label: "Latest" },
@@ -59,9 +100,8 @@ const NavigationBar = () => {
               <Link
                 key={href}
                 href={href}
-                className={`px-2 hover:text-gray-700 ${
-                  pathname === href ? "underline text-primary font-semibold" : ""
-                }`}
+                className={`px-2 hover:text-gray-700 ${pathname === href ? "underline text-primary font-semibold" : ""
+                  }`}
               >
                 {label}
               </Link>
@@ -71,8 +111,8 @@ const NavigationBar = () => {
 
         {/* Right Section */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href={UPLOAD_IDEA}>
-            <Button>Upload Idea</Button>
+          <Link href={disabledButtonDisabled ? "#": UPLOAD_IDEA}>
+            <Button disabled={disabledButtonDisabled}>Upload Idea</Button>
           </Link>
 
           <Popover>
@@ -100,9 +140,8 @@ const NavigationBar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed top-0 left-0 w-full h-full bg-white p-6 z-50 transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300`}
+        className={`md:hidden fixed top-0 left-0 w-full h-full bg-white p-6 z-50 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300`}
       >
         <button className="absolute top-5 right-5" onClick={() => setIsOpen(false)}>
           <X size={28} />
@@ -119,8 +158,8 @@ const NavigationBar = () => {
               {label}
             </Link>
           ))}
-          <Link href={UPLOAD_IDEA} onClick={() => setIsOpen(false)}>
-            <Button>Upload Idea</Button>
+          <Link href={disabledButtonDisabled ? "#": UPLOAD_IDEA} onClick={() => setIsOpen(false)}>
+            <Button disabled={disabledButtonDisabled}>Upload Idea</Button>
           </Link>
 
           <Popover>
