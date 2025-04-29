@@ -32,7 +32,10 @@ import { ADMIN } from "@/constants/routes";
 
 const newFormSchema = z
   .object({
-    name: z.string().min(1, "Name is required"),
+    name: z.string().min(1, "Name is required")
+    .refine((val) => !/\s/.test(val), {
+      message: "Name must not contain spaces",
+    }),
     phone: z.string().optional(),
     department: z.enum(["1", "2", "3", "4"]).transform(Number),
     userRole: z.enum(["1", "2", "3", "4", "5"]).transform(Number),
@@ -47,7 +50,12 @@ const newFormSchema = z
 
 const updateFormSchema = z
   .object({
-    name: z.string().min(1, "Name is required"),
+    name: z
+    .string()
+    .min(1, "Name is required")
+    .refine((val) => !/\s/.test(val), {
+      message: "Name must not contain spaces",
+    }),
     phone: z.string().optional(),
     department: z.enum(["1", "2", "3", "4"]).transform(Number),
     userRole: z.enum(["1", "2", "3", "4", "5"]).transform(Number),
@@ -66,7 +74,6 @@ export default function CreateNewUserForm({ isEditing = false }) {
       phone: "",
       department: null,
       userRole: null,
-      loginId: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -77,7 +84,6 @@ export default function CreateNewUserForm({ isEditing = false }) {
     useUsers();
   const pathname = usePathname();
   const userId = pathname.split("/").pop();
-  console.log({ userId });
 
   const fetchUserById = async () => {
     try {
@@ -86,7 +92,6 @@ export default function CreateNewUserForm({ isEditing = false }) {
       form.setValue("phone", userData.phone);
       form.setValue("department", userData.department.id.toString());
       form.setValue("userRole", userData.role.id.toString());
-      form.setValue("loginId", userData.loginId);
       form.setValue("email", userData.email);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -112,8 +117,6 @@ export default function CreateNewUserForm({ isEditing = false }) {
     }
     form.reset();
   }
-
-  console.log({ role: form.watch("userRole") });
 
   return (
     <Card>
