@@ -85,7 +85,7 @@ const CreateIdeaForm = () => {
             {/* Thumbnail Image Field */}
             <div
               {...getRootProps()}
-              className="border-2 border-solid border-slate-300 flex justify-center items-center p-4 text-center cursor-pointe h-[434px] rounded-lg"
+              className="border-2 border-solid border-slate-300 flex justify-center items-center p-4 text-center cursor-pointe h-[250px] lg:h-[434px] rounded-lg"
             >
               {imagePreview ? (
                 <div className="relative w-full h-full">
@@ -184,9 +184,9 @@ const CreateIdeaForm = () => {
 
             <div>
               <label className="text-gray-400">Content</label>
-              <div className="border rounded-md rdw-editor-wrapper prose">
+              <div className="border rounded-md rdw-editor-wrapper prose relative">
                 {/* Toolbar */}
-                <div className="toolbar flex gap-2">
+                <div className="toolbar sticky bg-white shadow-md top-20 z-20 p-2 flex gap-2 flex-wrap">
                   <button
                     type="button"
                     onClick={() => editor.chain().focus().toggleBold().run()}
