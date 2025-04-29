@@ -32,9 +32,9 @@ import { ADMIN } from "@/constants/routes";
 
 const newFormSchema = z
   .object({
-    name: z.string().min(1, "Name is required")
+    name: z.string().min(1, "Login ID is required")
     .refine((val) => !/\s/.test(val), {
-      message: "Name must not contain spaces",
+      message: "Login ID must not contain spaces",
     }),
     phone: z.string().optional(),
     department: z.enum(["1", "2", "3", "4"]).transform(Number),
@@ -52,9 +52,9 @@ const updateFormSchema = z
   .object({
     name: z
     .string()
-    .min(1, "Name is required")
+    .min(1, "Login ID is required")
     .refine((val) => !/\s/.test(val), {
-      message: "Name must not contain spaces",
+      message: "Login ID must not contain spaces",
     }),
     phone: z.string().optional(),
     department: z.enum(["1", "2", "3", "4"]).transform(Number),
