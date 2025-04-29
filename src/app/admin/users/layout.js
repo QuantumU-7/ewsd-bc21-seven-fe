@@ -4,7 +4,7 @@ import React from 'react'
 export default function UsersLayout({children}) {
     return (
         <UsersProvider>
-            <div className="lg:p-6">{children}</div>
+            <div className="p-4">{children}</div>
         </UsersProvider>
     );
 }
