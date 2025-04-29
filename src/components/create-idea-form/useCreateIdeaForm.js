@@ -10,10 +10,6 @@ import {
   createNewIdeaService,
   updateIdeaService,
 } from "@/services/ideaManagementService";
-import {
-  createNewIdeaService,
-  updateIdeaService,
-} from "@/services/ideaManagementService";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { getIdeaById } from "@/services/getIdeaById";
@@ -71,6 +67,7 @@ export const useCreateIdeaForm = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
+
 
   const { fetchIdeas, editingIdeaId, setEditingIdeaId } = useIdeas()
 
@@ -210,11 +207,7 @@ export const useCreateIdeaForm = () => {
     try {
       const data = await getIdeaById(editingIdeaId);
 
-      if (allCategories.length > 0) {
-        let categoryName = allCategories?.find(
-          (category) => category?.id === data.category.id
-        ).name;
-        console.log(categoryName);
+
       if (allCategories.length > 0) {
         let categoryName = allCategories?.find(
           (category) => category?.id === data.category.id
@@ -265,7 +258,6 @@ export const useCreateIdeaForm = () => {
   const onDrop = (acceptedFiles) => {
     setImage(acceptedFiles[0]);
     setValue("image", acceptedFiles[0]);
-    setIsThumbnailReplaced(true);
     setIsThumbnailReplaced(true);
   };
 
@@ -327,7 +319,6 @@ export const useCreateIdeaForm = () => {
       if (!isEditMode || isThumbnailReplaced) {
         formData.append("thumbnail", data.image);
         formData.append("update_thumbnail", true);
-        formData.append("update_thumbnail", true);
       }
 
 
@@ -340,7 +331,6 @@ export const useCreateIdeaForm = () => {
         });
       }
 
-      if (!isEditMode) {
       if (!isEditMode) {
         const result = await createNewIdeaService(formData);
         console.log("API Response:", result);
@@ -373,17 +363,8 @@ export const useCreateIdeaForm = () => {
   } else if (imageValue instanceof File) {
     imagePreview = URL.createObjectURL(imageValue);
   } else if (imageValue && Array.isArray(imageValue) && imageValue.length > 0) {
-  } else if (imageValue instanceof File) {
-    imagePreview = URL.createObjectURL(imageValue);
-  } else if (imageValue && Array.isArray(imageValue) && imageValue.length > 0) {
     imagePreview = URL.createObjectURL(imageValue[0]);
   }
-
-  const handleRemoveThumbnail = () => {
-    setImage(null);
-    setValue("image", null);
-    setIsThumbnailReplaced(true);
-  };
 
   const handleRemoveThumbnail = () => {
     setImage(null);
@@ -424,7 +405,6 @@ export const useCreateIdeaForm = () => {
     isEditMode,
     imageValue,
     imagePreview,
-    handleRemoveThumbnail,
     handleRemoveThumbnail,
   };
 };
