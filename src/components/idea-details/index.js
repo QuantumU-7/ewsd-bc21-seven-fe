@@ -39,7 +39,6 @@ const IdeaDetailPage = () => {
   const [dislikebyauthor, setDislikebyauthor] = useState(false);
   const [submissionDate, setSubmissionDate] = useState(null);
   const [finalClosureDate, setFinalClosureDate] = useState(null);
-  const [showComments, setShowComments] = useState(true);
   const [showVotingFeature, setShowVotingFeature] = useState(true);
 
   useEffect(() => {
@@ -76,13 +75,10 @@ const IdeaDetailPage = () => {
   const checkDates = () => {
     const currentDate = new Date();
     if (submissionDate && currentDate.toDateString() === submissionDate.toDateString()) {
-      setShowComments(false);
       setShowVotingFeature(true);
     } else if (finalClosureDate && currentDate.toDateString() === finalClosureDate.toDateString()) {
-      setShowComments(false);
       setShowVotingFeature(false);
     } else {
-      setShowComments(true);
       setShowVotingFeature(true);
     }
   };

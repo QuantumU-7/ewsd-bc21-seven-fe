@@ -15,7 +15,9 @@ export default function ClosureDate() {
     }, []);
 
     useEffect(() => {
-        checkDates();
+        if (submissionDate && finalClosureDate) {
+            checkDates();
+        }
     }, [submissionDate, finalClosureDate]);
 
     const fetchClosureDates = async () => {
@@ -32,24 +34,27 @@ export default function ClosureDate() {
 
     const checkDates = () => {
         const currentDate = new Date();
-        console.log("Current Date:", currentDate.toDateString());
-        console.log("Submission Date:", submissionDate?.toDateString());
 
-        if (submissionDate && currentDate.toDateString() === submissionDate.toDateString()) {
-            setShowAlert(true);
-            setCurrentAlert({
-                title: "Idea submission closed!",
-                message: `New idea creation is closed. You can still comment and vote your favourite idea until ${finalClosureDate.toDateString()}.`,
-                variant: "warning",
-            });
-        } else if (finalClosureDate && currentDate.toDateString() === finalClosureDate.toDateString()) {
+        // First check if we're past the final closure date
+        if (finalClosureDate && currentDate >= finalClosureDate) {
             setShowAlert(true);
             setCurrentAlert({
                 title: "Voting closed!",
                 message: "New idea submission and voting closed for this academic year. You can still view the ideas.",
                 variant: "warning",
             });
-        } else {
+        }
+        // If not past final closure but past submission date
+        else if (submissionDate && currentDate >= submissionDate) {
+            setShowAlert(true);
+            setCurrentAlert({
+                title: "Idea submission closed!",
+                message: `New idea creation is closed. You can still comment and vote your favourite idea until ${finalClosureDate.toLocaleDateString()}.`,
+                variant: "warning",
+            });
+        }
+        // If not past either date
+        else {
             setShowAlert(false);
         }
     };

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAnonymousStatus } from "@/services/getAnonymousStatus";
 
-const QaMangerDashboard = () => {
+const AdminDashboard = () => {
 
   const [anonymousStatus, setAnonymousStatus] = useState(null);
 
@@ -58,4 +58,4 @@ const QaMangerDashboard = () => {
   );
 };
 
-export default QaMangerDashboard;
+export default AdminDashboard;

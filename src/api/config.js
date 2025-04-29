@@ -8,7 +8,7 @@ export const redirectLogin = () => {
 };
 
 // Function to get localStorage data
-const getLocalStorage = () => {
+export const getLocalStorage = () => {
   const access_token = localStorage.getItem(TokenKeys.accesstoken);
   const refresh_token = localStorage.getItem(TokenKeys.refreshtoken);
   return { access_token, refresh_token };
