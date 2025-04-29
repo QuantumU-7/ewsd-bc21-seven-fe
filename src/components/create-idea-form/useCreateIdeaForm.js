@@ -68,7 +68,7 @@ export const useCreateIdeaForm = () => {
   const [isThumbnailReplaced, setIsThumbnailReplaced] = useState(false);
 
 
-  const { fetchIdeas } = useIdeas()
+  const { fetchIdeas, editingIdeaId } = useIdeas()
 
 
   const editor = useEditor({
@@ -204,7 +204,7 @@ export const useCreateIdeaForm = () => {
   const fetchIdeaById = async () => {
     setIsLoading(true);
     try {
-      const data = await getIdeaById(pathName.split("/")[3]);
+      const data = await getIdeaById(editingIdeaId);
 
 
       if (allCategories.length > 0) {
@@ -243,10 +243,15 @@ export const useCreateIdeaForm = () => {
   }, []);
 
   useEffect(() => {
-    if (pathName.includes("/edit")) {
+    if (pathName.includes("/edit") && editingIdeaId) {
       setIsEditMode(true);
       fetchIdeaById();
+    } else if(pathName.includes("/edit") && editingIdeaId === null) {
+      setIsEditMode(false);
+      router.push("/ideas");
     }
+
+
   }, [editor, allCategories]);
 
   const onDrop = (acceptedFiles) => {
@@ -331,7 +336,7 @@ export const useCreateIdeaForm = () => {
         toast.success("Idea created successfully!");
       } else {
         const result = await updateIdeaService(
-          pathName.split("/")[3],
+          editingIdeaId,
           formData
         );
         console.log("API Response:", result);

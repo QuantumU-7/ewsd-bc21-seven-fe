@@ -31,7 +31,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
     prevPage: null,
   });
 
-  const { fetchIdeas : fetchHomeIdeas} = useIdeas();
+  const { fetchIdeas : fetchHomeIdeas, setEditingIdeaId} = useIdeas();
 
   // Fetch ideas based on page number (for standalone mode)
   const fetchIdeas = async (page) => {
@@ -70,7 +70,8 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   };
 
   const handleEdit = (ideaId) => {
-    router.push(`/ideas/edit/${ideaId}`);
+    setEditingIdeaId(ideaId);
+    router.push(`/ideas/edit/`);
   };
 
   const handleDelete = async (ideaId) => {

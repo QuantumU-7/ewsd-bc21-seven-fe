@@ -12,6 +12,7 @@ export const IdeasProvider = ({ children }) => {
   const [homeCurrentPage, setHomeCurrentPage] = useState(1);
   const [homeTotalPages, setHomeTotalPages] = useState(5);
   const [loading, setLoading] = useState(false);
+  const [ editingIdeaId, setEditingIdeaId ] = useState(null);
   const limit = 5;
 
     const fetchIdeas = async (page) => {
@@ -40,6 +41,8 @@ export const IdeasProvider = ({ children }) => {
         setHomeTotalPages,
         fetchIdeas,
         loading,
+        editingIdeaId,
+        setEditingIdeaId,
       }}
     >
       {children}
