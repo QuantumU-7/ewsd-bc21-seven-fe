@@ -129,7 +129,7 @@ export default function CreateNewUserForm({ isEditing = false }) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name *</FormLabel>
+                    <FormLabel>Login ID *</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

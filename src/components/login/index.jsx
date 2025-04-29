@@ -106,9 +106,9 @@ const LoginForm = () => {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>Login ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your username" {...field} />
+                        <Input placeholder="Enter your Login ID" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
