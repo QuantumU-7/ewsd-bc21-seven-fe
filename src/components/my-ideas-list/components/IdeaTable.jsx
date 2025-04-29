@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { getAllIdeaService } from "@/services/getAllIdeas";
 import {
   Popover,
@@ -80,9 +81,6 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
       fetchHomeIdeas(1);
       fetchHomeIdeas(1);
       toast.success("Idea deleted successfully");
-
-
-
       // Refresh the current page data - use appropriate function based on mode
       // console.log(ideaId);
       // console.log(ideaId);
