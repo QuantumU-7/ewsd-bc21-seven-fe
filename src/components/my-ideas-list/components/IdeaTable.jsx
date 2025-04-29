@@ -78,10 +78,13 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
     try {
       await deleteIdeaService(ideaId);
       fetchHomeIdeas(1);
+      fetchHomeIdeas(1);
       toast.success("Idea deleted successfully");
 
 
+
       // Refresh the current page data - use appropriate function based on mode
+      // console.log(ideaId);
       // console.log(ideaId);
       if (handlePageChange) {
         handlePageChange(pagination.currentPage);

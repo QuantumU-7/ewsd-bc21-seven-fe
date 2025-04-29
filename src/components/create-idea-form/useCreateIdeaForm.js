@@ -50,6 +50,7 @@ export const useCreateIdeaForm = () => {
   });
 
   // console.log({ errors: errors });
+  // console.log({ errors: errors });
 
   const router = useRouter();
   const pathName = usePathname();
@@ -203,6 +204,7 @@ export const useCreateIdeaForm = () => {
 
   const fetchIdeaById = async () => {
     setIsLoading(true);
+    setIsLoading(true);
     try {
       const data = await getIdeaById(editingIdeaId);
 
@@ -217,6 +219,7 @@ export const useCreateIdeaForm = () => {
       }
 
 
+
       // setAllCategories(data.data);
       setValue("title", data.title);
       setValue("content", data.description);
@@ -224,7 +227,12 @@ export const useCreateIdeaForm = () => {
       setValue("image", convertBase64ToImage(data.thumbnail));
       setImage(convertBase64ToImage(data.thumbnail));
       setSelectedCategoryId(data.category.id);
+      setSelectedCategoryId(data.category.id);
 
+      setValue("isAnonymous", data.posted_by.id === null ? true : false);
+      setIsAnonymous(data.posted_by.id === null ? true : false);
+      console.log({ isAnonymous: data.posted_by.id === null });
+      setIsLoading(false);
       setValue("isAnonymous", data.posted_by.id === null ? true : false);
       setIsAnonymous(data.posted_by.id === null ? true : false);
       console.log({ isAnonymous: data.posted_by.id === null });
@@ -235,6 +243,7 @@ export const useCreateIdeaForm = () => {
     }
   };
 
+  // console.log({ image });
   // console.log({ image });
 
   useEffect(() => {
@@ -314,10 +323,13 @@ export const useCreateIdeaForm = () => {
       );
 
 
+
       if (!isEditMode || isThumbnailReplaced) {
         formData.append("thumbnail", data.image);
         formData.append("update_thumbnail", true);
+        formData.append("update_thumbnail", true);
       }
+
 
 
       if (files.length > 0) {
@@ -327,6 +339,7 @@ export const useCreateIdeaForm = () => {
           }
         });
       }
+
 
 
       if (!isEditMode) {
@@ -343,7 +356,9 @@ export const useCreateIdeaForm = () => {
         setEditingIdeaId(null)
         setIsLoading(false);
         toast.success("Idea updated successfully!");
+        toast.success("Idea updated successfully!");
       }
+      fetchIdeas(1);
       fetchIdeas(1);
       router.push("/");
     } catch (error) {
