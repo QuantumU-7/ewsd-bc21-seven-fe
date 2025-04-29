@@ -204,7 +204,6 @@ export const useCreateIdeaForm = () => {
 
   const fetchIdeaById = async () => {
     setIsLoading(true);
-    setIsLoading(true);
     try {
       const data = await getIdeaById(editingIdeaId);
 
@@ -227,12 +226,7 @@ export const useCreateIdeaForm = () => {
       setValue("image", convertBase64ToImage(data.thumbnail));
       setImage(convertBase64ToImage(data.thumbnail));
       setSelectedCategoryId(data.category.id);
-      setSelectedCategoryId(data.category.id);
 
-      setValue("isAnonymous", data.posted_by.id === null ? true : false);
-      setIsAnonymous(data.posted_by.id === null ? true : false);
-      console.log({ isAnonymous: data.posted_by.id === null });
-      setIsLoading(false);
       setValue("isAnonymous", data.posted_by.id === null ? true : false);
       setIsAnonymous(data.posted_by.id === null ? true : false);
       console.log({ isAnonymous: data.posted_by.id === null });
@@ -242,8 +236,6 @@ export const useCreateIdeaForm = () => {
       console.error(error.message);
     }
   };
-
-  // console.log({ image });
   // console.log({ image });
 
   useEffect(() => {
@@ -340,8 +332,6 @@ export const useCreateIdeaForm = () => {
         });
       }
 
-
-
       if (!isEditMode) {
         const result = await createNewIdeaService(formData);
         console.log("API Response:", result);
@@ -356,9 +346,7 @@ export const useCreateIdeaForm = () => {
         setEditingIdeaId(null)
         setIsLoading(false);
         toast.success("Idea updated successfully!");
-        toast.success("Idea updated successfully!");
       }
-      fetchIdeas(1);
       fetchIdeas(1);
       router.push("/");
     } catch (error) {
