@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -38,7 +37,7 @@ export default function CategoryManagementTable() {
 
   useEffect(() => {
     categories.length === 0 && fetchCategories(1);
-  }, [categories.length , fetchCategories]);
+  }, [categories.length, fetchCategories]);
 
   const handleClickEditingCategory = (id, name) => {
     setEditingCategory(name);
@@ -48,71 +47,72 @@ export default function CategoryManagementTable() {
   const handlePageChange = (page) => {
     fetchCategories(page);
     setCurrentPage(page);
-  }
+  };
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Categories</h2>
-          <Link href={"/admin/categories/new"}>
-            <Button className="bg-black text-white">Add New Category</Button>
-          </Link>
-        </div>
+    <section>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Categories</h2>
+        <Link href={"/admin/categories/new"}>
+          <Button className="bg-black text-white">Add New Category</Button>
+        </Link>
+      </div>
 
-        {/* Table */}
-        <Table className="border rounded-md mb-5">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead className="w-12"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableLoading columns={2}/>
-            ) : (
-              categories?.map((category, index) => (
-                <TableRow key={index}>
-                  <TableCell>{category.name}</TableCell>
-                  <TableCell className="text-right">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <div className="cursor-pointer">
-                          <MoreHorizontal className="cursor-pointer" />
-                        </div>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-                        <p
-                          onClick={() =>
-                            handleClickEditingCategory(
-                              category.id,
-                              category.name
-                            )
-                          }
-                          className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                        >
-                          Edit
-                        </p>
-                        <div className="border-t"></div>
-                        <p
-                          onClick={() => deleteSelectedCategory(category.id)}
-                          className="text-sm p-2 text-red-500 cursor-pointer hover:bg-gray-100"
-                        >
-                          Delete
-                        </p>
-                      </PopoverContent>
-                    </Popover>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+      {/* Table */}
+      <Table className="border rounded-md mb-5">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead className="w-12"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {loading ? (
+            <TableLoading columns={2} />
+          ) : (
+            categories?.map((category, index) => (
+              <TableRow key={index}>
+                <TableCell>{category.name}</TableCell>
+                <TableCell className="text-right">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <div className="cursor-pointer">
+                        <MoreHorizontal className="cursor-pointer" />
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+                      <p
+                        onClick={() =>
+                          handleClickEditingCategory(category.id, category.name)
+                        }
+                        className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                      >
+                        Edit
+                      </p>
+                      <div className="border-t"></div>
+                      <p
+                        onClick={() => deleteSelectedCategory(category.id)}
+                        className="text-sm p-2 text-red-500 cursor-pointer hover:bg-gray-100"
+                      >
+                        Delete
+                      </p>
+                    </PopoverContent>
+                  </Popover>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
 
-        {/* Pagination */}
-        <CommonPagination position="center" currentPage={currentPage} totalPages={totalPages} isLoading={loading} onPageChange={handlePageChange}/>
-      </CardContent>
-    </Card>
+      {/* Pagination */}
+      <CommonPagination
+        position="center"
+        currentPage={currentPage}
+        totalPages={totalPages}
+        isLoading={loading}
+        onPageChange={handlePageChange}
+      />
+    </section>
   );
 }
