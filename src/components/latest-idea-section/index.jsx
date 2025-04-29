@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import IdeaCard from "../shared/common/idea-card/IdeaCard";
 import LoadingIdeaCard from "../shared/common/idea-card/LoadingIdeaCard";
 import Link from "next/link";
