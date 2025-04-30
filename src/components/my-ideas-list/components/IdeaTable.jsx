@@ -32,7 +32,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
     prevPage: null,
   });
 
-  const { fetchIdeas : fetchHomeIdeas, setEditingIdeaId} = useIdeas();
+  const { fetchIdeas : fetchHomeIdeas, setEditingIdeaId} = useIdeas() ||{};
 
   // Fetch ideas based on page number (for standalone mode)
   const fetchIdeas = async (page) => {

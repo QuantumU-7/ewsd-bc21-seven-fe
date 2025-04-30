@@ -11,6 +11,9 @@ export const getAllIdeaService = async ({
   myIdeas = false,
   departments = null,
   most_viewed = null,
+  reported = null,
+  anonymous = null,
+  no_comment = null,
 } = {}) => {
   try {
     const params = {};
@@ -23,7 +26,7 @@ export const getAllIdeaService = async ({
     if (
       myIdeas ||
       (categories && categories.length > 0) ||
-      (departments && departments.length > 0)
+      (departments && departments.length > 0) || reported || anonymous || no_comment
     ) {
       params.filter = {};
 
@@ -37,6 +40,17 @@ export const getAllIdeaService = async ({
 
       if (categories && categories.length > 0) {
         params.filter.category = categories;
+      }
+
+      if (reported !== null) {
+        params.filter.reported = true;
+      }
+
+      if (anonymous !== null) {
+        params.filter.anonymous = true;
+      }
+      if (no_comment !== null) {
+        params.filter.no_comment = true;
       }
     }
 

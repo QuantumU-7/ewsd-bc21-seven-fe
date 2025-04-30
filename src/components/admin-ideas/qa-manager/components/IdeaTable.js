@@ -36,51 +36,62 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
 
   const tableBody = (
     <>
-      {ideas.map((idea) => (
-        <TableRow key={idea.id} className="border-b">
-          <TableCell>{idea.title}</TableCell>
-          <TableCell>{`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</TableCell>
-          <TableCell>{idea.department.name}</TableCell>
-          <TableCell>{idea.likes_count}</TableCell>
-          <TableCell>{idea.views_count}</TableCell>
-          <TableCell>{idea.category.name}</TableCell>
-          <TableCell>{new Date(idea.posted_on).toLocaleDateString()}</TableCell>
-          <TableCell>
-            <Popover>
-              <PopoverTrigger asChild>
-                <div className="cursor-pointer flex justify-end">
-                  <Ellipsis className="text-gray-500" />
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-                <p
-                  className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleView(idea.id)}
-                >
-                  View
-                </p>
-                <div className="border-t"></div>
-                {/* <p
-                  className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleEdit(idea.id)}
-                >
-                  Edit
-                </p>
-                <div className="border-t"></div> */}
-                <p
-                  className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-                  onClick={() => {
-                    setDeleteId(idea.id);
-                    setOpenConfirmBox(true);
-                  }}
-                >
-                  Delete
-                </p>
-              </PopoverContent>
-            </Popover>
+      {ideas.length > 0 ? (
+        ideas.map((idea) => (
+          <TableRow key={idea.id} className="border-b">
+            <TableCell>{idea.title}</TableCell>
+            <TableCell>{`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</TableCell>
+            <TableCell>{idea.department.name}</TableCell>
+            <TableCell>{idea.likes_count}</TableCell>
+            <TableCell>{idea.views_count}</TableCell>
+            <TableCell>{idea.category.name}</TableCell>
+            <TableCell>{new Date(idea.posted_on).toLocaleDateString()}</TableCell>
+            <TableCell>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="cursor-pointer flex justify-end">
+                    <Ellipsis className="text-gray-500" />
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+                  <p
+                    className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleView(idea.id)}
+                  >
+                    View
+                  </p>
+                  {/* <div className="border-t"></div>
+                  <p
+                    className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleEdit(idea.id)}
+                  >
+                    Edit
+                  </p>
+                  <div className="border-t"></div> */}
+                  <p
+                    className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => {
+                      setDeleteId(idea.id);
+                      setOpenConfirmBox(true);
+                    }}
+                  >
+                    Delete
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </TableCell>
+          </TableRow>
+        ))) :
+
+        <TableRow
+          className={`border-b h-40`}
+        >
+          <TableCell colSpan={8} className="text-center text-gray-500">
+            No ideas found.
           </TableCell>
         </TableRow>
-      ))}
+
+      }
     </>
   );
 

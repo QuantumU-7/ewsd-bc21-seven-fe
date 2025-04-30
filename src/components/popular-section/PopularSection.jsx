@@ -29,13 +29,13 @@ const PopularSection = () => {
   };
 
   useEffect(() => {
-    if (!popularIdeas || popularIdeas.length === 0) {
+    if (!popularIdeas || popularIdeas?.length === 0) {
       fetchPopularIdeas();
     }
   }, []);
 
   // Check if data is available before rendering
-  if (!popularIdeas || popularIdeas.length === 0) {
+  if (!popularIdeas || popularIdeas?.length === 0) {
     return (
       <section className="max-w-7xl mx-auto space-y-8 my-8 px-4">
         <div className="flex justify-between items-center">
@@ -90,7 +90,7 @@ const PopularSection = () => {
 
           {/* Idea Categories */}
           <div className="flex-1 grid grid-cols-2 gap-4">
-            {popularIdeas.slice(1, 5).map((idea) => (
+            {popularIdeas && popularIdeas.slice(1, 5).map((idea) => (
               <Link href={`/ideas/${idea.id}`} key={idea.id} className="inline-block h-full">
                 <CategoryCard
                   categoryName={idea.category.name}

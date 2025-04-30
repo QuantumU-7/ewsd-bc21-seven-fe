@@ -39,7 +39,6 @@ const IdeaDetailPage = () => {
   const [dislikebyauthor, setDislikebyauthor] = useState(false);
   const [submissionDate, setSubmissionDate] = useState(null);
   const [finalClosureDate, setFinalClosureDate] = useState(null);
-  const [showComments, setShowComments] = useState(true);
   const [showVotingFeature, setShowVotingFeature] = useState(true);
 
   useEffect(() => {
@@ -75,14 +74,19 @@ const IdeaDetailPage = () => {
 
   const checkDates = () => {
     const currentDate = new Date();
-    if (submissionDate && currentDate.toDateString() === submissionDate.toDateString()) {
-      setShowComments(false);
-      setShowVotingFeature(true);
-    } else if (finalClosureDate && currentDate.toDateString() === finalClosureDate.toDateString()) {
-      setShowComments(false);
+    const normalizedCurrentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const normalizedSubmissionDate = submissionDate
+      ? new Date(submissionDate.getFullYear(), submissionDate.getMonth(), submissionDate.getDate())
+      : null;
+    const normalizedFinalClosureDate = finalClosureDate
+      ? new Date(finalClosureDate.getFullYear(), finalClosureDate.getMonth(), finalClosureDate.getDate())
+      : null;
+
+    if (normalizedSubmissionDate && normalizedCurrentDate < normalizedSubmissionDate) {
+      setShowVotingFeature(false);
+    } else if (normalizedFinalClosureDate && normalizedCurrentDate >= normalizedFinalClosureDate) {
       setShowVotingFeature(false);
     } else {
-      setShowComments(true);
       setShowVotingFeature(true);
     }
   };
@@ -369,7 +373,7 @@ const IdeaDetailPage = () => {
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
                       className="mb-2"
-                      disabled={commentLoading || !showComments}
+                      disabled={commentLoading || !showVotingFeature}
                     />
 
                     <div className="flex justify-between items-center">
@@ -378,7 +382,7 @@ const IdeaDetailPage = () => {
                           id="anonymous"
                           checked={isAnonymous}
                           onCheckedChange={setIsAnonymous}
-                          disabled={commentLoading || !showComments}
+                          disabled={commentLoading || !showVotingFeature}
                         />
                         <label
                           htmlFor="anonymous"
@@ -473,7 +477,6 @@ const IdeaDetailPage = () => {
             <div
               className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-
             >
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
@@ -489,7 +492,6 @@ const IdeaDetailPage = () => {
             <div
               className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-
             >
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
