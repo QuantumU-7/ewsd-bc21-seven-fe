@@ -250,7 +250,7 @@ const QAManagerIdeasList = () => {
       </div>
 
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid lg:w-[20vw] grid-cols-3 mb-4">
+         <TabsList className="flex overflow-x-auto whitespace-nowrap mb-4 gap-2 lg:w-fit justify-normal">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="popular">Most Popular</TabsTrigger>
           <TabsTrigger value="viewed">Most Viewed</TabsTrigger>

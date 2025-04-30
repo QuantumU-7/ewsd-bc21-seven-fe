@@ -61,12 +61,16 @@ const NavigationBar = () => {
 
   const checkDates = () => {
     const currentDate = new Date();
+    const normalizedCurrentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const normalizedSubmissionDate = submissionDate
+      ? new Date(submissionDate.getFullYear(), submissionDate.getMonth(), submissionDate.getDate())
+      : null;
 
     // First check if we're past the final closure date
-    if (finalClosureDate && currentDate >= finalClosureDate) {
+    if (normalizedSubmissionDate && normalizedCurrentDate >= normalizedSubmissionDate) {
       setDisabledButton(true);
     }
-    // If not past either date
+    // If not past the final closure date
     else {
       setDisabledButton(false);
     }
@@ -111,7 +115,7 @@ const NavigationBar = () => {
 
         {/* Right Section */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href={disabledButtonDisabled ? "#": UPLOAD_IDEA}>
+          <Link href={disabledButtonDisabled ? "#" : UPLOAD_IDEA}>
             <Button disabled={disabledButtonDisabled}>Upload Idea</Button>
           </Link>
 
@@ -158,7 +162,7 @@ const NavigationBar = () => {
               {label}
             </Link>
           ))}
-          <Link href={disabledButtonDisabled ? "#": UPLOAD_IDEA} onClick={() => setIsOpen(false)}>
+          <Link href={disabledButtonDisabled ? "#" : UPLOAD_IDEA} onClick={() => setIsOpen(false)}>
             <Button disabled={disabledButtonDisabled}>Upload Idea</Button>
           </Link>
 

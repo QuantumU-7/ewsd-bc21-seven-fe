@@ -34,9 +34,16 @@ export default function ClosureDate() {
 
     const checkDates = () => {
         const currentDate = new Date();
+        const normalizedCurrentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+        const normalizedSubmissionDate = submissionDate
+            ? new Date(submissionDate.getFullYear(), submissionDate.getMonth(), submissionDate.getDate())
+            : null;
+        const normalizedFinalClosureDate = finalClosureDate
+            ? new Date(finalClosureDate.getFullYear(), finalClosureDate.getMonth(), finalClosureDate.getDate())
+            : null;
 
         // First check if we're past the final closure date
-        if (finalClosureDate && currentDate >= finalClosureDate) {
+        if (normalizedFinalClosureDate && normalizedCurrentDate >= normalizedFinalClosureDate) {
             setShowAlert(true);
             setCurrentAlert({
                 title: "Voting closed!",
@@ -45,7 +52,7 @@ export default function ClosureDate() {
             });
         }
         // If not past final closure but past submission date
-        else if (submissionDate && currentDate >= submissionDate) {
+        else if (normalizedSubmissionDate && normalizedCurrentDate >= normalizedSubmissionDate) {
             setShowAlert(true);
             setCurrentAlert({
                 title: "Idea submission closed!",

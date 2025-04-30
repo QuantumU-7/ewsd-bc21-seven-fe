@@ -74,9 +74,17 @@ const IdeaDetailPage = () => {
 
   const checkDates = () => {
     const currentDate = new Date();
-    if (submissionDate && currentDate.toDateString() === submissionDate.toDateString()) {
-      setShowVotingFeature(true);
-    } else if (finalClosureDate && currentDate.toDateString() === finalClosureDate.toDateString()) {
+    const normalizedCurrentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const normalizedSubmissionDate = submissionDate
+      ? new Date(submissionDate.getFullYear(), submissionDate.getMonth(), submissionDate.getDate())
+      : null;
+    const normalizedFinalClosureDate = finalClosureDate
+      ? new Date(finalClosureDate.getFullYear(), finalClosureDate.getMonth(), finalClosureDate.getDate())
+      : null;
+
+    if (normalizedSubmissionDate && normalizedCurrentDate < normalizedSubmissionDate) {
+      setShowVotingFeature(false);
+    } else if (normalizedFinalClosureDate && normalizedCurrentDate >= normalizedFinalClosureDate) {
       setShowVotingFeature(false);
     } else {
       setShowVotingFeature(true);
