@@ -28,9 +28,7 @@ const LatestIdeaSection = () => {
   
 
   useEffect(() => {
-    if (ideas.length === 0) {
       fetchIdeas(homeCurrentPage);
-    }
   }, []);
 
   const handlePageChange = (page) => {

@@ -507,7 +507,7 @@ const IdeaDetailPage = () => {
                 }`}
             >
               <Eye className="text-primary" />
-              <p className="text-sm">{idea.views_count}</p>
+              <p className="text-sm">{idea.views_count + 1}</p>
             </div>
 
             {/* Report button */}
