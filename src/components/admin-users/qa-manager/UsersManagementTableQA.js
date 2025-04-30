@@ -24,7 +24,6 @@ const UsersManagementTableQA = () => {
     currentPage,
     setCurrentPage,
     isFilterMode,
-    roleId,
     departmentId,
     searchKey,
   } = useUsers();
@@ -33,15 +32,15 @@ const UsersManagementTableQA = () => {
   const [selectedUser, setSelectedUser] = React.useState(null);
 
   useEffect(() => {
-    users.length === 0 && fetchUsers();
+    users.length === 0 && fetchUsers(currentPage, 10, null, null, 3);
   }, [users.length, fetchUsers]);
 
   const handlePageChange = (page) => {
     console.log({ isFilterMode });
     if (isFilterMode) {
-      fetchUsers(page, roleId, departmentId, searchKey);
+      fetchUsers(page, 10, departmentId, searchKey, 3);
     } else {
-      fetchUsers(page);
+      fetchUsers(page, 10, null, null, 3);
     }
     setCurrentPage(page);
   };
@@ -54,7 +53,7 @@ const UsersManagementTableQA = () => {
           <TableCell>{user.id}</TableCell>
           <TableCell>{user.email}</TableCell>
           <TableCell>{user.department.name}</TableCell>
-          <TableCell>{user.role.name}</TableCell>
+          {/* <TableCell>{user.role.name}</TableCell> */}
           <TableCell>{user.isdisabled ? "Blocked" : "-"}</TableCell>
           <TableCell className="w-12">
             {" "}
@@ -87,7 +86,7 @@ const UsersManagementTableQA = () => {
     try {
       const res = enableDisableUser(id, isdisabled);
       if (res) {
-        fetchUsers(currentPage);
+        fetchUsers(currentPage, 10, null, null, 3);
         toast.success('User status updated successfully');
       }
     } catch (error) {
@@ -111,7 +110,6 @@ const UsersManagementTableQA = () => {
           "User ID",
           "Email",
           "Department",
-          "Role",
           "Is Blocked",
           "",
         ]}
