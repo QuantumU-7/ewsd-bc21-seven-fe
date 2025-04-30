@@ -26,6 +26,7 @@ import Link from "next/link";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
 import { USER_ROLES } from "@/constants/common";
 import { useRouter } from "next/navigation";
+import { getUser } from "@/utils/authentication";
 
 const filterSchema = z.object({
   department: z.string().optional(),
@@ -55,8 +56,10 @@ export const FilterForm = () => {
     fetchAllDepartments,
   } = useUsers();
 
+  const user = getUser();
+
   const onSubmit = (data) => {
-    fetchUsers(1, 10, watch("department"), data.keyword, watch("role"));
+    user.role.name !== "QAMANAGER" ? fetchUsers(1, 10, watch("department"), data.keyword, watch("role")) : fetchUsers(1, 10, watch("department"), data.keyword, 3);
     setDepartmentId(watch("department"));
     setSearchKey(data.keyword);
     setRoleId(watch("role"));
@@ -67,7 +70,9 @@ export const FilterForm = () => {
   const handleReset = () => {
     reset();
     setIsFilterMode(false);
-    fetchUsers(1);
+    user.role.name !== "QAMANAGER"
+      ? fetchUsers(1)
+      : fetchUsers(1, 10, null, null, 3);
     setDepartmentId(null);
     setSearchKey(null);
     setRoleId(null);
@@ -76,8 +81,7 @@ export const FilterForm = () => {
 
   useEffect(() => {
     departments.length === 0 && fetchAllDepartments();
-  }
-  , [fetchAllDepartments]);
+  }, [fetchAllDepartments]);
 
   return (
     <form
@@ -119,32 +123,35 @@ export const FilterForm = () => {
           )}
         </div>
 
-        <div>
-          <Select
-            onValueChange={(val) => {
-              setValue("role", val);
-            }}
-            {...register("role")}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="All Roles">
-                {USER_ROLES.find((role) => role.id === parseInt(watch("role")))
-                  ?.name || "All Roles"}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={0}>All Roles</SelectItem>
-              {USER_ROLES.map((role) => (
-                <SelectItem key={role.id} value={role.id}>
-                  {role.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.department && (
-            <p className="text-red-500">{errors.department.message}</p>
-          )}
-        </div>
+        {user.role.name !== "QAMANAGER" && (
+          <div>
+            <Select
+              onValueChange={(val) => {
+                setValue("role", val);
+              }}
+              {...register("role")}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="All Roles">
+                  {USER_ROLES.find(
+                    (role) => role.id === parseInt(watch("role"))
+                  )?.name || "All Roles"}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={0}>All Roles</SelectItem>
+                {USER_ROLES.map((role) => (
+                  <SelectItem key={role.id} value={role.id}>
+                    {role.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.department && (
+              <p className="text-red-500">{errors.department.message}</p>
+            )}
+          </div>
+        )}
 
         <div>
           <Input {...register("keyword")} placeholder="Enter keyword" />
@@ -154,7 +161,7 @@ export const FilterForm = () => {
         </div>
       </div>
       <div className="flex">
-        <Button type="submit" >Filter</Button>
+        <Button type="submit">Filter</Button>
         {isFilterMode && (
           <Button onClick={() => handleReset()} variant="ghost" type="button">
             Clear
@@ -241,31 +248,29 @@ const UsersManagementTableAdmin = () => {
 
   return (
     <>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Users</h2>
 
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Users</h2>
+        <Link href="/admin/users/new">
+          <Button className="bg-primary text-white">Add User</Button>
+        </Link>
+      </div>
 
-            <Link href="/admin/users/new">
-              <Button className="bg-primary text-white">Add User</Button>
-            </Link>
-          </div>
+      <FilterForm />
 
-          <FilterForm />
-
-          <CommonTable
-            columns={["Name", "User ID", "Email", "Department", "Role", ""]}
-            loading={loading}
-            tableBody={tableBody}
-          />
-          <CommonPagination
-            className="mt-5"
-            position="center"
-            isLoading={loading}
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handleClickPagination}
-          />
-  
+      <CommonTable
+        columns={["Name", "User ID", "Email", "Department", "Role", ""]}
+        loading={loading}
+        tableBody={tableBody}
+      />
+      <CommonPagination
+        className="mt-5"
+        position="center"
+        isLoading={loading}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handleClickPagination}
+      />
 
       <ConfirmationBox
         title="Delete User"

@@ -13,6 +13,7 @@ import React, { useEffect } from "react";
 import { enableDisableUser } from "@/services/userManagementService";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
 import { FilterForm } from "../administrator/UsersManagementTableAdmin";
+import { toast } from "sonner";
 
 const UsersManagementTableQA = () => {
   const {
@@ -23,7 +24,6 @@ const UsersManagementTableQA = () => {
     currentPage,
     setCurrentPage,
     isFilterMode,
-    roleId,
     departmentId,
     searchKey,
   } = useUsers();
@@ -32,56 +32,62 @@ const UsersManagementTableQA = () => {
   const [selectedUser, setSelectedUser] = React.useState(null);
 
   useEffect(() => {
-    users.length === 0 && fetchUsers();
+    users.length === 0 && fetchUsers(currentPage, 10, null, null, 3);
   }, [users.length, fetchUsers]);
 
   const handlePageChange = (page) => {
     console.log({ isFilterMode });
     if (isFilterMode) {
-      fetchUsers(page, roleId, departmentId, searchKey);
+      fetchUsers(page, 10, departmentId, searchKey, 3);
     } else {
-      fetchUsers(page);
+      fetchUsers(page, 10, null, null, 3);
     }
     setCurrentPage(page);
   };
 
   const tableBody = users.map((user) => (
-    <TableRow key={user.id}>
-      <TableCell>{user.username}</TableCell>
-      <TableCell>{user.id}</TableCell>
-      <TableCell>{user.email}</TableCell>
-      <TableCell>{user.department.name}</TableCell>
-      <TableCell>{user.role.name}</TableCell>
-      <TableCell className="w-12">
-        {" "}
-        <Popover>
-          <PopoverTrigger asChild>
-            <div className="cursor-pointer">
-              <MoreHorizontal className="cursor-pointer" />
-            </div>
-          </PopoverTrigger>
-          <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
-            <p
-              className="text-sm p-2 cursor-pointer hover:bg-gray-100"
-              onClick={() => {
-                setSelectedUser(user);
-                setIsOpen(true);
-              }}
-            >
-              {user.is_disabled ? "Unblock User" : "Block User"}
-            </p>
-          </PopoverContent>
-        </Popover>
-      </TableCell>
-    </TableRow>
+    <>
+      {user.role.name !== "ADMIN" && (
+        <TableRow key={user.id}>
+          <TableCell>{user.username}</TableCell>
+          <TableCell>{user.id}</TableCell>
+          <TableCell>{user.email}</TableCell>
+          <TableCell>{user.department.name}</TableCell>
+          {/* <TableCell>{user.role.name}</TableCell> */}
+          <TableCell>{user.isdisabled ? "Blocked" : "-"}</TableCell>
+          <TableCell className="w-12">
+            {" "}
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="cursor-pointer">
+                  <MoreHorizontal className="cursor-pointer" />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+                <p
+                  className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setIsOpen(true);
+                  }}
+                >
+                  {user.isdisabled ? "Unblock User" : "Block User"}
+                </p>
+              </PopoverContent>
+            </Popover>
+          </TableCell>
+        </TableRow>
+      )}
+    </>
   ));
 
   const handleDisableConfirm = () => {
-    const { id, is_disabled } = selectedUser;
+    const { id, isdisabled } = selectedUser;
     try {
-      const res = enableDisableUser(id, is_disabled);
+      const res = enableDisableUser(id, isdisabled);
       if (res) {
-        fetchUsers();
+        fetchUsers(currentPage, 10, null, null, 3);
+        toast.success('User status updated successfully');
       }
     } catch (error) {
       console.error("Error disabling user:", error);
@@ -91,7 +97,7 @@ const UsersManagementTableQA = () => {
   };
 
   return (
-    <section className="px-4">
+    <section className="">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Users</h2>
       </div>
@@ -99,7 +105,14 @@ const UsersManagementTableQA = () => {
       <FilterForm />
 
       <CommonTable
-        columns={["Name", "User ID", "Email", "Department","Role", ""]}
+        columns={[
+          "Name",
+          "User ID",
+          "Email",
+          "Department",
+          "Is Blocked",
+          "",
+        ]}
         loading={loading}
         tableBody={tableBody}
       />
@@ -113,9 +126,9 @@ const UsersManagementTableQA = () => {
       />
 
       <ConfirmationBox
-        title={selectedUser?.is_disabled ? "Unblock User" : "Block User"}
+        title={selectedUser?.isdisabled ? "Unblock User" : "Block User"}
         message={`Are you sure you want to ${
-          selectedUser?.is_disabled ? "unblock" : "block"
+          selectedUser?.isdisabled ? "unblock" : "block"
         } this user?`}
         onConfirm={handleDisableConfirm}
         isOpen={isOpen}
