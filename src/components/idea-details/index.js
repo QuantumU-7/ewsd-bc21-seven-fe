@@ -255,7 +255,7 @@ const IdeaDetailPage = () => {
         <div className="w-full lg:w-2/3 h-full relative flex justify-center">
           {idea.thumbnail ? (
             <img
-              className="w-full"
+              className="w-full h-[270px] object-cover lg:h-auto"
               src={convertBase64ToImage(idea.thumbnail)}
               width={300}
               height={200}
@@ -263,7 +263,7 @@ const IdeaDetailPage = () => {
             />
           ) : (
             <Image
-              className="w-full"
+              className="w-full h-[270px] object-cover lg:h-auto"
               src={DefaultThumbnail}
               width={300}
               height={200}
