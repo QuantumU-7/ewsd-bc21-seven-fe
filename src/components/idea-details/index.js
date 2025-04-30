@@ -473,7 +473,6 @@ const IdeaDetailPage = () => {
             <div
               className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-
             >
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
@@ -489,7 +488,6 @@ const IdeaDetailPage = () => {
             <div
               className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-
             >
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
