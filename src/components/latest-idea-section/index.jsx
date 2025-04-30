@@ -28,9 +28,7 @@ const LatestIdeaSection = () => {
   
 
   useEffect(() => {
-    if (ideas.length === 0) {
       fetchIdeas(homeCurrentPage);
-    }
   }, []);
 
   const handlePageChange = (page) => {
@@ -44,7 +42,7 @@ const LatestIdeaSection = () => {
         <h1 className="text-4xl font-bold text-dark">All Ideas</h1>
         {loading
           ? [...Array(5)].map((_, index) => <LoadingIdeaCard key={index} />)
-          : ideas.map((idea) => (
+          : ideas && ideas.map((idea) => (
               <div key={idea.id}>
                 <Link href={`/ideas/${idea.id}`}>
                   <IdeaCard
@@ -64,7 +62,7 @@ const LatestIdeaSection = () => {
               </div>
             ))}
 
-        {!loading && ideas.length === 0 && (
+        {!loading && ideas?.length === 0 && (
           <div className="flex justify-center items-center h-[300px]">
             <h2 className="text-2xl font-semibold text-gray-500">
               No Ideas Found

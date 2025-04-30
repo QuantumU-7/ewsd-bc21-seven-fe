@@ -14,11 +14,17 @@ const QAManagerIdeasList = () => {
   const [allIdeas, setAllIdeas] = useState([]);
   const [popularIdeas, setPopularIdeas] = useState([]);
   const [viewedIdeas, setViewedIdeas] = useState([]);
+  const [reportedIdeas, setReportedIdeas] = useState([]);
+  const [anonymousIdeas, setAnonymousIdeas] = useState([]);
+  const [noCommentedIdeas, setNoCommentedIdeas] = useState([]);
 
   // Separate loading states
   const [allIdeasLoading, setAllIdeasLoading] = useState(true);
   const [popularIdeasLoading, setPopularIdeasLoading] = useState(true);
   const [viewedIdeasLoading, setViewedIdeasLoading] = useState(true);
+  const [reportedIdeasLoading, setReportedIdeasLoading] = useState(true);
+  const [anonymousIdeasLoading, setAnonymousIdeasLoading] = useState(true);
+  const [noCommentedIdeasLoading, setNoCommentedIdeasLoading] = useState(true);
   const [exportCSVLoading, setExportCSVLoading] = useState(false);
   const [downloadAttachmentsLoading, setDownloadAttachmentsLoading] = useState(false);
 
@@ -44,16 +50,38 @@ const QAManagerIdeasList = () => {
     nextPage: null,
     prevPage: null,
   });
+  const [reportedPagination, setReportedPagination] = useState({
+    totalRecords: 0,
+    currentPage: 1,
+    totalPages: 1,
+    nextPage: null,
+    prevPage: null,
+  });
+
+  const [anonymousePagination, setAnonymousPagination] = useState({
+    totalRecords: 0,
+    currentPage: 1,
+    totalPages: 1,
+    nextPage: null,
+    prevPage: null,
+  });
+
+  const [noCommentedPagination, setnoCommentedPagination] = useState({
+    totalRecords: 0,
+    currentPage: 1,
+    totalPages: 1,
+    nextPage: null,
+    prevPage: null,
+  });
 
   useEffect(() => {
     fetchAllIdeas(1);
     fetchPopularIdeas(1);
     fetchViewedIdeas(1);
+    fetchReportedIdeas(1);
+    fetchAnonymousIdeas(1);
+    featchNoCommentIdeas(1);
   }, []);
-  console.log("allIdeas", allIdeas);
-  console.log("popularIdeas", popularIdeas);
-  console.log("viewedIdeas", viewedIdeas);
-
   const fetchAllIdeas = async (page) => {
     setAllIdeasLoading(true);
     try {
@@ -111,6 +139,62 @@ const QAManagerIdeasList = () => {
     }
   };
 
+  const fetchReportedIdeas = async (page) => {
+    setViewedIdeasLoading(true);
+    try {
+      const response = await getAllIdeaService({ page: page, reported: -1 });
+      setReportedIdeas(response.data);
+      setReportedPagination({
+        totalRecords: response.pagination.total_records,
+        currentPage: response.pagination.current_page,
+        totalPages: response.pagination.total_pages,
+        nextPage: response.pagination.next_page,
+        prevPage: response.pagination.prev_page,
+      });
+    } catch (error) {
+      console.error("Error fetching reported ideas:", error);
+    } finally {
+      setReportedIdeasLoading(false);
+    }
+  };
+
+  const fetchAnonymousIdeas = async (page) => {
+    setAnonymousIdeasLoading(true);
+    try {
+      const response = await getAllIdeaService({ page: page, anonymous: -1 });
+      setAnonymousIdeas(response.data);
+      setAnonymousPagination({
+        totalRecords: response.pagination.total_records,
+        currentPage: response.pagination.current_page,
+        totalPages: response.pagination.total_pages,
+        nextPage: response.pagination.next_page,
+        prevPage: response.pagination.prev_page,
+      });
+    } catch (error) {
+      console.error("Error fetching popular ideas:", error);
+    } finally {
+      setAnonymousIdeasLoading(false);
+    }
+  };
+  const featchNoCommentIdeas = async (page) => {
+    setNoCommentedIdeasLoading(true);
+    try {
+      const response = await getAllIdeaService({ page: page, no_comment: -1 });
+      setNoCommentedIdeas(response.data);
+      setnoCommentedPagination({
+        totalRecords: response.pagination.total_records,
+        currentPage: response.pagination.current_page,
+        totalPages: response.pagination.total_pages,
+        nextPage: response.pagination.next_page,
+        prevPage: response.pagination.prev_page,
+      });
+    } catch (error) {
+      console.error("Error fetching popular ideas:", error);
+    } finally {
+      setNoCommentedIdeasLoading(false);
+    }
+  };
+
   const handlePageChange = (page, tab) => {
     switch (tab) {
       case "popular":
@@ -119,6 +203,11 @@ const QAManagerIdeasList = () => {
       case "viewed":
         fetchViewedIdeas(page);
         break;
+      case "reported":
+        fetchReportedIdeas(page);
+        break
+      case "anonymous":
+        fetchAnonymousIdeas(page); break;
       default:
         fetchAllIdeas(page);
         break;
@@ -161,10 +250,13 @@ const QAManagerIdeasList = () => {
       </div>
 
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid lg:w-[20vw] grid-cols-3 mb-4">
+         <TabsList className="flex overflow-x-auto whitespace-nowrap mb-4 gap-2 lg:w-fit justify-normal">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="popular">Most Popular</TabsTrigger>
           <TabsTrigger value="viewed">Most Viewed</TabsTrigger>
+          <TabsTrigger value="reported">Reported Ideas</TabsTrigger>
+          <TabsTrigger value="anonymous">Anonymous Ideas</TabsTrigger>
+          <TabsTrigger value="no_comment">No Commented Ideas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all">
@@ -191,6 +283,32 @@ const QAManagerIdeasList = () => {
             loading={viewedIdeasLoading}
             pagination={viewedPagination}
             handlePageChange={(page) => handlePageChange(page, "viewed")}
+          />
+        </TabsContent>
+
+        <TabsContent value="reported">
+          <IdeaTable
+            ideas={reportedIdeas}
+            loading={reportedIdeasLoading}
+            pagination={reportedPagination}
+            handlePageChange={(page) => handlePageChange(page, "reported")}
+          />
+        </TabsContent>
+
+        <TabsContent value="anonymous">
+          <IdeaTable
+            ideas={anonymousIdeas}
+            loading={anonymousIdeasLoading}
+            pagination={anonymousePagination}
+            handlePageChange={(page) => handlePageChange(page, "anonymous")}
+          />
+        </TabsContent>
+        <TabsContent value="no_comment">
+          <IdeaTable
+            ideas={noCommentedIdeas}
+            loading={noCommentedIdeasLoading}
+            pagination={noCommentedPagination}
+            handlePageChange={(page) => handlePageChange(page, "no_comment")}
           />
         </TabsContent>
       </Tabs>

@@ -1,8 +1,8 @@
-import QaMangerDashboard from "@/components/admin-dashboard/qa-manager";
+import Dashboard from "@/components/admin-dashboard";
 import React from "react";
 
 const AdminDashboardPage = () => {
-  return <QaMangerDashboard />;
+  return <Dashboard />;
 };
 
 export default AdminDashboardPage;
