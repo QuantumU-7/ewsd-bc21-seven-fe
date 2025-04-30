@@ -1,8 +1,9 @@
 import actionApi from "@/api/config";
 
-export async function ideasByCategoryService() {
+export async function ideasByCategoryService(id = null) {
+  const url = id ? `dashboard/ideas-by-category/?department_id=${id}` : "dashboard/ideas-by-category";
   try {
-    const response = await actionApi().get("dashboard/ideas-by-category", {
+    const response = await actionApi().get(url, {
       headers: {
         accept: "application/json",
       },

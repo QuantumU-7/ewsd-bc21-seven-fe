@@ -9,7 +9,6 @@ const Dashboard = () => {
 
     const userData = getLocalStorage();
     const decodeTokendata = decodeToken(userData.access_token);
-    console.log(decodeTokendata);
     return (
         <>
             {
