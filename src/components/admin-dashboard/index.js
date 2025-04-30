@@ -12,7 +12,7 @@ const Dashboard = () => {
     return (
         <>
             {
-                decodeTokendata.role === "QACOORDINATOR" ? (
+                decodeToken && decodeTokendata?.role === "QACOORDINATOR" ? (
                     <QaMangerDashboard />
                 ) : (
                     <AdminDashboard />

@@ -7,11 +7,16 @@ export const redirectLogin = () => {
   window.location.href = "/login";
 };
 
-// Function to get localStorage data
+// Function to get localStorage data with server-side rendering safety
 export const getLocalStorage = () => {
-  const access_token = localStorage.getItem(TokenKeys.accesstoken);
-  const refresh_token = localStorage.getItem(TokenKeys.refreshtoken);
-  return { access_token, refresh_token };
+  // Check if window is defined (client-side)
+  if (typeof window !== 'undefined') {
+    const access_token = localStorage.getItem(TokenKeys.accesstoken);
+    const refresh_token = localStorage.getItem(TokenKeys.refreshtoken);
+    return { access_token, refresh_token };
+  }
+  // Return empty values for server-side rendering
+  return { access_token: null, refresh_token: null };
 };
 
 let refreshPromise = null;
