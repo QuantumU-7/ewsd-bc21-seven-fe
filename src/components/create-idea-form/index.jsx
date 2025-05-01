@@ -458,12 +458,12 @@ const CreateIdeaForm = () => {
                       href="mailto:qaoffice@university.edu"
                       className="text-blue-600 hover:underline"
                     >
-                      qaoffice@university.edu
+                      squantumuniversity@gmail.com	
                     </a>
                   </div>
                   <DialogFooter className="sm:justify-start">
                     <DialogClose asChild>
-                      <Button type="button" variant="secondary">
+                      <Button type="button" className="bg-primary ml-auto">
                         Close
                       </Button>
                     </DialogClose>
