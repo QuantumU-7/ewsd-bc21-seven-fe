@@ -28,7 +28,7 @@ export function RemarkBox({
         <div className="flex flex-col gap-4">
           <Textarea placeholder="Enter your remark" value={remark} onChange={(e) => setRemark(e.target.value)} />
         </div>
-        <DialogFooter>
+        <DialogFooter className='flex gap-2 '>
           <Button variant="outline" onClick={onCancel}>
             Close
           </Button>
