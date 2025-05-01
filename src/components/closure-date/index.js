@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import NotificationAlert from "@/components/shared/common/Alert/NotificationAlert";
 import { getClosureDateService } from "@/services/getClosureDates";
+import { getAllRestrictionService } from "@/services/getAllRestrictionService";
 
 export default function ClosureDate() {
     const [showAlert, setShowAlert] = useState(false);
@@ -11,9 +12,19 @@ export default function ClosureDate() {
     const [finalClosureDate, setFinalClosureDate] = useState(null);
 
     useEffect(() => {
-        fetchClosureDates();
-    }, []);
+        const fetchData = async () => {
+            try {
+                const response = await getAllRestrictionService();
+                if (response && response?.length > 0) {
+                    await fetchClosureDates();
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
+        fetchData();
+    }, []);
     useEffect(() => {
         if (submissionDate && finalClosureDate) {
             checkDates();

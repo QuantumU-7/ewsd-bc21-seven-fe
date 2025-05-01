@@ -12,6 +12,7 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }) {
+  const today = new Date();
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -64,6 +65,7 @@ function Calendar({
           <ChevronRight className={cn("h-4 w-4", className)} {...props} />
         ),
       }}
+      disabled={{ before: today }}
       {...props} />
   );
 }
