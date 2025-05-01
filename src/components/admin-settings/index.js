@@ -28,6 +28,7 @@ import { toast } from "sonner"
 import { useState, useMemo, useEffect } from "react"
 import LoadingButton from "../shared/common/Button"
 import { getClosureDateService } from "@/services/getClosureDates"
+import { getAllRestrictionService } from "@/services/getAllRestrictionService"
 
 const formSchema = z.object({
     submission_date: z.date({
@@ -40,6 +41,7 @@ const formSchema = z.object({
 
 export default function AdminSettings() {
     const [loading, setLoading] = useState(false);
+    const [noRestriction, setNoRestrictionData] = useState(false);
 
     // Calculate the next academic year (2025-2026)
     const nextAcademicYear = useMemo(() => {
@@ -52,8 +54,24 @@ export default function AdminSettings() {
     }, []);
 
     useEffect(() => {
-        fetchClosureDates();
-    }, [])
+        const fetchData = async () => {
+            try {
+                const response = await getAllRestrictionService();
+                if (response && response?.length > 0) {
+                    setNoRestrictionData(false);
+                    await fetchClosureDates();
+                } else {
+                    setNoRestrictionData(true);
+                    form.setValue("submission_date", new Date());
+                    form.setValue("final_closure_date", new Date());
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const fetchClosureDates = async () => {
         try {
@@ -81,7 +99,7 @@ export default function AdminSettings() {
 
         try {
             setLoading(true);
-            await closureDateService(payload);
+            await closureDateService(payload, noRestriction);
             toast.success("Closure dates updated successfully");
 
             // Reset form fields

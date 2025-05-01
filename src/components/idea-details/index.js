@@ -18,6 +18,8 @@ import { ideaReportService } from "@/services/ideaReport";
 import { convertBase64ToImage } from "@/utils/image";
 import DefaultThumbnail from "@/public/images/default.png";
 import { getClosureDateService } from "@/services/getClosureDates";
+import { getAllRestrictionService } from "@/services/getAllRestrictionService";
+import { TokenKeys } from "@/constants/tokenKeys";
 
 const IdeaDetailPage = () => {
   const params = useParams();
@@ -40,6 +42,7 @@ const IdeaDetailPage = () => {
   const [submissionDate, setSubmissionDate] = useState(null);
   const [finalClosureDate, setFinalClosureDate] = useState(null);
   const [showVotingFeature, setShowVotingFeature] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchIdeaDetail = async () => {
@@ -64,11 +67,30 @@ const IdeaDetailPage = () => {
   }, [params.id]);
 
   useEffect(() => {
-    fetchClosureDates();
-  }, [])
+
+    const userData = JSON.parse(localStorage.getItem(TokenKeys.user));
+    if (userData) {
+      setCurrentUser(userData);
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await getAllRestrictionService();
+        if (response && response?.length > 0) {
+          await fetchClosureDates();
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    checkDates();
+    if (submissionDate && finalClosureDate) {
+      checkDates();
+    }
   }, [submissionDate, finalClosureDate]);
 
 
@@ -150,7 +172,7 @@ const IdeaDetailPage = () => {
     setCommentLoading(true);
     try {
       const res = await createComment(params.id, isAnonymous, commentText);
-      setComments((prevComments) => [{ ispostedanon: isAnonymous, username: idea.posted_by.firstname + " " + idea.posted_by.lastname, comment: commentText, postedon: new Date().toISOString() }, ...prevComments]);
+      setComments((prevComments) => [{ ispostedanon: isAnonymous, username: currentUser.firstname + " " + currentUser.lastname, comment: commentText, postedon: new Date().toISOString() }, ...prevComments]);
       // Update the idea state with the new comment
       if (res && res.data) {
         const newComment = res.data;
@@ -365,7 +387,7 @@ const IdeaDetailPage = () => {
                 {/* Comment input */}
                 <div className="flex gap-3">
                   <Avatar>
-                    <AvatarFallback> {idea.posted_by.firstname.charAt(0) || "U"}</AvatarFallback>
+                    <AvatarFallback> {currentUser.username?.charAt(0) || "U"}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <Input

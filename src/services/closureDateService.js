@@ -1,6 +1,8 @@
 import actionApi from "@/api/config";
 
-export const closureDateService = async (values) => {
-    const res = await actionApi().put(`/restrictions/1`, values);
+export const closureDateService = async (values,newStatus=false) => {
+    const url = newStatus ? `/restrictions` : `/restrictions/1`;
+    const method = newStatus ? 'post' : 'put';
+    const res = await actionApi()[method](url, values);
     return res.data;
 }

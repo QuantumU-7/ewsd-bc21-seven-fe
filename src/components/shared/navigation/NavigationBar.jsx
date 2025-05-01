@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/popover";
 import { handleLogout, getUser } from "@/utils/authentication";
 import { getClosureDateService } from "@/services/getClosureDates";
+import { getAllRestrictionService } from "@/services/getAllRestrictionService";
 
 const NavigationBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +39,18 @@ const NavigationBar = () => {
   const [disabledButtonDisabled, setDisabledButton] = useState(false);
 
   useEffect(() => {
-    fetchClosureDates();
+    const fetchData = async () => {
+      try {
+        const response = await getAllRestrictionService();
+        if (response && response?.length > 0) {
+          await fetchClosureDates();
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
