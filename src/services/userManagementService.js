@@ -32,7 +32,7 @@ export const createNewUser = async (user) => {
   try {
     const response = await actionApi().post(`/users`, {
       firstname: user.name,
-      lastname: "University",
+      lastname: "",
       email: user.email,
       username: user.name,
       default_pwd: user.password,
@@ -63,7 +63,7 @@ export const updateUserById = async (userId, user) => {
   try {
     const response = await actionApi().patch(`/users/${userId}`, {
       firstname: user.name,
-      lastname: "University",
+      lastname: "",
       email: user.email,
       username: user.name,
       default_pwd: user.password,
@@ -141,6 +141,26 @@ export const enableDisableUser = async (id, is_disabled) => {
 
     if (error.response) {
       throw new Error(error.response.data.message || "disable user failed");
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+};
+
+export const hideUnhideUser = async (id, is_hidden) => {
+  const apiType = is_hidden ? "unhide" : "hide";
+  try {
+    const response = await actionApi().patch(`/users/${id}/${apiType}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error hiding user:",
+      error.response ? error.response.data : error.message
+    );
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "hide user failed");
     } else {
       throw new Error("Something went wrong. Please try again.");
     }

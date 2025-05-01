@@ -196,7 +196,7 @@ export const useCreateIdeaForm = () => {
     try {
       const data = await getAllCategories(1, 99);
       setAllCategories(data.data);
-      console.log({ data });
+      // console.log({ data });
     } catch (error) {
       console.error(error.message);
     }
@@ -212,7 +212,7 @@ export const useCreateIdeaForm = () => {
         let categoryName = allCategories?.find(
           (category) => category?.id === data.category.id
         ).name;
-        console.log(categoryName);
+        // console.log(categoryName);
         setValue("facility", categoryName);
         setSelectedCategory(categoryName);
       }

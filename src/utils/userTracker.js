@@ -39,7 +39,7 @@ const UserTracker = () => {
                     const user = getUser(); // Retrieve the logged-in user
                     const browserName = getShortBrowserName(); // Get short browser name
                     await trackUserActionsServices(url, user?.id, browserName);
-                    console.log(`Tracked page access: ${url}`);
+                    // console.log(`Tracked page access: ${url}`);
                     setPrevPath(url);
                 } catch (error) {
                     console.error("Error tracking page access:", error);
