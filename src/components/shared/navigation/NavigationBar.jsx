@@ -157,7 +157,7 @@ const NavigationBar = () => {
               key={href}
               href={href}
               onClick={() => setIsOpen(false)}
-              className={`${pathname === href ? "text-orange-600 font-semibold" : ""}`}
+              className={`${pathname === href ? "text-primary underline font-semibold" : ""}`}
             >
               {label}
             </Link>
