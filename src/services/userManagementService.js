@@ -37,9 +37,9 @@ export const createNewUser = async (user) => {
       username: user.name,
       default_pwd: user.password,
       password: user.password,
-      "isdisabled": true,
-      "islocked": true,
-      lastlogin: "2025-03-20T01:26:42.978Z",
+      "isdisabled": false,
+      "islocked": false,
+      lastlogin: null,
       role_id: user.userRole,
       department_id: user.department,
     });
@@ -68,9 +68,6 @@ export const updateUserById = async (userId, user) => {
       username: user.name,
       default_pwd: user.password,
       password: user.password,
-      "isdisabled": true,
-      "islocked": true,
-      lastlogin: "2025-03-20T01:26:42.978Z",
       role_id: user.userRole,
       department_id: user.department,
     });

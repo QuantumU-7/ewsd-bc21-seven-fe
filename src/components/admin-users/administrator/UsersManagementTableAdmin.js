@@ -59,7 +59,9 @@ export const FilterForm = () => {
   const user = getUser();
 
   const onSubmit = (data) => {
-    user.role.name !== "QAMANAGER" ? fetchUsers(1, 10, watch("department"), data.keyword, watch("role")) : fetchUsers(1, 10, watch("department"), data.keyword, 3);
+    user.role.name !== "QAMANAGER"
+      ? fetchUsers(1, 10, watch("department"), data.keyword, watch("role"))
+      : fetchUsers(1, 10, watch("department"), data.keyword, 3);
     setDepartmentId(watch("department"));
     setSearchKey(data.keyword);
     setRoleId(watch("role"));
@@ -214,7 +216,7 @@ const UsersManagementTableAdmin = () => {
       <TableCell>{user.id}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>{user.department.name}</TableCell>
-      <TableCell>{user.role.name}</TableCell>
+      <TableCell>{USER_ROLES.find((u) => u.id === user.role.id)?.name}</TableCell>
       <TableCell className="w-12">
         {" "}
         <Popover>
