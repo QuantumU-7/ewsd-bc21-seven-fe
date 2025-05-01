@@ -32,12 +32,14 @@ import { ADMIN } from "@/constants/routes";
 
 const newFormSchema = z
   .object({
-    name: z.string().min(1, "Login ID is required")
-    .refine((val) => !/\s/.test(val), {
-      message: "Login ID must not contain spaces",
-    }),
+    name: z
+      .string()
+      .min(1, "Login ID is required")
+      .refine((val) => !/\s/.test(val), {
+        message: "Login ID must not contain spaces",
+      }),
     phone: z.string().optional(),
-    department: z.enum(["1", "2", "3", "4"]).transform(Number),
+    department: z.string().min(1, { message: "Department is required." }),
     userRole: z.enum(["1", "2", "3", "4", "5"]).transform(Number),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -51,13 +53,13 @@ const newFormSchema = z
 const updateFormSchema = z
   .object({
     name: z
-    .string()
-    .min(1, "Login ID is required")
-    .refine((val) => !/\s/.test(val), {
-      message: "Login ID must not contain spaces",
-    }),
+      .string()
+      .min(1, "Login ID is required")
+      .refine((val) => !/\s/.test(val), {
+        message: "Login ID must not contain spaces",
+      }),
     phone: z.string().optional(),
-    department: z.enum(["1", "2", "3", "4"]).transform(Number),
+    department: z.string().min(1, "Department is required").transform(Number),
     userRole: z.enum(["1", "2", "3", "4", "5"]).transform(Number),
     email: z.string().email("Invalid email address"),
   })
