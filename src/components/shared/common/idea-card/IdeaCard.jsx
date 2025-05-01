@@ -18,7 +18,7 @@ const IdeaCard = ({
   dept_name
 }) => {
 
-  console.log({posted_At})
+  // console.log({posted_At})
   return (
     <div className="cursor-pointer group">
       <div className="flex flex-col lg:flex-row rounded-md overflow-hidden bg-white shadow-sm border hover:shadow-lg transition-shadow duration-300">

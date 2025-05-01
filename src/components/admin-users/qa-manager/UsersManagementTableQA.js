@@ -10,7 +10,10 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { useUsers } from "@/providers/UsersContext";
 import { MoreHorizontal } from "lucide-react";
 import React, { useEffect } from "react";
-import { enableDisableUser } from "@/services/userManagementService";
+import {
+  enableDisableUser,
+  hideUnhideUser,
+} from "@/services/userManagementService";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
 import { FilterForm } from "../administrator/UsersManagementTableAdmin";
 import { toast } from "sonner";
@@ -30,13 +33,15 @@ const UsersManagementTableQA = () => {
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState(null);
+  const [actionMode, setActionMode] =
+    React.useState(null); /* 1 for disable 2 for hide */
 
   useEffect(() => {
     users.length === 0 && fetchUsers(currentPage, 10, null, null, 3);
   }, [users.length, fetchUsers]);
 
   const handlePageChange = (page) => {
-    console.log({ isFilterMode });
+    // console.log({ isFilterMode });
     if (isFilterMode) {
       fetchUsers(page, 10, departmentId, searchKey, 3);
     } else {
@@ -55,6 +60,7 @@ const UsersManagementTableQA = () => {
           <TableCell>{user.department.name}</TableCell>
           {/* <TableCell>{user.role.name}</TableCell> */}
           <TableCell>{user.isdisabled ? "Blocked" : "-"}</TableCell>
+          <TableCell>{user.ishidden ? "Hidden" : "-"}</TableCell>
           <TableCell className="w-12">
             {" "}
             <Popover>
@@ -69,9 +75,21 @@ const UsersManagementTableQA = () => {
                   onClick={() => {
                     setSelectedUser(user);
                     setIsOpen(true);
+                    setActionMode(1);
                   }}
                 >
                   {user.isdisabled ? "Unblock User" : "Block User"}
+                </p>
+                <hr />
+                <p
+                  className="text-sm p-2 cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setIsOpen(true);
+                    setActionMode(2);
+                  }}
+                >
+                  {user.ishidden ? "Unhide User" : "Hide User"}
                 </p>
               </PopoverContent>
             </Popover>
@@ -87,7 +105,24 @@ const UsersManagementTableQA = () => {
       const res = enableDisableUser(id, isdisabled);
       if (res) {
         fetchUsers(currentPage, 10, null, null, 3);
-        toast.success('User status updated successfully');
+        setActionMode(null);
+        toast.success("User status updated successfully");
+      }
+    } catch (error) {
+      console.error("Error disabling user:", error);
+    } finally {
+      setIsOpen(false);
+    }
+  };
+
+  const handleUnhideConfirm = () => {
+    const { id, ishidden } = selectedUser;
+    try {
+      const res = hideUnhideUser(id, ishidden);
+      if (res) {
+        fetchUsers(currentPage, 10, null, null, 3);
+        setActionMode(null);
+        toast.success("User status updated successfully");
       }
     } catch (error) {
       console.error("Error disabling user:", error);
@@ -111,6 +146,7 @@ const UsersManagementTableQA = () => {
           "Email",
           "Department",
           "Is Blocked",
+          "Is Hidden",
           "",
         ]}
         loading={loading}
@@ -126,11 +162,27 @@ const UsersManagementTableQA = () => {
       />
 
       <ConfirmationBox
-        title={selectedUser?.isdisabled ? "Unblock User" : "Block User"}
+        title={
+          actionMode === 1
+            ? selectedUser?.isdisabled
+              ? "Unblock User"
+              : "Block User"
+            : selectedUser?.ishidden
+            ? "Unhide User"
+            : "Hide User"
+        }
         message={`Are you sure you want to ${
-          selectedUser?.isdisabled ? "unblock" : "block"
+          actionMode === 1
+            ? selectedUser?.isdisabled
+              ? "unblock"
+              : "block"
+            : selectedUser?.ishidden
+            ? "unhide"
+            : "hide"
         } this user?`}
-        onConfirm={handleDisableConfirm}
+        onConfirm={
+          actionMode === 1 ? handleDisableConfirm : handleUnhideConfirm
+        }
         isOpen={isOpen}
         onCancel={() => setIsOpen(false)}
         onClose={() => setIsOpen(false)}
