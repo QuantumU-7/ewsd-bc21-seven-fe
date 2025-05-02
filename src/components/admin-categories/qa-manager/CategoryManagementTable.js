@@ -54,7 +54,7 @@ export default function CategoryManagementTable() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Categories</h2>
         <Link href={"/admin/categories/new"}>
-          <Button className="bg-black text-white">Add New Category</Button>
+          <Button className="bg-primary text-white">Add New Category</Button>
         </Link>
       </div>
 

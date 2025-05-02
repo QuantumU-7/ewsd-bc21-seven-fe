@@ -108,7 +108,7 @@ const CreateIdeaForm = () => {
                     width={200}
                     height={200}
                   />
-                  {isEditMode && (
+              
                     <Button
                       type="button"
                       variant="destructive"
@@ -117,7 +117,7 @@ const CreateIdeaForm = () => {
                     >
                       <X fill="white" size={45} />
                     </Button>
-                  )}
+               
                 </div>
               ) : (
                 <div>

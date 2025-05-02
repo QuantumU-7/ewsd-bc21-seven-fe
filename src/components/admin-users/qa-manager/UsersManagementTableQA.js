@@ -59,8 +59,8 @@ const UsersManagementTableQA = () => {
           <TableCell>{user.email}</TableCell>
           <TableCell>{user.department.name}</TableCell>
           {/* <TableCell>{user.role.name}</TableCell> */}
-          <TableCell>{user.isdisabled ? "Blocked" : "-"}</TableCell>
-          <TableCell>{user.ishidden ? "Hidden" : "-"}</TableCell>
+          <TableCell>{user.isdisabled ? "YES" : "-"}</TableCell>
+          <TableCell>{user.ishidden ? "YES" : "-"}</TableCell>
           <TableCell className="w-12">
             {" "}
             <Popover>
@@ -89,7 +89,7 @@ const UsersManagementTableQA = () => {
                     setActionMode(2);
                   }}
                 >
-                  {user.ishidden ? "Unhide User" : "Hide User"}
+                  {user.ishidden ? "Unblock & Unhide User" : "Block & Hide User"}
                 </p>
               </PopoverContent>
             </Popover>
@@ -171,14 +171,14 @@ const UsersManagementTableQA = () => {
             ? "Unhide User"
             : "Hide User"
         }
-        message={`Are you sure you want to ${
+        description={`${
           actionMode === 1
             ? selectedUser?.isdisabled
-              ? "unblock"
-              : "block"
+              ? "Are you sure you want to unblock this user?"
+              : "This action will block the user from submitting ideas or commenting. Are you sure you want to proceed?"
             : selectedUser?.ishidden
-            ? "unhide"
-            : "hide"
+            ? "Are you sure you want to unhide this user? Their ideas/comments will be restored."
+            : "Are you sure you want to hide this user? This will block them from the system, and their ideas and comments will be hidden!"
         } this user?`}
         onConfirm={
           actionMode === 1 ? handleDisableConfirm : handleUnhideConfirm
