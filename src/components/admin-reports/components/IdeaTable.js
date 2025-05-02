@@ -36,7 +36,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
 
   const tableBody = (
     <>
-      {ideas.map((idea) => (
+      {ideas?.map((idea) => (
         <TableRow key={idea.id} className="border-b">
           <TableCell>{idea.title}</TableCell>
           <TableCell>{`${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</TableCell>

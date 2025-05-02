@@ -26,7 +26,7 @@ export const UsersProvider = ({ children }) => {
 
   const fetchAllDepartments = async () => {
     try {
-      const response = await getAllDepartments();
+      const response = await getAllDepartments(1, 99);
       setDepartments(response.data);
     } catch (error) {
       console.error("Error fetching departments:", error);
