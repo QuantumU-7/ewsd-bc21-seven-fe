@@ -9,8 +9,8 @@ import { downloadAttachments } from "@/services/downloadAttachments";
 import { toast } from "sonner";
 
 const QAManagerIdeasList = () => {
-
   // Separate states for each tab
+  const [selectedTab, setSelectedTab] = useState("all");
   const [allIdeas, setAllIdeas] = useState([]);
   const [popularIdeas, setPopularIdeas] = useState([]);
   const [viewedIdeas, setViewedIdeas] = useState([]);
@@ -19,14 +19,15 @@ const QAManagerIdeasList = () => {
   const [noCommentedIdeas, setNoCommentedIdeas] = useState([]);
 
   // Separate loading states
-  const [allIdeasLoading, setAllIdeasLoading] = useState(true);
+  const [allIdeasLoading, setAllIdeasLoading] = useState(false);
   const [popularIdeasLoading, setPopularIdeasLoading] = useState(true);
   const [viewedIdeasLoading, setViewedIdeasLoading] = useState(true);
   const [reportedIdeasLoading, setReportedIdeasLoading] = useState(true);
   const [anonymousIdeasLoading, setAnonymousIdeasLoading] = useState(true);
   const [noCommentedIdeasLoading, setNoCommentedIdeasLoading] = useState(true);
   const [exportCSVLoading, setExportCSVLoading] = useState(false);
-  const [downloadAttachmentsLoading, setDownloadAttachmentsLoading] = useState(false);
+  const [downloadAttachmentsLoading, setDownloadAttachmentsLoading] =
+    useState(false);
 
   // Separate pagination states
   const [allPagination, setAllPagination] = useState({
@@ -74,14 +75,6 @@ const QAManagerIdeasList = () => {
     prevPage: null,
   });
 
-  useEffect(() => {
-    fetchAllIdeas(1);
-    fetchPopularIdeas(1);
-    fetchViewedIdeas(1);
-    fetchReportedIdeas(1);
-    fetchAnonymousIdeas(1);
-    featchNoCommentIdeas(1);
-  }, []);
   const fetchAllIdeas = async (page) => {
     setAllIdeasLoading(true);
     try {
@@ -104,7 +97,11 @@ const QAManagerIdeasList = () => {
   const fetchPopularIdeas = async (page) => {
     setPopularIdeasLoading(true);
     try {
-      const response = await getAllIdeaService({ page: page, sortPopularity: -1 });
+      const response = await getAllIdeaService({
+        page: page,
+        limit: 20,
+        sortPopularity: -1,
+      });
       setPopularIdeas(response.data);
       setPopularPagination({
         totalRecords: response.pagination.total_records,
@@ -123,7 +120,11 @@ const QAManagerIdeasList = () => {
   const fetchViewedIdeas = async (page) => {
     setViewedIdeasLoading(true);
     try {
-      const response = await getAllIdeaService({ page: page, most_viewed: -1 });
+      const response = await getAllIdeaService({
+        page: page,
+        limit: 20,
+        most_viewed: -1,
+      });
       setViewedIdeas(response.data);
       setViewedPagination({
         totalRecords: response.pagination.total_records,
@@ -142,7 +143,11 @@ const QAManagerIdeasList = () => {
   const fetchReportedIdeas = async (page) => {
     setViewedIdeasLoading(true);
     try {
-      const response = await getAllIdeaService({ page: page, reported: -1 });
+      const response = await getAllIdeaService({
+        page: page,
+        limit: 20,
+        reported: -1,
+      });
       setReportedIdeas(response.data);
       setReportedPagination({
         totalRecords: response.pagination.total_records,
@@ -161,7 +166,11 @@ const QAManagerIdeasList = () => {
   const fetchAnonymousIdeas = async (page) => {
     setAnonymousIdeasLoading(true);
     try {
-      const response = await getAllIdeaService({ page: page, anonymous: -1 });
+      const response = await getAllIdeaService({
+        page: page,
+        limit: 20,
+        anonymous: -1,
+      });
       setAnonymousIdeas(response.data);
       setAnonymousPagination({
         totalRecords: response.pagination.total_records,
@@ -179,7 +188,11 @@ const QAManagerIdeasList = () => {
   const featchNoCommentIdeas = async (page) => {
     setNoCommentedIdeasLoading(true);
     try {
-      const response = await getAllIdeaService({ page: page, no_comment: -1 });
+      const response = await getAllIdeaService({
+        page: page,
+        limit: 20,
+        no_comment: -1,
+      });
       setNoCommentedIdeas(response.data);
       setnoCommentedPagination({
         totalRecords: response.pagination.total_records,
@@ -195,6 +208,29 @@ const QAManagerIdeasList = () => {
     }
   };
 
+  useEffect(() => {
+    switch (selectedTab) {
+      case "all":
+        if (allIdeas.length === 0) fetchAllIdeas(1);
+        break;
+      case "popular":
+        if (popularIdeas.length === 0) fetchPopularIdeas(1);
+        break;
+      case "viewed":
+        if (viewedIdeas.length === 0) fetchViewedIdeas(1);
+        break;
+      case "reported":
+        if (reportedIdeas.length === 0) fetchReportedIdeas(1);
+        break;
+      case "anonymous":
+        if (anonymousIdeas.length === 0) fetchAnonymousIdeas(1);
+        break;
+      case "no_comment":
+        if (noCommentedIdeas.length === 0) featchNoCommentIdeas(1);
+        break;
+    }
+  }, [selectedTab]);
+
   const handlePageChange = (page, tab) => {
     switch (tab) {
       case "popular":
@@ -205,9 +241,13 @@ const QAManagerIdeasList = () => {
         break;
       case "reported":
         fetchReportedIdeas(page);
-        break
+        break;
       case "anonymous":
-        fetchAnonymousIdeas(page); break;
+        fetchAnonymousIdeas(page);
+        break;
+      case "no_comment":
+        featchNoCommentIdeas(page);
+        break;
       default:
         fetchAllIdeas(page);
         break;
@@ -244,13 +284,29 @@ const QAManagerIdeasList = () => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4">
         <h2 className="text-xl font-bold">Ideas</h2>
         <div className="flex gap-2">
-          <div className="min-w-[100px]"><LoadingButton label="Export (.csv)" isLoading={exportCSVLoading} onClick={handleExportCSV} /></div>
-          <div className="min-w-[150px]"><LoadingButton label="Download Attachments" isLoading={downloadAttachmentsLoading} onClick={handleDownloadAttachments} /></div>
+          <div className="min-w-[100px]">
+            <LoadingButton
+              label="Export (.csv)"
+              isLoading={exportCSVLoading}
+              onClick={handleExportCSV}
+            />
+          </div>
+          <div className="min-w-[150px]">
+            <LoadingButton
+              label="Download Attachments"
+              isLoading={downloadAttachmentsLoading}
+              onClick={handleDownloadAttachments}
+            />
+          </div>
         </div>
       </div>
 
-      <Tabs defaultValue="all" className="w-full">
-         <TabsList className="flex overflow-x-auto whitespace-nowrap mb-4 gap-2 lg:w-fit justify-normal">
+      <Tabs
+        onValueChange={setSelectedTab}
+        defaultValue="all"
+        className="w-full"
+      >
+        <TabsList className="flex overflow-x-auto whitespace-nowrap mb-4 gap-2 lg:w-fit justify-normal">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="popular">Most Popular</TabsTrigger>
           <TabsTrigger value="viewed">Most Viewed</TabsTrigger>
