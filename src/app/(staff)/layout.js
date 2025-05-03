@@ -1,10 +1,10 @@
 import LayoutWrapper from "@/components/shared/layout-wrapper";
-import { IdeasProvider } from "@/providers/IdeasContext";
+import {IdeasProvider} from "@/providers/IdeasContext";
 
 export default function StaffLayout({children}) {
 	return (
-		<IdeasProvider><LayoutWrapper>{children}</LayoutWrapper></IdeasProvider>
-			
-
+		<IdeasProvider>
+			<LayoutWrapper>{children}</LayoutWrapper>
+		</IdeasProvider>
 	);
 }
