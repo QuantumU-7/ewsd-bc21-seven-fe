@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getAllIdeaService } from "@/services/getAllIdeas";
-import IdeaTable from "./components/IdeaTable";
+// import { getAllIdeaService } from "@/services/getAllIdeas";
+// import IdeaTable from "./components/IdeaTable";
 import { getMostActiveUsers } from "@/services/getMostActiveUsers";
 import { getMostUsedBrowsers } from "@/services/getMostUsedBrowsers";
 import MostActiveUsersTable from "./components/MostActiveUsersTable";
@@ -12,15 +12,15 @@ import MostViewedPagesTable from "./components/MostViewedPagesTable";
 
 const AdminReports = () => {
   // Separate states for each tab
-  const [selectedTab, setSelectedTab] = useState("all"); 
-  const [allIdeas, setAllIdeas] = useState([]);
-  const [popularIdeas, setPopularIdeas] = useState([]);
-  const [viewedIdeas, setViewedIdeas] = useState([]);
+  const [selectedTab, setSelectedTab] = useState("most_active_users"); 
+  // const [allIdeas, setAllIdeas] = useState([]);
+  // const [popularIdeas, setPopularIdeas] = useState([]);
+  // const [viewedIdeas, setViewedIdeas] = useState([]);
 
   // Separate loading states
-  const [allIdeasLoading, setAllIdeasLoading] = useState(false);
-  const [popularIdeasLoading, setPopularIdeasLoading] = useState(true);
-  const [viewedIdeasLoading, setViewedIdeasLoading] = useState(true);
+  // const [allIdeasLoading, setAllIdeasLoading] = useState(false);
+  // const [popularIdeasLoading, setPopularIdeasLoading] = useState(true);
+  // const [viewedIdeasLoading, setViewedIdeasLoading] = useState(true);
   const [mostActiveUsers, setMostActiveUsers] = useState([]);
   const [mostActiveUsersLoading, setMostActiveUsersLoading] = useState(true);
   const [mostActiveUsersPagination, setMostActiveUsersPagination] = useState({
@@ -51,92 +51,92 @@ const AdminReports = () => {
   });
 
   // Separate pagination states
-  const [allPagination, setAllPagination] = useState({
-    totalRecords: 0,
-    currentPage: 1,
-    totalPages: 1,
-    nextPage: null,
-    prevPage: null,
-  });
-  const [popularPagination, setPopularPagination] = useState({
-    totalRecords: 0,
-    currentPage: 1,
-    totalPages: 1,
-    nextPage: null,
-    prevPage: null,
-  });
-  const [viewedPagination, setViewedPagination] = useState({
-    totalRecords: 0,
-    currentPage: 1,
-    totalPages: 1,
-    nextPage: null,
-    prevPage: null,
-  });
+  // const [allPagination, setAllPagination] = useState({
+  //   totalRecords: 0,
+  //   currentPage: 1,
+  //   totalPages: 1,
+  //   nextPage: null,
+  //   prevPage: null,
+  // });
+  // const [popularPagination, setPopularPagination] = useState({
+  //   totalRecords: 0,
+  //   currentPage: 1,
+  //   totalPages: 1,
+  //   nextPage: null,
+  //   prevPage: null,
+  // });
+  // const [viewedPagination, setViewedPagination] = useState({
+  //   totalRecords: 0,
+  //   currentPage: 1,
+  //   totalPages: 1,
+  //   nextPage: null,
+  //   prevPage: null,
+  // });
 
-  const fetchAllIdeas = async (page) => {
-    setAllIdeasLoading(true);
-    try {
-      const response = await getAllIdeaService({ page: page, limit: 10 });
-      setAllIdeas(response.data);
-      setAllPagination({
-        totalRecords: response.pagination.total_records,
-        currentPage: response.pagination.current_page,
-        totalPages: response.pagination.total_pages,
-        nextPage: response.pagination.next_page,
-        prevPage: response.pagination.prev_page,
-      });
-    } catch (error) {
-      console.error("Error fetching all ideas:", error);
-    } finally {
-      setAllIdeasLoading(false);
-    }
-  };
+  // const fetchAllIdeas = async (page) => {
+  //   setAllIdeasLoading(true);
+  //   try {
+  //     const response = await getAllIdeaService({ page: page, limit: 10 });
+  //     setAllIdeas(response.data);
+  //     setAllPagination({
+  //       totalRecords: response.pagination.total_records,
+  //       currentPage: response.pagination.current_page,
+  //       totalPages: response.pagination.total_pages,
+  //       nextPage: response.pagination.next_page,
+  //       prevPage: response.pagination.prev_page,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching all ideas:", error);
+  //   } finally {
+  //     setAllIdeasLoading(false);
+  //   }
+  // };
 
-  const fetchPopularIdeas = async (page) => {
-    setPopularIdeasLoading(true);
-    try {
-      const response = await getAllIdeaService({
-        page: page,
-        limit: 10,
-        sortPopularity: -1,
-      });
-      setPopularIdeas(response.data);
-      setPopularPagination({
-        totalRecords: response.pagination.total_records,
-        currentPage: response.pagination.current_page,
-        totalPages: response.pagination.total_pages,
-        nextPage: response.pagination.next_page,
-        prevPage: response.pagination.prev_page,
-      });
-    } catch (error) {
-      console.error("Error fetching popular ideas:", error);
-    } finally {
-      setPopularIdeasLoading(false);
-    }
-  };
+  // const fetchPopularIdeas = async (page) => {
+  //   setPopularIdeasLoading(true);
+  //   try {
+  //     const response = await getAllIdeaService({
+  //       page: page,
+  //       limit: 10,
+  //       sortPopularity: -1,
+  //     });
+  //     setPopularIdeas(response.data);
+  //     setPopularPagination({
+  //       totalRecords: response.pagination.total_records,
+  //       currentPage: response.pagination.current_page,
+  //       totalPages: response.pagination.total_pages,
+  //       nextPage: response.pagination.next_page,
+  //       prevPage: response.pagination.prev_page,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching popular ideas:", error);
+  //   } finally {
+  //     setPopularIdeasLoading(false);
+  //   }
+  // };
 
-  const fetchViewedIdeas = async (page) => {
-    setViewedIdeasLoading(true);
-    try {
-      const response = await getAllIdeaService({
-        page: page,
-        limit: 10,
-        most_viewed: -1,
-      });
-      setViewedIdeas(response.data);
-      setViewedPagination({
-        totalRecords: response.pagination.total_records,
-        currentPage: response.pagination.current_page,
-        totalPages: response.pagination.total_pages,
-        nextPage: response.pagination.next_page,
-        prevPage: response.pagination.prev_page,
-      });
-    } catch (error) {
-      console.error("Error fetching most viewed ideas:", error);
-    } finally {
-      setViewedIdeasLoading(false);
-    }
-  };
+  // const fetchViewedIdeas = async (page) => {
+  //   setViewedIdeasLoading(true);
+  //   try {
+  //     const response = await getAllIdeaService({
+  //       page: page,
+  //       limit: 10,
+  //       most_viewed: -1,
+  //     });
+  //     setViewedIdeas(response.data);
+  //     setViewedPagination({
+  //       totalRecords: response.pagination.total_records,
+  //       currentPage: response.pagination.current_page,
+  //       totalPages: response.pagination.total_pages,
+  //       nextPage: response.pagination.next_page,
+  //       prevPage: response.pagination.prev_page,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching most viewed ideas:", error);
+  //   } finally {
+  //     setViewedIdeasLoading(false);
+  //   }
+  // };
 
   const fetchMostActiveUsers = async (page) => {
     setMostActiveUsersLoading(true);
@@ -199,15 +199,15 @@ const AdminReports = () => {
 
    useEffect(() => {
     switch (selectedTab) {
-        case "all":
-            if (allIdeas.length === 0) fetchAllIdeas(1); 
-            break;
-        case "popular":
-            if (popularIdeas.length === 0) fetchPopularIdeas(1);
-            break;
-        case "viewed":
-            if (viewedIdeas.length === 0) fetchViewedIdeas(1);
-            break;
+        // case "all":
+        //     if (allIdeas.length === 0) fetchAllIdeas(1); 
+        //     break;
+        // case "popular":
+        //     if (popularIdeas.length === 0) fetchPopularIdeas(1);
+        //     break;
+        // case "viewed":
+        //     if (viewedIdeas.length === 0) fetchViewedIdeas(1);
+        //     break;
         case "most_active_users":
             if (mostActiveUsers.length === 0) fetchMostActiveUsers(1);
             break;
@@ -222,12 +222,6 @@ const AdminReports = () => {
 
   const handlePageChange = (page, tab) => {
     switch (tab) {
-      case "popular":
-        fetchPopularIdeas(page);
-        break;
-      case "viewed":
-        fetchViewedIdeas(page);
-        break;
       case "most_active_users":
         fetchMostActiveUsers(page);
         break;
@@ -235,7 +229,7 @@ const AdminReports = () => {
         fetchMostUsedBrowsers(page);
         break;
       default:
-        fetchAllIdeas(page);
+        fetchMostActiveUsers(page);
         break;
     }
   };
@@ -246,9 +240,9 @@ const AdminReports = () => {
         <h2 className="text-xl font-bold">Reports</h2>
       </div>
 
-      <Tabs onValueChange={setSelectedTab} defaultValue="all" className="w-full">
+      <Tabs onValueChange={setSelectedTab} defaultValue="most_active_users" className="w-full">
         <TabsList className="flex overflow-x-auto whitespace-nowrap mb-4 gap-2 lg:w-fit justify-normal">
-          <TabsTrigger className="" value="all">
+          {/* <TabsTrigger className="" value="all">
             All
           </TabsTrigger>
           <TabsTrigger className="" value="popular">
@@ -256,7 +250,7 @@ const AdminReports = () => {
           </TabsTrigger>
           <TabsTrigger className="" value="viewed">
             Most Viewed
-          </TabsTrigger>
+          </TabsTrigger> */}
           <TabsTrigger className="" value="most_active_users">
             Most Active Users
           </TabsTrigger>
@@ -268,7 +262,7 @@ const AdminReports = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all">
+        {/* <TabsContent value="all">
           <IdeaTable
             ideas={allIdeas}
             loading={allIdeasLoading}
@@ -293,7 +287,7 @@ const AdminReports = () => {
             pagination={viewedPagination}
             handlePageChange={(page) => handlePageChange(page, "viewed")}
           />
-        </TabsContent>
+        </TabsContent> */}
         <TabsContent value="most_active_users">
           <MostActiveUsersTable
             users={mostActiveUsers}

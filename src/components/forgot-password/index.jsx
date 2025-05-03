@@ -56,7 +56,7 @@ const ForgotPasswordForm = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <Card className="w-full mx-6 max-w-3xl">
-        <CardContent className="flex justify-center flex-col lg:flex-row p-0 lg:justify-between items-center h-[388px]">
+        <CardContent className="flex justify-center flex-col lg:flex-row p-0 lg:justify-between items-center h-[550px]">
           <div className="w-full lg:w-1/2 p-[4vw]">
             <div className="flex flex-col items-center justify-center mb-9">
               <p className="text-2xl font-bold mb-2 text-primary">
@@ -83,7 +83,7 @@ const ForgotPasswordForm = () => {
             </div>
             {error && <p className="text-center text-destructive">{error}</p>}
           </div>
-          <div className="lg:w-1/2 relative justify-center hidden lg:flex h-[388px]">
+          <div className="lg:w-1/2 relative justify-center hidden lg:flex h-[550px]">
             <Image
               src={uniImage}
               alt="university logo"
