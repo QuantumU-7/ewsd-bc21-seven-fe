@@ -29,7 +29,7 @@ const IdeaCard = ({
               {title}
             </h1>
             <div className="flex items-center justify-between text-gray-600 text-sm mt-4">
-              <div className="font-medium">By <span className="font-bold">{user}</span> from <b>{dept_name}</b> Department</div>
+              <div className="font-medium">By <span className="font-bold">{user}</span> from <b>{dept_name} Department</b></div>
               <span>{formatDate(posted_At)}</span>
             </div>
             <div className="flex items-center justify-between text-gray-700 text-sm rounded-b-md">

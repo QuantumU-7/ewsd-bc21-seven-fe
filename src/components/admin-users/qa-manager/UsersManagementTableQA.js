@@ -59,8 +59,8 @@ const UsersManagementTableQA = () => {
           <TableCell>{user.email}</TableCell>
           <TableCell>{user.department.name}</TableCell>
           {/* <TableCell>{user.role.name}</TableCell> */}
-          <TableCell>{user.isdisabled ? "YES" : "-"}</TableCell>
-          <TableCell>{user.ishidden ? "YES" : "-"}</TableCell>
+          <TableCell>{user.isdisabled ? "Yes" : "-"}</TableCell>
+          <TableCell>{user.ishidden ? "Yes" : "-"}</TableCell>
           <TableCell className="w-12">
             {" "}
             <Popover>
@@ -69,7 +69,7 @@ const UsersManagementTableQA = () => {
                   <MoreHorizontal className="cursor-pointer" />
                 </div>
               </PopoverTrigger>
-              <PopoverContent className="w-[110px] rounded-xl p-0 flex flex-col text-center">
+              <PopoverContent className="w-[150px] rounded-xl p-0 flex flex-col text-center">
                 <p
                   className="text-sm p-2 cursor-pointer hover:bg-gray-100"
                   onClick={() => {
@@ -78,7 +78,7 @@ const UsersManagementTableQA = () => {
                     setActionMode(1);
                   }}
                 >
-                  {user.isdisabled ? "Unblock User" : "Block User"}
+                  {user.isdisabled ? "Unblock" : "Block"}
                 </p>
                 <hr />
                 <p
@@ -89,7 +89,7 @@ const UsersManagementTableQA = () => {
                     setActionMode(2);
                   }}
                 >
-                  {user.ishidden ? "Unblock & Unhide User" : "Block & Hide User"}
+                  {user.ishidden ? "Unblock & Unhide" : "Block & Hide"}
                 </p>
               </PopoverContent>
             </Popover>
@@ -168,8 +168,8 @@ const UsersManagementTableQA = () => {
               ? "Unblock User"
               : "Block User"
             : selectedUser?.ishidden
-            ? "Unhide User"
-            : "Hide User"
+            ? "Are you sure you want to unhide this user?"
+            : "Are you sure you want to hide this user?"
         }
         description={`${
           actionMode === 1
@@ -177,15 +177,15 @@ const UsersManagementTableQA = () => {
               ? "Are you sure you want to unblock this user?"
               : "This action will block the user from submitting ideas or commenting. Are you sure you want to proceed?"
             : selectedUser?.ishidden
-            ? "Are you sure you want to unhide this user? Their ideas/comments will be restored."
-            : "Are you sure you want to hide this user? This will block them from the system, and their ideas and comments will be hidden!"
-        } this user?`}
+            ? "Their ideas/comments will be restored."
+            : "This will block them from the system, and their ideas and comments will be hidden!"
+        }`}
         onConfirm={
           actionMode === 1 ? handleDisableConfirm : handleUnhideConfirm
         }
         isOpen={isOpen}
         onCancel={() => setIsOpen(false)}
-        onClose={() => setIsOpen(false)}
+        // onClose={() => setIsOpen(false)}
       />
     </section>
   );

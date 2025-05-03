@@ -3,7 +3,15 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Heart, ThumbsDown, Eye, Loader2, Download, MessageCircleWarning } from "lucide-react";
+import {
+  ArrowLeft,
+  Heart,
+  ThumbsDown,
+  Eye,
+  Loader2,
+  Download,
+  MessageCircleWarning,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -67,7 +75,6 @@ const IdeaDetailPage = () => {
   }, [params.id]);
 
   useEffect(() => {
-
     const userData = JSON.parse(localStorage.getItem(TokenKeys.user));
     if (userData) {
       setCurrentUser(userData);
@@ -93,20 +100,37 @@ const IdeaDetailPage = () => {
     }
   }, [submissionDate, finalClosureDate]);
 
-
   const checkDates = () => {
     const currentDate = new Date();
-    const normalizedCurrentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const normalizedCurrentDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate()
+    );
     const normalizedSubmissionDate = submissionDate
-      ? new Date(submissionDate.getFullYear(), submissionDate.getMonth(), submissionDate.getDate())
+      ? new Date(
+          submissionDate.getFullYear(),
+          submissionDate.getMonth(),
+          submissionDate.getDate()
+        )
       : null;
     const normalizedFinalClosureDate = finalClosureDate
-      ? new Date(finalClosureDate.getFullYear(), finalClosureDate.getMonth(), finalClosureDate.getDate())
+      ? new Date(
+          finalClosureDate.getFullYear(),
+          finalClosureDate.getMonth(),
+          finalClosureDate.getDate()
+        )
       : null;
 
-    if (normalizedSubmissionDate && normalizedCurrentDate < normalizedSubmissionDate) {
-      setShowVotingFeature(false);
-    } else if (normalizedFinalClosureDate && normalizedCurrentDate >= normalizedFinalClosureDate) {
+    if (
+      normalizedSubmissionDate &&
+      normalizedCurrentDate < normalizedSubmissionDate
+    ) {
+      setShowVotingFeature(true);
+    } else if (
+      normalizedFinalClosureDate &&
+      normalizedCurrentDate >= normalizedFinalClosureDate
+    ) {
       setShowVotingFeature(false);
     } else {
       setShowVotingFeature(true);
@@ -121,9 +145,11 @@ const IdeaDetailPage = () => {
         setFinalClosureDate(new Date(response.final_closure_date));
       }
     } catch (error) {
-      toast.error(error.response.data.detail || "Failed to fetch closure dates!");
+      toast.error(
+        error.response.data.detail || "Failed to fetch closure dates!"
+      );
     }
-  }
+  };
 
   const toggleLike = async (id, isLike) => {
     if (isLike) {
@@ -172,7 +198,15 @@ const IdeaDetailPage = () => {
     setCommentLoading(true);
     try {
       const res = await createComment(params.id, isAnonymous, commentText);
-      setComments((prevComments) => [{ ispostedanon: isAnonymous, username: currentUser.firstname + " " + currentUser.lastname, comment: commentText, postedon: new Date().toISOString() }, ...prevComments]);
+      setComments((prevComments) => [
+        {
+          ispostedanon: isAnonymous,
+          username: currentUser.firstname + " " + currentUser.lastname,
+          comment: commentText,
+          postedon: new Date().toISOString(),
+        },
+        ...prevComments,
+      ]);
       // Update the idea state with the new comment
       if (res && res.data) {
         const newComment = res.data;
@@ -210,7 +244,6 @@ const IdeaDetailPage = () => {
       setExportLoading(false);
     }
   };
-
 
   const handleReportIdea = async (id) => {
     try {
@@ -357,7 +390,11 @@ const IdeaDetailPage = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{idea.ispostedanon ? 'Anonymous' : `${idea.posted_by.firstname} ${idea.posted_by.lastname}`}</p>
+                  <p className="font-medium">
+                    {idea.ispostedanon
+                      ? "Anonymous"
+                      : `${idea.posted_by.firstname} ${idea.posted_by.lastname}`}
+                  </p>
                   <p className="text-sm text-gray-500 flex items-center">
                     {idea.category.name || "Uncategorized"}
                   </p>
@@ -376,10 +413,9 @@ const IdeaDetailPage = () => {
                 {idea.title || "Untitled"}
               </p>
               <div className="text-gray-700 mb-7 rdw-editor-wrapper prose">
-                <div dangerouslySetInnerHTML={{ __html: idea.description }}>
-
-                </div>
-
+                <div
+                  dangerouslySetInnerHTML={{ __html: idea.description }}
+                ></div>
               </div>
 
               {/* Comments section */}
@@ -387,7 +423,10 @@ const IdeaDetailPage = () => {
                 {/* Comment input */}
                 <div className="flex gap-3">
                   <Avatar>
-                    <AvatarFallback> {currentUser.username?.charAt(0) || "U"}</AvatarFallback>
+                    <AvatarFallback>
+                      {" "}
+                      {currentUser.username?.charAt(0) || "U"}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <Input
@@ -399,20 +438,22 @@ const IdeaDetailPage = () => {
                     />
 
                     <div className="flex justify-between items-center">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="anonymous"
-                          checked={isAnonymous}
-                          onCheckedChange={setIsAnonymous}
-                          disabled={commentLoading || !showVotingFeature}
-                        />
-                        <label
-                          htmlFor="anonymous"
-                          className="text-sm text-gray-600 cursor-pointer"
-                        >
-                          Post anonymously
-                        </label>
-                      </div>
+                      {showVotingFeature && (
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="anonymous"
+                            checked={isAnonymous}
+                            onCheckedChange={setIsAnonymous}
+                            disabled={commentLoading || !showVotingFeature}
+                          />
+                          <label
+                            htmlFor="anonymous"
+                            className="text-sm text-gray-600 cursor-pointer"
+                          >
+                            Post anonymously
+                          </label>
+                        </div>
+                      )}
 
                       {(commentText.trim() !== "" || commentLoading) && (
                         <div>
@@ -464,8 +505,8 @@ const IdeaDetailPage = () => {
                           <div className="leading-3">
                             <div className="flex items-baseline justify-between gap-2">
                               <p className="font-bold">
-                                {comment.ispostedanon ?
-                                  'Anonymous'
+                                {comment.ispostedanon
+                                  ? "Anonymous"
                                   : comment.username}
                               </p>
                             </div>
@@ -483,9 +524,13 @@ const IdeaDetailPage = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-4 text-center text-gray-500">
-                    No comments yet. Be the first to comment!
-                  </div>
+                  <>
+                    {showVotingFeature && (
+                      <div className="p-4 text-center text-gray-500">
+                        No comments yet. Be the first to comment!
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -497,38 +542,57 @@ const IdeaDetailPage = () => {
           <div className="w-[2vw] space-y-4">
             {/* Like button with loading state */}
             <div
-              className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`flex flex-col justify-center items-center cursor-pointer ${
+                !showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {likeLoading ? (
                 <Loader2 className="text-red-600 animate-spin" size={24} />
               ) : likebyauthor ? (
                 <Heart className="text-red-600 fill-current" size={24} />
               ) : (
-                <Heart className="text-red-600 " size={24} onClick={showVotingFeature ? () => !likeLoading && toggleLike(idea.id, true) : null} />
+                <Heart
+                  className="text-red-600 "
+                  size={24}
+                  onClick={
+                    showVotingFeature
+                      ? () => !likeLoading && toggleLike(idea.id, true)
+                      : null
+                  }
+                />
               )}
               <p className="text-sm">{likeCount}</p>
             </div>
 
             {/* Dislike button with loading state */}
             <div
-              className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`flex flex-col justify-center items-center cursor-pointer ${
+                !showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {dislikeLoading ? (
                 <Loader2 className="text-primary animate-spin" size={24} />
               ) : dislikebyauthor ? (
                 <ThumbsDown className="text-primary fill-current" size={24} />
               ) : (
-                <ThumbsDown className="text-primary" size={24} onClick={showVotingFeature ? () => !dislikeLoading && toggleLike(idea.id, false) : null} />
+                <ThumbsDown
+                  className="text-primary"
+                  size={24}
+                  onClick={
+                    showVotingFeature
+                      ? () => !dislikeLoading && toggleLike(idea.id, false)
+                      : null
+                  }
+                />
               )}
               <p className="text-sm">{dislikeCount}</p>
             </div>
 
             {/* Views count (no interaction) */}
             <div
-              className={`flex flex-col justify-center items-center ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`flex flex-col justify-center items-center ${
+                !showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               <Eye className="text-primary" />
               <p className="text-sm">{idea.views_count + 1}</p>
@@ -536,8 +600,9 @@ const IdeaDetailPage = () => {
 
             {/* Report button */}
             <div
-              className={`flex flex-col justify-center items-center cursor-pointer ${!showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`flex flex-col justify-center items-center cursor-pointer ${
+                !showVotingFeature ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={showVotingFeature ? () => setOpenConfirmBox(true) : null}
             >
               <MessageCircleWarning className="text-primary" size={24} />
