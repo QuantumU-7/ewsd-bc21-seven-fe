@@ -1,10 +1,3 @@
-import { useRouter } from "next/navigation";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { Ellipsis } from "lucide-react";
 import { ConfirmationBox } from "@/components/shared/common/Dialog/ConfirmationBox";
 import { TableCell, TableRow } from "@/components/ui/table";
 import CommonTable from "@/components/shared/common/Table";
@@ -14,15 +7,15 @@ import { useState } from "react";
 const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
   const [openConfirmBox, setOpenConfirmBox] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-  const router = useRouter();
+  // const router = useRouter();
 
-  const handleView = (ideaId) => {
-    router.push(`/ideas/${ideaId}`);
-  };
+  // const handleView = (ideaId) => {
+  //   router.push(`/ideas/${ideaId}`);
+  // };
 
-  const handleEdit = (ideaId) => {
-    router.push(`/ideas/edit/${ideaId}`);
-  };
+  // const handleEdit = (ideaId) => {
+  //   router.push(`/ideas/edit/${ideaId}`);
+  // };
 
   const handleDelete = async (ideaId) => {
     console.log(ideaId)
@@ -45,7 +38,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
           <TableCell>{idea.views_count}</TableCell>
           <TableCell>{idea.category.name}</TableCell>
           <TableCell>{new Date(idea.posted_on).toLocaleDateString()}</TableCell>
-          <TableCell>
+          {/* <TableCell>
             <Popover>
               <PopoverTrigger asChild>
                 <div className="cursor-pointer flex justify-end">
@@ -78,7 +71,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
                 </p>
               </PopoverContent>
             </Popover>
-          </TableCell>
+          </TableCell> */}
         </TableRow>
       ))}
     </>
@@ -95,7 +88,7 @@ const IdeaTable = ({ ideas, loading, pagination, handlePageChange }) => {
           "Total Views",
           "Category",
           "Posted On",
-          "",
+          // "",
         ]}
         loading={loading}
         tableBody={tableBody}
