@@ -78,7 +78,7 @@ const QAManagerIdeasList = () => {
   const fetchAllIdeas = async (page) => {
     setAllIdeasLoading(true);
     try {
-      const response = await getAllIdeaService({ page: page });
+      const response = await getAllIdeaService({ page: page, limit: 10 });
       setAllIdeas(response.data);
       setAllPagination({
         totalRecords: response.pagination.total_records,
