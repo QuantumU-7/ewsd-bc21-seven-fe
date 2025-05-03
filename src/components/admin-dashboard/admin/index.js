@@ -46,7 +46,7 @@ const AdminDashboard = () => {
 
         <Card className="shadow-md">
           <CardHeader>
-            <CardTitle>Total Anonymous</CardTitle>
+            <CardTitle>Total Anonymous Comments</CardTitle>
           </CardHeader>
 
           <CardContent>
