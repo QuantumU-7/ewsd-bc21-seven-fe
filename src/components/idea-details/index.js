@@ -384,7 +384,7 @@ const IdeaDetailPage = () => {
             {/* User info and title */}
             <div className="w-full flex justify-between">
               <div className="flex gap-3">
-                <Avatar>
+                <Avatar className="uppercase">
                   <AvatarFallback>
                     {idea.posted_by.firstname.charAt(0) || "U"}
                   </AvatarFallback>
@@ -422,7 +422,7 @@ const IdeaDetailPage = () => {
               <div>
                 {/* Comment input */}
                 <div className="flex gap-3">
-                  <Avatar>
+                  <Avatar className="uppercase">
                     <AvatarFallback>
                       {" "}
                       {currentUser.username?.charAt(0) || "U"}
@@ -495,13 +495,22 @@ const IdeaDetailPage = () => {
                         className="flex w-full justify-between my-5"
                       >
                         <div className="flex gap-3">
-                          <Avatar>
-                            <AvatarFallback>
-                              {typeof comment.username === "string"
-                                ? comment.username.charAt(0)
-                                : "U"}
-                            </AvatarFallback>
-                          </Avatar>
+                          {comment.ispostedanon ? (
+                            <Avatar>
+                              <AvatarFallback>
+                                A
+                              </AvatarFallback>
+                            </Avatar>
+                          ) : (
+                            <Avatar className="uppercase">
+                              <AvatarFallback>
+                                {typeof comment.username === "string"
+                                  ? comment.username.charAt(0)
+                                  : "U"}
+                              </AvatarFallback>
+                            </Avatar>
+                          )}
+
                           <div className="leading-3">
                             <div className="flex items-baseline justify-between gap-2">
                               <p className="font-bold">
