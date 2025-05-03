@@ -101,14 +101,14 @@ const NavigationBar = () => {
       <div className="max-w-7xl mx-auto py-5 px-4 flex justify-between items-center">
         {/* Left Section */}
         <div className="flex items-center gap-4">
-          <Link href={HOME}>
+
             <Image
               src={logo}
               width={73}
               height={41}
               alt="Quantum University Logo"
             />
-          </Link>
+
 
           {/* Desktop Menu */}
           <div className="hidden md:flex gap-4 ml-10">

@@ -99,7 +99,7 @@ const QAManagerIdeasList = () => {
     try {
       const response = await getAllIdeaService({
         page: page,
-        limit: 20,
+        limit: 10,
         sortPopularity: -1,
       });
       setPopularIdeas(response.data);
@@ -122,7 +122,7 @@ const QAManagerIdeasList = () => {
     try {
       const response = await getAllIdeaService({
         page: page,
-        limit: 20,
+        limit: 10,
         most_viewed: -1,
       });
       setViewedIdeas(response.data);
@@ -145,7 +145,7 @@ const QAManagerIdeasList = () => {
     try {
       const response = await getAllIdeaService({
         page: page,
-        limit: 20,
+        limit: 10,
         reported: -1,
       });
       setReportedIdeas(response.data);
@@ -168,7 +168,7 @@ const QAManagerIdeasList = () => {
     try {
       const response = await getAllIdeaService({
         page: page,
-        limit: 20,
+        limit: 10,
         anonymous: -1,
       });
       setAnonymousIdeas(response.data);
@@ -190,7 +190,7 @@ const QAManagerIdeasList = () => {
     try {
       const response = await getAllIdeaService({
         page: page,
-        limit: 20,
+        limit: 10,
         no_comment: -1,
       });
       setNoCommentedIdeas(response.data);

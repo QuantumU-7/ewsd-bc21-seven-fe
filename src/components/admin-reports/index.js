@@ -76,7 +76,7 @@ const AdminReports = () => {
   const fetchAllIdeas = async (page) => {
     setAllIdeasLoading(true);
     try {
-      const response = await getAllIdeaService({ page: page });
+      const response = await getAllIdeaService({ page: page, limit: 10 });
       setAllIdeas(response.data);
       setAllPagination({
         totalRecords: response.pagination.total_records,
@@ -97,7 +97,7 @@ const AdminReports = () => {
     try {
       const response = await getAllIdeaService({
         page: page,
-        limit: 20,
+        limit: 10,
         sortPopularity: -1,
       });
       setPopularIdeas(response.data);
@@ -120,7 +120,7 @@ const AdminReports = () => {
     try {
       const response = await getAllIdeaService({
         page: page,
-        limit: 20,
+        limit: 10,
         most_viewed: -1,
       });
       setViewedIdeas(response.data);

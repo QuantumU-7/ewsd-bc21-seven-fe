@@ -26,7 +26,7 @@ export const CategoryProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getAllCategories(page);
+      const response = await getAllCategories(page, 10);
       setCategories(response.data);
       setTotalPages(response.pagination.total_pages || 1);
     } catch (error) {
