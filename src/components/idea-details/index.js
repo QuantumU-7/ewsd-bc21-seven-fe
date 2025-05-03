@@ -9,7 +9,7 @@ import {
   ThumbsDown,
   Eye,
   Loader2,
-  Download,
+  // Download,
   MessageCircleWarning,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import { getIdeaById } from "@/services/getIdeaById";
 import { toggleLikeIdea } from "@/services/ideaInteraction";
 import { toast } from "sonner";
 import { createComment } from "@/services/createComment";
-import { exportIdeaToCSV } from "@/services/exportIdeaToCSV";
+// import { exportIdeaToCSV } from "@/services/exportIdeaToCSV";
 import { RemarkBox } from "../shared/common/Dialog/RemarkBox";
 import { ideaReportService } from "@/services/ideaReport";
 import { convertBase64ToImage } from "@/utils/image";
@@ -39,7 +39,7 @@ const IdeaDetailPage = () => {
   const [likeLoading, setLikeLoading] = useState(false);
   const [dislikeLoading, setDislikeLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
-  const [exportLoading, setExportLoading] = useState(false);
+  // const [exportLoading, setExportLoading] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
   const [comments, setComments] = useState([]);
@@ -233,17 +233,17 @@ const IdeaDetailPage = () => {
     setIsAnonymous(false);
   };
 
-  const handleExportCSV = async () => {
-    setExportLoading(true);
-    try {
-      await exportIdeaToCSV();
-      toast.success("Idea exported successfully!");
-    } catch (error) {
-      toast.error("Failed to export idea");
-    } finally {
-      setExportLoading(false);
-    }
-  };
+  // const handleExportCSV = async () => {
+  //   setExportLoading(true);
+  //   try {
+  //     await exportIdeaToCSV();
+  //     toast.success("Idea exported successfully!");
+  //   } catch (error) {
+  //     toast.error("Failed to export idea");
+  //   } finally {
+  //     setExportLoading(false);
+  //   }
+  // };
 
   const handleReportIdea = async (id) => {
     try {
@@ -295,7 +295,7 @@ const IdeaDetailPage = () => {
         <Button variant="ghost" size="sm" onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <Button
+        {/* <Button
           variant="outline"
           size="sm"
           onClick={handleExportCSV}
@@ -307,7 +307,7 @@ const IdeaDetailPage = () => {
             <Download className="h-4 w-4 mr-2" />
           )}
           Export CSV
-        </Button>
+        </Button> */}
       </div>
       {/* Image and documents section */}
       <div className="w-full h-[450px] flex flex-col lg:flex-row gap-7 p-2">
@@ -384,7 +384,7 @@ const IdeaDetailPage = () => {
             {/* User info and title */}
             <div className="w-full flex justify-between">
               <div className="flex gap-3">
-                <Avatar>
+                <Avatar className="uppercase">
                   <AvatarFallback>
                     {idea.posted_by.firstname.charAt(0) || "U"}
                   </AvatarFallback>
@@ -422,7 +422,7 @@ const IdeaDetailPage = () => {
               <div>
                 {/* Comment input */}
                 <div className="flex gap-3">
-                  <Avatar>
+                  <Avatar className="uppercase">
                     <AvatarFallback>
                       {" "}
                       {currentUser.username?.charAt(0) || "U"}
@@ -495,13 +495,22 @@ const IdeaDetailPage = () => {
                         className="flex w-full justify-between my-5"
                       >
                         <div className="flex gap-3">
-                          <Avatar>
-                            <AvatarFallback>
-                              {typeof comment.username === "string"
-                                ? comment.username.charAt(0)
-                                : "U"}
-                            </AvatarFallback>
-                          </Avatar>
+                          {comment.ispostedanon ? (
+                            <Avatar>
+                              <AvatarFallback>
+                                A
+                              </AvatarFallback>
+                            </Avatar>
+                          ) : (
+                            <Avatar className="uppercase">
+                              <AvatarFallback>
+                                {typeof comment.username === "string"
+                                  ? comment.username.charAt(0)
+                                  : "U"}
+                              </AvatarFallback>
+                            </Avatar>
+                          )}
+
                           <div className="leading-3">
                             <div className="flex items-baseline justify-between gap-2">
                               <p className="font-bold">
