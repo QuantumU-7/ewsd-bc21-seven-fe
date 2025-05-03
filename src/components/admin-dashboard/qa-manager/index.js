@@ -36,16 +36,16 @@ const QaManagerDashboard = () => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card className="shadow-md w-full h-full">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-semibold">
-            Total Ideas in {department?.name || "Department"} Department
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex items-center justify-center h-[90%]">
-          <span className="text-6xl font-bold block py-2 text-center">{ideasCount}</span>
-        </CardContent>
-      </Card>
+        <Card className="shadow-md w-full h-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-semibold">
+              Total Ideas in {department?.name || "Department"} Department
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex items-center justify-center h-[90%]">
+            <span className="text-6xl font-bold block py-2 text-center">{ideasCount}</span>
+          </CardContent>
+        </Card>
         {department && (
           <CategoryByDepartment id={department.id} />
         )}

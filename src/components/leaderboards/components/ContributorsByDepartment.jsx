@@ -111,7 +111,8 @@ export function ContributorsByDepartment() {
                                 dataKey="department"
                                 type="category"
                                 tickLine={false}
-                                tickMargin={10}
+                                tickMargin={0}
+                                width={100}
                                 axisLine={false}
                                 tickFormatter={(value) => chartConfig[value]?.label}
                             />
